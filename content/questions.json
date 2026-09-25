@@ -1,0 +1,73 @@
+{
+  "contentVersion": 1,
+  "_comment": [
+    "Source of truth for the Q&A content. Authored and reviewed here, then",
+    "compiled into assets/db/content.db by tool/build_db.dart.",
+    "",
+    "Entries carry surah:ayah references ONLY. Arabic text and the Bengali",
+    "translation are resolved from content/quran.json at build time, never",
+    "written here: the original source document has PDF-corrupted Arabic, and",
+    "this rule is what keeps that corruption out of the app.",
+    "",
+    "status: 'published' ships; 'draft' is excluded from the build. Use draft",
+    "for an entry whose claim has not been checked against the mushaf yet, or",
+    "whose cited ayah does not actually support the answer."
+  ],
+  "categories": [
+    { "id": "words", "nameBn": "শব্দ ও পরিভাষা", "nameEn": "Words and terms", "sortOrder": 1 },
+    { "id": "quran-itself", "nameBn": "কুরআন নিজের সম্পর্কে", "nameEn": "The Qur'an about itself", "sortOrder": 2 },
+    { "id": "worship", "nameBn": "ইবাদত", "nameEn": "Worship", "sortOrder": 3 }
+  ],
+  "questions": [
+    {
+      "slug": "muddakkir-al-qamar",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 1,
+      "questionBn": "“মুদ্দাক্কির” শব্দটি ছয়বার কোন সূরায় এসেছে?",
+      "answerBn": "সূরা আল-কামার (৫৪)-এ ছয়বার এসেছে — আয়াত ১৫, ১৭, ২২, ৩২, ৪০ ও ৫১। সম্পূর্ণ কুরআনে শব্দটি কেবল এই সূরাতেই পাওয়া যায়।",
+      "refs": ["54:15", "54:17", "54:22", "54:32", "54:40", "54:51"],
+      "reviewNote": "Verified against the fetched mushaf: six occurrences, exactly these ayat, and nowhere else in the Qur'an."
+    },
+    {
+      "slug": "naba-azeem",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 2,
+      "questionBn": "কুরআনকে “মহাসংবাদ” কোথায় কতবার বলা হয়েছে?",
+      "answerBn": "দুই জায়গায়। সূরা আন-নাবা ৭৮:২-এ নির্দিষ্ট রূপে “আন-নাবাইল আজীম”, এবং সূরা সাদ ৩৮:৬৭-এ অনির্দিষ্ট রূপে “নাবাউন আজীম”।",
+      "refs": ["78:2", "38:67"],
+      "reviewNote": "Verified: these are the only two ayat pairing the naba root with azeem. The source document called it two occurrences of the definite phrase; the definite form occurs once (78:2), the indefinite once (38:67), so the wording here is corrected."
+    },
+    {
+      "slug": "haqqa-tilawatihi",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 3,
+      "questionBn": "“হাক্কা তিলাওয়াতিহি” কোন সূরার কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:১২১-এ। সম্পূর্ণ কুরআনে এই বাক্যাংশটি কেবল এখানেই এসেছে।",
+      "refs": ["2:121"],
+      "reviewNote": "Verified: single occurrence in the mushaf."
+    },
+    {
+      "slug": "amana-ar-rasul",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 4,
+      "questionBn": "“আমানার রাসূল” — অর্থাৎ রাসূল ঈমান এনেছেন — কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-বাকারা ২:২৮৫-এ। সম্পূর্ণ কুরআনে এই বাক্যাংশটি কেবল এখানেই এসেছে।",
+      "refs": ["2:285"],
+      "reviewNote": "Verified: single occurrence in the mushaf."
+    },
+    {
+      "slug": "hudna-ilayk",
+      "status": "draft",
+      "category": "worship",
+      "sortOrder": 5,
+      "questionBn": "“লাব্বাইক”-এর পরিবর্তে হজ্জের সময় কী পাঠ করতে হবে?",
+      "answerBn": "সূরা আল-আ‘রাফ ৭:১৫৬ — “ইন্না হুদনা ইলাইকা”, অর্থ: নিশ্চয় আমরা আপনার দিকেই প্রত্যাবর্তন করেছি।",
+      "refs": ["7:156"],
+      "reviewNote": "HELD AS DRAFT, needs the author's decision. The phrase does occur in 7:156 and only there, so the reference is correct. But 7:156 is part of Musa's supplication and says nothing about hajj or about replacing the talbiyah, so the question as phrased asserts a ruling the cited ayah does not support. Either rephrase the question to what the ayah actually says, or supply a reference that establishes the hajj claim."
+    }
+  ]
+}

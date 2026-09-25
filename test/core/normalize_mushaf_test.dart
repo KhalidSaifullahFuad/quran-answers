@@ -64,6 +64,35 @@ void main() {
     );
   });
 
+  test('a hamza-on-alef query reaches a hamza-on-waw spelling', () {
+    // The second seed question asks where the Qur'an is called a "great
+    // tiding": 78:2 spells it with the definite article, 38:67 with the hamza
+    // riding a waw. A user types the hamza on an alef in both cases, so both
+    // spellings have to be reachable from that one keyboard form. This is the
+    // regression the hamza-seat rule exists for.
+    const indefinite = 'نبأ عظيم'; // نبأ عظيم
+    expectFindable('38:67', indefinite, 'naba azeem, hamza typed on alef');
+
+    const definite = 'النبأ العظيم';
+    expectFindable('78:2', definite, 'an-naba al-azeem');
+  });
+
+  test('the definite article is NOT stripped, so search must handle it', () {
+    // Documents a known limitation rather than a bug: النبا and نبا remain
+    // distinct tokens, so a bare query will not reach an ayah that carries the
+    // article. The search layer deals with this; normalization does not, since
+    // stripping a leading ال would corrupt words that legitimately begin with
+    // those letters.
+    final withArticle = normalizeForSearch(
+      byKey['78:2']!['textUthmani'] as String,
+    );
+    expect(
+      withArticle.contains('نبا عظيم'),
+      isFalse,
+      reason: 'if this ever passes, normalization started stripping ال',
+    );
+  });
+
   test('no ayah normalizes to an empty string', () {
     final blankArabic = <String>[];
     final blankBengali = <String>[];

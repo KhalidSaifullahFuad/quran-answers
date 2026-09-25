@@ -42,6 +42,21 @@ void main() {
       );
     });
 
+    test('drops hamza seats so every spelling of a word converges', () {
+      // نَبَؤٌا (38:67) and the ordinary spelling نبأ must reduce to the same
+      // form, otherwise that ayah is unreachable by search. Both become نبا.
+      const onWaw = 'نبؤٍا'; // نبؤٍا
+      const onAlef = 'نبأ'; // نبأ
+      const bare = 'نبا'; // نبا
+      expect(normalizeArabic(onWaw), bare);
+      expect(normalizeArabic(onAlef), bare);
+    });
+
+    test('drops hamza on ya', () {
+      // مِئَة -> مه  (the ya is only a seat)
+      expect(normalizeArabic('مئَة'), 'مه');
+    });
+
     test('drops tatweel', () {
       expect(normalizeArabic('\u0645\u0640\u0640\u062F'), '\u0645\u062F');
     });

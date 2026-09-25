@@ -23,6 +23,13 @@ const List<List<int>> _arabicMarkRanges = [
 /// Hamza carriers and the various alef forms are inconsistently typed, so they
 /// are collapsed. This loses orthographic detail, which is acceptable in a
 /// search column but never in displayed text.
+///
+/// Hamza and its seats are dropped outright rather than folded to the seat
+/// letter. In 38:67 the hamza rides a waw that is not pronounced; folding it to
+/// waw would index that word with an extra consonant, while a user typing the
+/// ordinary spelling produces the form without it, and the ayah would become
+/// unfindable. Dropping the seat makes every spelling converge. Alef is kept,
+/// because it is a letter in its own right and is what users actually type.
 const Map<String, String> _arabicLetterFolds = {
   '\u0622': '\u0627', // آ -> ا
   '\u0623': '\u0627', // أ -> ا
@@ -32,8 +39,8 @@ const Map<String, String> _arabicLetterFolds = {
   '\u0673': '\u0627',
   '\u0649': '\u064A', // ى alef maksura -> ي
   '\u06CC': '\u064A', // Farsi ye -> ي
-  '\u0626': '\u064A', // ئ -> ي
-  '\u0624': '\u0648', // ؤ -> و
+  '\u0624': '', // hamza on waw
+  '\u0626': '', // hamza on ya
   '\u0629': '\u0647', // ة ta marbuta -> ه
   '\u06A9': '\u0643', // Persian kaf -> ك
   '\u0640': '', // tatweel: drop

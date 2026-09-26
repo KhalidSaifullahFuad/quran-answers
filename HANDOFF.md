@@ -1,13 +1,17 @@
 # Handoff — Quran Answers app
 
-Steps 1–8 of the plan are done, plus the topics / surahs tabs pulled forward
-from step 9. **Next is step 9 (ayah screen, settings, about).** 98 tests
-passing.
+Steps 1–10 of the plan are done. **Next is step 11
+(content migration)** — blocked on the user's original `.docx`/`.pdf`.
+105 tests passing; `flutter build appbundle --release` builds.
 
 The uncommitted `lib/web_preview*.dart`, `native_opener*.dart` and the edits to
 `main.dart` / `database_providers.dart` are a temporary Chrome preview on static
 data (not from the step-7 session). Search is not overridden there, so on web
-the search screen spins forever. Decide whether to keep or drop it.
+the search screen spins forever. Decide whether to keep or drop it. The user chose
+to **keep it, uncommitted**. Its only footprint in tracked files is the
+uncommitted diff in `main.dart` (a `kIsWeb` override line + two imports) and
+`database_providers.dart` (conditional `native_opener` import); commit around
+those hunks.
 
 Full plan: `C:\Users\Fuad\.claude\plans\pasted-content-id-1712-want-to-smooth-rossum.md`
 
@@ -97,10 +101,11 @@ lib/core/strings.dart             UI chrome labels only — never content
 lib/core/text/numerals.dart       Bengali/Arabic digits, ayah end mark, Bengali date
 lib/shared/                       design primitives (widgets.dart), citation labels, AyahCard
 lib/shared/navigation.dart        AppTab, bottom bar, tab-relative openQuestion/Category/Surah
-lib/features/                     home, topics, surahs, saved (tabs); category, surah, question, search
+lib/features/                     home, topics, surahs, saved (tabs); category, surah, question, search, ayah, settings, about
 tool/                             fetch_quran, validate_content, build_db
 test/core/                        7 test files (DB, queries, search, normalize, store)
-test/widget_test.dart             app boot, question detail, tab switching, search
+test/widget_test.dart             app boot, question detail, tabs, search, ayah, settings, about
+test/settings_test.dart           settings persistence + clamping
 ```
 
 ## Gotchas already paid for — do not rediscover
@@ -145,6 +150,57 @@ test/widget_test.dart             app boot, question detail, tab switching, sear
 - **Writing Dart via shell heredocs mangles backslashes** and Edit anchors fail
   on lines with RTL comments. Use the Write tool for files with `\u` escapes.
 
+## Step 9 (ayah, settings, about)
+
+- **Ayah screen** `/ayah/:surah/:ayah` (`features/ayah/`): `ayahPageProvider`
+  keyed by a `({surah, ayah})` record; 2 context verses either side (quieter
+  cards, tap to move), prev/next crossing surah boundaries (`replaceAyah`, so
+  back leaves the screen), questions citing it. Every `AyahCard` citation pill
+  now opens it (`linkToAyah: false` on the ayah screen itself). The screen
+  opens scrolled to the top, so with context the focused verse sits below
+  54:13–14; auto-scroll to it if that bothers.
+- **Settings** in SharedPreferences (`features/settings/settings_provider.dart`).
+  `sharedPreferencesProvider` is loaded in `main` before `runApp` and **must be
+  overridden** in every test container (`setMockInitialValues`). Arabic scale
+  multiplies `AppText.arabic`; Bengali scale only questionTitle/answer/
+  translation, chrome keeps its size. Preview verse is 1:1 read from the DB.
+- **About** reads the translation credit from `meta`. Font OFL texts are
+  assets now and registered with `LicenseRegistry` (`registerFontLicenses()` in
+  `main`), shown via `showLicensePage`.
+- **Methodology sheet** (`features/about/methodology_sheet.dart`): info icon
+  beside "সংকলিত উত্তর" on every question, plus settings and about. Its five
+  points are in `Strings.methodologyPoints` — **written by Claude, the author
+  should review the wording.**
+- Gear on home header opens settings. `bottomSheetTheme` now uses `c.sheet`
+  (fixes the greenish sheet). `TopicChip` label ellipsizes.
+- Not built: "same phrase in this surah" on the ayah screen (no phrase data in
+  the schema), collections.
+
+## Step 10 (icon, store kit)
+
+- **Icon**: a rub el hizb (۞) outline with a centre disc, scripture green
+  `#20C08D` on the dark canvas `#131313`. Adaptive (foreground + background
+  colour + Android 13 monochrome) plus legacy square/round PNGs.
+- **All graphics are generated** by `flutter test tool/render_assets_test.dart`:
+  launcher mipmaps, `store/icon-512.png`, `store/feature-graphic.png`,
+  `store/screenshots/*.png` (1080×1920, real app on the real DB). It lives in
+  `tool/` so the normal `flutter test` doesn't rewrite assets. **Rerun after
+  step 11** — screenshots currently show the 5-question pilot.
+- **Splash**: window colour = app canvas per system theme (paper / dark), with
+  the Android 12+ system splash on the same colour. No white flash.
+- **Label** "Quran Answers" on Android and iOS `CFBundleName`. iOS icons not
+  done (iOS later).
+- **Release signing** reads `android/key.properties` (gitignored); falls back
+  to the debug key if absent. No keystore exists yet — the author must create
+  it (`store/README.md` has the commands).
+- **Release manifest has no INTERNET permission** (only debug/profile add it),
+  which is what the "collects no data" Data-safety answer rests on. Keep it
+  that way: adding any network plugin changes the privacy policy.
+- `store/`: `listing.md` (Bengali name/short/full description, lengths
+  checked), `privacy-policy.md` (EN + BN, needs date + email + hosting),
+  `README.md` (build, Data safety and content-rating answers, 12-tester /
+  14-day closed-test rule for new accounts).
+
 ## Content status
 
 5 questions, 11 citations, 3 categories. Translation 163, Sheikh Mujibur Rahman
@@ -183,9 +239,9 @@ history with a confirmed clear. Bottom sheets use the default M3 surface,
 which reads slightly green on the paper theme; set `bottomSheetTheme` if it
 bothers.
 
-Design screens still to build: collections,
-ayah screen with prev/next and "same phrase in this surah", settings with
-Arabic/Bengali size sliders, methodology bottom sheet (9).
+Design screens still to build: collections, "same phrase in this surah". The
+ayah, settings and about screens were built without re-reading the `.dc.html`;
+compare against it when convenient.
 
 Design features the **schema cannot yet feed** — need content fields before
 they can be built honestly:
@@ -211,8 +267,6 @@ tearDown otherwise deadlocks.
 
 | Step | Work |
 |---|---|
-| 9 | Standalone ayah screen (`/ayah/:surah/:ayah`, context verses via `ayahWindow`, prev/next, questions citing it — `questionsCiting` exists), settings (theme, Arabic/Bengali size), about + credits (fonts OFL + translation), methodology bottom sheet, settings gear on home. Topics and surahs tabs already exist. |
-| 10 | Dark/light setting, app icon, Play Store assets |
 | 11 | Full content migration from the user's original `.docx`/`.pdf` |
 
 Arabic needs `textDirection: TextDirection.rtl` and `height: >= 1.9` or
@@ -240,5 +294,7 @@ punctuation and the overlapping surah names. Web can't run the app (native SQLit
 ## Still needed from the user
 
 1. The original `.docx`/`.pdf` for the real content migration.
-2. ~~Package id~~ — now `com.fuad.quran_answers` (iOS `com.fuad.quranAnswers`). App name stays Quran Answers.
-3. ~~Device check~~ — user confirmed Bengali and Arabic render correctly on device.
+2. Upload keystore + `android/key.properties`, contact email, privacy-policy
+   hosting URL (see `store/README.md`).
+3. ~~Package id~~ — now `com.fuad.quran_answers` (iOS `com.fuad.quranAnswers`). App name stays Quran Answers.
+4. ~~Device check~~ — user confirmed Bengali and Arabic render correctly on device.

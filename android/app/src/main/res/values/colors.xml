@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The design's dark canvas, behind the launcher mark in every theme. -->
+    <color name="ic_launcher_background">#131313</color>
+    <!-- Window colour while Flutter starts: the app's own canvas, so launch
+         does not flash white. Light is the "paper" theme. -->
+    <color name="launch_background">#F4F1EA</color>
+</resources>

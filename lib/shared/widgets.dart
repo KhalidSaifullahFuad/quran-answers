@@ -173,41 +173,53 @@ class SearchFieldButton extends StatelessWidget {
   }
 }
 
-/// A topic shortcut in the home carousel.
+/// A pill with an icon: a topic shortcut on home, a folder filter on the saved
+/// tab.
 class TopicChip extends StatelessWidget {
   const TopicChip({
     super.key,
     required this.label,
     required this.icon,
     this.onTap,
+    this.onLongPress,
+    this.selected = false,
   });
 
   final String label;
   final IconData icon;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
     final c = AppColors.of(context);
-    return Material(
-      color: c.track,
-      shape: const StadiumBorder(),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          height: 35,
-          padding: const EdgeInsets.fromLTRB(12, 0, 16, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 18, color: c.fg2),
-              const SizedBox(width: 10),
-              Text(
-                label,
-                style: AppText.of(context).pill.copyWith(fontSize: 14),
-              ),
-            ],
+    return Semantics(
+      selected: selected,
+      child: Material(
+        color: selected ? c.selected : c.track,
+        shape: const StadiumBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Container(
+            height: 35,
+            padding: const EdgeInsets.fromLTRB(12, 0, 16, 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 18, color: selected ? c.fg1 : c.fg2),
+                const SizedBox(width: 10),
+                Text(
+                  label,
+                  style: AppText.of(context).pill.copyWith(
+                    fontSize: 14,
+                    fontWeight: selected ? FontWeight.w600 : null,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -245,12 +257,16 @@ class QuestionTile extends StatelessWidget {
     required this.meta,
     this.onTap,
     this.inset = Space.gutter,
+    this.trailing,
   });
 
   final IconData icon;
   final String title;
   final String meta;
   final VoidCallback? onTap;
+
+  /// Shown at the end of the row, e.g. a button to file it into a folder.
+  final Widget? trailing;
 
   /// Horizontal padding. Zero when the parent already pads by the gutter.
   final double inset;
@@ -283,6 +299,7 @@ class QuestionTile extends StatelessWidget {
                 ],
               ),
             ),
+            ?trailing,
           ],
         ),
       ),

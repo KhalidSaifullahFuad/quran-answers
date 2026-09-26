@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/app.dart';
+import 'package:quran_answers/core/db/content_db.dart';
 import 'package:quran_answers/core/db/content_search.dart';
 import 'package:quran_answers/core/db/database_providers.dart';
 import 'package:quran_answers/core/strings.dart';
@@ -198,6 +199,9 @@ void main() {
       await container.read(surahsProvider.future);
       await container.read(recentSlugsProvider.future);
       await container.read(bookmarkedSlugsProvider.future);
+      await container.read(bookmarksProvider.future);
+      await container.read(foldersProvider.future);
+      await container.read(savedAyahsProvider.future);
       final featured = questionOfTheDay(index.questions, today)!;
       await container.read(questionDetailProvider(featured.slug).future);
     });
@@ -252,6 +256,10 @@ void main() {
     await tester.runAsync(() async {
       results = container.listen(searchResultsProvider(query), (_, _) {});
       await container.read(searchResultsProvider(query).future);
+      final ayah = (await container.read(
+        searchResultsProvider(query).future,
+      )).refAyah!;
+      await container.read(isAyahBookmarkedProvider(ayah.id).future);
     });
     addTearDown(() => results.close());
 
@@ -271,4 +279,84 @@ void main() {
     expect(find.text(Strings.citingThisAyah), findsOne);
     expect(find.text(index.bySlug('muddakkir-al-qamar')!.questionBn), findsOne);
   });
+
+  testWidgets(
+    'the saved tab lists questions and verses and filters by folder',
+    (tester) async {
+      late QuestionIndex index;
+      late int folder;
+      await tester.runAsync(() async {
+        final db = await container.read(userDatabaseProvider.future);
+        await db.toggleBookmark('naba-azeem');
+        await db.toggleBookmark('muddakkir-al-qamar');
+        await db.toggleAyahBookmark(ayahId(54, 15));
+        folder = await db.createFolder('ফোল্ডার ক');
+        await db.moveAyahBookmark(ayahId(54, 15), folder);
+
+        index = await container.read(questionIndexProvider.future);
+        await container.read(surahsProvider.future);
+        await container.read(recentSlugsProvider.future);
+        await container.read(bookmarkedSlugsProvider.future);
+        await container.read(bookmarksProvider.future);
+        await container.read(foldersProvider.future);
+        await container.read(savedAyahsProvider.future);
+        await container.read(isAyahBookmarkedProvider(ayahId(54, 15)).future);
+        final featured = questionOfTheDay(index.questions, today)!;
+        await container.read(questionDetailProvider(featured.slug).future);
+      });
+
+      await pumpApp(tester);
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AppBottomNav),
+          matching: find.text(AppTab.saved.label),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      final naba = index.bySlug('naba-azeem')!.questionBn;
+      expect(find.text(naba), findsOne);
+      expect(find.byType(AyahCard), findsOne);
+      expect(find.text(Strings.savedQuestions), findsOne);
+
+      // Only the verse is in the folder.
+      await tester.tap(find.text('ফোল্ডার ক'));
+      await tester.pump();
+      expect(find.text(naba), findsNothing);
+      expect(find.byType(AyahCard), findsOne);
+      // A folder holding no questions shows no empty questions section.
+      expect(find.text(Strings.savedQuestions), findsNothing);
+
+      await tester.tap(find.text(Strings.allFolders));
+      await tester.pump();
+
+      expect(find.text(naba), findsOne);
+
+      // File the unfiled question into the folder through the picker.
+      final row = find.ancestor(
+        of: find.text(index.bySlug('muddakkir-al-qamar')!.questionBn),
+        matching: find.byType(QuestionTile),
+      );
+      await tester.tap(
+        find.descendant(
+          of: row,
+          matching: find.byTooltip(Strings.moveToFolder),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.text(Strings.noFolder), findsOne);
+      await tester.tap(find.text('ফোল্ডার ক').last);
+      await tester.pump(const Duration(milliseconds: 600));
+      final db = container.read(userDatabaseProvider).value!;
+      await drain(tester, () async {
+        final marks = await db.watchBookmarks().first;
+        return marks.any(
+          (b) => b.questionSlug == 'muddakkir-al-qamar' && b.folderId == folder,
+        );
+      });
+      await unmount(tester);
+    },
+  );
 }

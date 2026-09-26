@@ -40,6 +40,27 @@ abstract final class Strings {
   static const savedEmpty =
       'প্রশ্নের পাতায় বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
   static const historyEmpty = 'এখনো কোনো প্রশ্ন পড়া হয়নি।';
+  static const savedQuestions = 'সংরক্ষিত প্রশ্ন';
+  static const savedAyat = 'সংরক্ষিত আয়াত';
+  static const savedAyatEmpty =
+      'আয়াতের কার্ডে বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
+  static const folderEmpty = 'এই ফোল্ডারে এখনো কিছু রাখা হয়নি।';
+  static const bookmarkAyah = 'আয়াত সংরক্ষণ';
+  static const ayahBookmarked = 'আয়াতটি সংরক্ষিত হয়েছে';
+  static const ayahUnbookmarked = 'আয়াতটি সংরক্ষিত তালিকা থেকে সরানো হয়েছে';
+  static const allFolders = 'সব';
+  static const newFolder = 'নতুন ফোল্ডার';
+  static const folderName = 'ফোল্ডারের নাম';
+  static const moveToFolder = 'ফোল্ডারে রাখুন';
+  static const noFolder = 'কোনো ফোল্ডারে নয়';
+  static const renameFolder = 'নাম বদলান';
+  static const deleteFolder = 'ফোল্ডার মুছুন';
+  static const clearHistory = 'ইতিহাস মুছুন';
+  static const clearHistoryConfirm =
+      'পড়ার ইতিহাস মুছে ফেলবেন? সংরক্ষিত প্রশ্ন ও আয়াত থাকবে।';
+  static const cancel = 'বাতিল';
+  static const save = 'রাখুন';
+  static const delete = 'মুছুন';
 
   static const searchPrompt =
       'প্রশ্নের শব্দ, আরবি বা বাংলা শব্দ, অথবা আয়াত নম্বর (৫৪:১৫) লিখুন।';
@@ -52,6 +73,9 @@ abstract final class Strings {
   static String questionCount(String n) => '$nটি প্রশ্ন';
   static String ayahCount(String n) => '$nটি আয়াত';
   static String ayatInSurah(String n) => '$n আয়াত';
+  static String deleteFolderConfirm(String name) =>
+      '“$name” ফোল্ডারটি মুছে ফেলবেন? ভেতরের প্রশ্ন ও আয়াত সংরক্ষিতই থাকবে, '
+      'শুধু ফোল্ডারের বাইরে চলে যাবে।';
   static String noSuchAyah(String surah, String ayah) =>
       'সূরা $surah-এ $ayah নম্বর আয়াত নেই।';
   static String firstOfTotal(String shown, String total) =>

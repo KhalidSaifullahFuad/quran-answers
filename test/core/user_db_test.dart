@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/core/db/user_db.dart';
@@ -92,4 +93,119 @@ void main() {
       expect(await db.bookmarkedSlugs(), ['naba-azeem']);
     });
   });
+
+  group('verse bookmarks', () {
+    test('toggling adds, then removes, newest first', () async {
+      expect(await db.toggleAyahBookmark(54015), isTrue);
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+      expect(await db.toggleAyahBookmark(78002), isTrue);
+      expect((await db.watchAyahBookmarks().first).map((b) => b.ayahId), [
+        78002,
+        54015,
+      ]);
+
+      expect(await db.toggleAyahBookmark(54015), isFalse);
+      expect((await db.watchAyahBookmarks().first).map((b) => b.ayahId), [
+        78002,
+      ]);
+    });
+
+    test('watchIsAyahBookmarked follows toggles', () async {
+      final states = <bool>[];
+      final sub = db.watchIsAyahBookmarked(54015).listen(states.add);
+      await pumpEventQueue();
+      await db.toggleAyahBookmark(54015);
+      await pumpEventQueue();
+      expect(states, [false, true]);
+      await sub.cancel();
+    });
+  });
+
+  group('folders', () {
+    test('items are filed, moved and unfiled', () async {
+      final a = await db.createFolder('A');
+      final b = await db.createFolder('B');
+      await db.toggleBookmark('naba-azeem');
+      await db.toggleAyahBookmark(54015);
+
+      await db.moveBookmark('naba-azeem', a);
+      await db.moveAyahBookmark(54015, b);
+      expect((await db.watchBookmarks().first).single.folderId, a);
+      expect((await db.watchAyahBookmarks().first).single.folderId, b);
+
+      await db.moveBookmark('naba-azeem', null);
+      expect((await db.watchBookmarks().first).single.folderId, isNull);
+    });
+
+    test('renaming keeps the order folders were made in', () async {
+      final a = await db.createFolder('A');
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+      await db.createFolder('B');
+      await db.renameFolder(a, 'Z');
+      expect((await db.watchFolders().first).map((f) => f.name), ['Z', 'B']);
+    });
+
+    test(
+      'deleting a folder unfiles its items instead of losing them',
+      () async {
+        final a = await db.createFolder('A');
+        await db.toggleBookmark('naba-azeem');
+        await db.toggleAyahBookmark(54015);
+        await db.moveBookmark('naba-azeem', a);
+        await db.moveAyahBookmark(54015, a);
+
+        await db.deleteFolder(a);
+
+        expect(await db.watchFolders().first, isEmpty);
+        expect((await db.watchBookmarks().first).single.folderId, isNull);
+        expect((await db.watchAyahBookmarks().first).single.folderId, isNull);
+      },
+    );
+  });
+
+  test(
+    'a schema 1 file upgrades and keeps its bookmarks and history',
+    () async {
+      // A second database beside setUp's, on its own executor: drift's warning
+      // about duplicate instances does not apply.
+      driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
+      addTearDown(
+        () => driftRuntimeOptions.dontWarnAboutMultipleDatabases = false,
+      );
+      // The exact tables schema 1 created, as already on the author's device.
+      final old = UserDatabase(
+        NativeDatabase.memory(
+          setup: (raw) {
+            raw.execute(
+              'CREATE TABLE bookmarks (question_slug TEXT NOT NULL, '
+              'created_at TEXT NOT NULL, PRIMARY KEY (question_slug))',
+            );
+            raw.execute(
+              'CREATE TABLE reading_history (question_slug TEXT NOT NULL, '
+              'viewed_at TEXT NOT NULL, PRIMARY KEY (question_slug))',
+            );
+            raw.execute(
+              "INSERT INTO bookmarks VALUES ('naba-azeem', "
+              "'2026-09-20T10:00:00.000')",
+            );
+            raw.execute(
+              "INSERT INTO reading_history VALUES ('naba-azeem', "
+              "'2026-09-20T10:00:00.000')",
+            );
+            raw.execute('PRAGMA user_version = 1');
+          },
+        ),
+      );
+      addTearDown(old.close);
+
+      expect(await old.bookmarkedSlugs(), ['naba-azeem']);
+      expect(await old.recentSlugs(), ['naba-azeem']);
+      final folder = await old.createFolder('A');
+      await old.moveBookmark('naba-azeem', folder);
+      expect((await old.watchBookmarks().first).single.folderId, folder);
+      expect(await old.toggleAyahBookmark(54015), isTrue);
+      final version = await old.customSelect('PRAGMA user_version').getSingle();
+      expect(version.data.values.single, 2);
+    },
+  );
 }

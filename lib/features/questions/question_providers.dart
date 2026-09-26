@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
 import '../../core/db/database_providers.dart';
+import '../../core/db/user_db.dart';
 import '../../shared/references.dart';
 
 /// Read-model providers shared by the home, category and question screens.
@@ -121,6 +122,41 @@ final isBookmarkedProvider = StreamProvider.family<bool, String>((
 ) async* {
   final db = await ref.watch(userDatabaseProvider.future);
   yield* db.watchIsBookmarked(slug);
+});
+
+/// Saved questions with their folder, most recently added first.
+final bookmarksProvider = StreamProvider<List<Bookmark>>((ref) async* {
+  final db = await ref.watch(userDatabaseProvider.future);
+  yield* db.watchBookmarks();
+});
+
+/// Saved verses with their folder, most recently added first.
+final ayahBookmarksProvider = StreamProvider<List<AyahBookmark>>((ref) async* {
+  final db = await ref.watch(userDatabaseProvider.future);
+  yield* db.watchAyahBookmarks();
+});
+
+final isAyahBookmarkedProvider = StreamProvider.family<bool, int>((
+  ref,
+  ayahId,
+) async* {
+  final db = await ref.watch(userDatabaseProvider.future);
+  yield* db.watchIsAyahBookmarked(ayahId);
+});
+
+final foldersProvider = StreamProvider<List<Folder>>((ref) async* {
+  final db = await ref.watch(userDatabaseProvider.future);
+  yield* db.watchFolders();
+});
+
+/// The saved verses themselves, resolved from the content database.
+///
+/// Recomputed whenever the saved set changes: the two live in different
+/// database files, so this cannot be a join.
+final savedAyahsProvider = FutureProvider<Map<int, Ayah>>((ref) async {
+  final saved = await ref.watch(ayahBookmarksProvider.future);
+  final db = await ref.watch(contentDatabaseProvider.future);
+  return db.ayahsByIds(saved.map((b) => b.ayahId));
 });
 
 /// Today's date. A provider so a test can pin the featured question.

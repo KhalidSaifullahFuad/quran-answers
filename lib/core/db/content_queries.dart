@@ -103,6 +103,14 @@ extension ContentQueries on ContentDatabase {
     ayahs,
   )..where((a) => a.id.equals(ayahId(surah, ayah)))).getSingleOrNull();
 
+  /// Verses for the given ids, keyed by id. Ids with no verse are left out.
+  Future<Map<int, Ayah>> ayahsByIds(Iterable<int> ids) async {
+    final wanted = ids.toSet().toList();
+    if (wanted.isEmpty) return const {};
+    final rows = await (select(ayahs)..where((a) => a.id.isIn(wanted))).get();
+    return {for (final a in rows) a.id: a};
+  }
+
   /// An ayah with up to [context] verses either side, for the ayah screen.
   ///
   /// Clamped to the surah, so the window never runs into the previous or next

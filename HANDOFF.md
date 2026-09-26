@@ -1,8 +1,8 @@
 # Handoff — Quran Answers app
 
-Steps 1–7 of the plan are done, plus the bottom navigation and the topics /
-surahs / saved tabs pulled forward from steps 8–9. **Next is step 8 (saved tab
-polish).** 91 tests passing.
+Steps 1–8 of the plan are done, plus the topics / surahs tabs pulled forward
+from step 9. **Next is step 9 (ayah screen, settings, about).** 98 tests
+passing.
 
 The uncommitted `lib/web_preview*.dart`, `native_opener*.dart` and the edits to
 `main.dart` / `database_providers.dart` are a temporary Chrome preview on static
@@ -69,7 +69,7 @@ The shipped app makes **zero network calls**.
 cd D:/DEVELOPMENT/HOME_WORKSPACE/quran-answers
 
 flutter analyze
-flutter test                          # 91 tests, all passing
+flutter test                          # 98 tests, all passing
 
 dart run tool/validate_content.dart   # check content before building
 dart run tool/build_db.dart           # rebuild assets/db/content.db + .version
@@ -88,8 +88,8 @@ lib/core/db/content_db.dart       DB class, ayahId(), FTS table DDL + tokenizer
 lib/core/db/content_queries.dart  reads: question detail, ayah windows, etc.
 lib/core/db/content_search.dart   parseAyahRef, ftsMatchExpression, search()
 lib/core/db/content_store.dart    copies the asset out of the bundle
-lib/core/db/user_tables.dart      bookmarks, reading_history
-lib/core/db/user_db.dart          toggleBookmark, recordView, recentSlugs
+lib/core/db/user_tables.dart      bookmarks, ayah_bookmarks, folders, reading_history
+lib/core/db/user_db.dart          schema 2 + migration; bookmarks, verse bookmarks, folders, history
 lib/core/db/database_providers.dart  Riverpod wiring
 lib/app.dart                      MaterialApp.router + go_router routes
 lib/core/theme/                   AppColors / AppText ThemeExtensions (design tokens)
@@ -128,6 +128,18 @@ test/widget_test.dart             app boot, question detail, tab switching, sear
   syntax. A bare Arabic word also tries the article-prefixed form, so qamar
   finds al-qamar. Verse hits are capped at 50 with a separate total. Other
   attached Arabic prefixes (wa, fa, bi, li) are **not** handled.
+- **User DB schema 2** adds `ayah_bookmarks` (keyed by ayah id, which is
+  stable across content releases) and `folders`, plus nullable `folder_id` on
+  both bookmark tables. One folder per item. No SQL foreign keys (they need a
+  per-connection pragma); `deleteFolder` unfiles its items in a transaction.
+  `onUpgrade` from 1 is tested against the exact v1 DDL.
+- **Every new user-DB stream provider a screen watches must be pre-resolved in
+  widget tests** (`bookmarksProvider`, `foldersProvider`, `savedAyahsProvider`,
+  `isAyahBookmarkedProvider(id)` for each visible AyahCard), or tearDown hangs.
+- **In UI handlers, open sheets/dialogs before awaiting a provider future.**
+  Awaiting `userDatabaseProvider.future` first stalls in widget tests (future
+  from the real zone) so the sheet never opens. The folder picker captures
+  `ProviderScope.containerOf` up front, since filing can remove the row.
 - **Auto-dispose providers in widget tests:** `container.listen(...)` must also
   run inside `runAsync`, or the query starts on the fake clock and hangs.
 - **Writing Dart via shell heredocs mangles backslashes** and Edit anchors fail
@@ -164,7 +176,14 @@ Search screen was built from existing primitives without re-reading the
 compare against the design's search layout when convenient. Ayah results are
 not tappable yet — wire them to `/ayah/:surah/:ayah` in step 9.
 
-Design screens still to build: saved ayat + folders (8), collections,
+The saved tab (step 8) was also built without the `.dc.html`: folder chips
+(tap filters, long-press renames/deletes), saved questions with a file-into-
+folder button, saved verses (`AyahCard` now has a bookmark toggle everywhere),
+history with a confirmed clear. Bottom sheets use the default M3 surface,
+which reads slightly green on the paper theme; set `bottomSheetTheme` if it
+bothers.
+
+Design screens still to build: collections,
 ayah screen with prev/next and "same phrase in this surah", settings with
 Arabic/Bengali size sliders, methodology bottom sheet (9).
 
@@ -192,7 +211,6 @@ tearDown otherwise deadlocks.
 
 | Step | Work |
 |---|---|
-| 8 | Saved tab polish: ayah bookmarks (needs a user-db table), folders, clear history. Question bookmarks + history list already work. |
 | 9 | Standalone ayah screen (`/ayah/:surah/:ayah`, context verses via `ayahWindow`, prev/next, questions citing it — `questionsCiting` exists), settings (theme, Arabic/Bengali size), about + credits (fonts OFL + translation), methodology bottom sheet, settings gear on home. Topics and surahs tabs already exist. |
 | 10 | Dark/light setting, app icon, Play Store assets |
 | 11 | Full content migration from the user's original `.docx`/`.pdf` |

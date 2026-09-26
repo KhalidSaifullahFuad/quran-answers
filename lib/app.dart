@@ -6,21 +6,63 @@ import 'core/theme/theme.dart';
 import 'features/home/home_screen.dart';
 import 'features/questions/category_screen.dart';
 import 'features/questions/question_screen.dart';
+import 'features/saved/saved_screen.dart';
+import 'features/surahs/surahs_screen.dart';
+import 'features/topics/topics_screen.dart';
+import 'shared/navigation.dart';
+
+/// Opened from any tab, and registered under each of them so the bottom bar
+/// stays visible and back returns to that tab's own screen.
+List<RouteBase> _detailRoutes() => [
+  GoRoute(
+    path: 'question/:slug',
+    builder: (context, state) =>
+        QuestionScreen(slug: state.pathParameters['slug']!),
+  ),
+  GoRoute(
+    path: 'category/:id',
+    builder: (context, state) =>
+        CategoryScreen(categoryId: state.pathParameters['id']!),
+  ),
+  GoRoute(
+    path: 'surah/:number',
+    builder: (context, state) => SurahQuestionsScreen(
+      number: int.parse(state.pathParameters['number']!),
+    ),
+  ),
+];
 
 /// Routes are paths, so a question or category can later be opened from a
 /// share link or a notification without a separate lookup.
 GoRouter buildRouter() => GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
-    GoRoute(
-      path: '/category/:id',
-      builder: (context, state) =>
-          CategoryScreen(categoryId: state.pathParameters['id']!),
-    ),
-    GoRoute(
-      path: '/question/:slug',
-      builder: (context, state) =>
-          QuestionScreen(slug: state.pathParameters['slug']!),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, shell) => Scaffold(
+        body: shell,
+        bottomNavigationBar: AppBottomNav(
+          current: shell.currentIndex,
+          // Tapping the current tab again returns it to its first screen.
+          onTap: (i) =>
+              shell.goBranch(i, initialLocation: i == shell.currentIndex),
+        ),
+      ),
+      branches: [
+        for (final tab in AppTab.values)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: tab.path,
+                builder: (context, state) => switch (tab) {
+                  AppTab.home => const HomeScreen(),
+                  AppTab.topics => const TopicsScreen(),
+                  AppTab.surahs => const SurahsScreen(),
+                  AppTab.saved => const SavedScreen(),
+                },
+                routes: _detailRoutes(),
+              ),
+            ],
+          ),
+      ],
     ),
   ],
 );

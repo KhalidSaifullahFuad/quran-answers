@@ -358,3 +358,47 @@ class AsyncBody<T> extends StatelessWidget {
     };
   }
 }
+
+/// A surah number in the design's vertical hexagon.
+class HexBadge extends StatelessWidget {
+  const HexBadge({super.key, required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.of(context);
+    return ClipPath(
+      clipper: const _HexClipper(),
+      child: Container(
+        width: 33,
+        height: 36,
+        color: c.raised,
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: AppText.of(context).pill.copyWith(fontSize: 13.5, height: 1.1),
+        ),
+      ),
+    );
+  }
+}
+
+/// `polygon(50% 0, 96% 25%, 96% 75%, 50% 100%, 4% 75%, 4% 25%)` from the
+/// design tokens.
+class _HexClipper extends CustomClipper<Path> {
+  const _HexClipper();
+
+  @override
+  Path getClip(Size s) => Path()
+    ..moveTo(s.width * .5, 0)
+    ..lineTo(s.width * .96, s.height * .25)
+    ..lineTo(s.width * .96, s.height * .75)
+    ..lineTo(s.width * .5, s.height)
+    ..lineTo(s.width * .04, s.height * .75)
+    ..lineTo(s.width * .04, s.height * .25)
+    ..close();
+
+  @override
+  bool shouldReclip(_HexClipper oldClipper) => false;
+}

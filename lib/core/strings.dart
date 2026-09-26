@@ -25,6 +25,22 @@ abstract final class Strings {
   static const notFound = 'প্রশ্নটি পাওয়া যায়নি';
   static const loadFailed = 'তথ্য খোলা যায়নি';
 
+  static const navHome = 'হোম';
+  static const navTopics = 'বিষয়';
+  static const navSurahs = 'সূরা';
+  static const navSaved = 'সংরক্ষিত';
+
+  static const surahsTitle = 'সূরা থেকে প্রশ্ন';
+  static const surahsIntro =
+      'যে সূরার আয়াত কোনো প্রশ্নের প্রমাণ হিসেবে এসেছে, সেগুলো এখানে।';
+  static const surahQuestionsNote = 'এই সূরার আয়াত যেসব প্রশ্নের প্রমাণ';
+  static const makki = 'মাক্কী';
+  static const madani = 'মাদানী';
+  static const readingHistory = 'পড়ার ইতিহাস';
+  static const savedEmpty =
+      'প্রশ্নের পাতায় বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
+  static const historyEmpty = 'এখনো কোনো প্রশ্ন পড়া হয়নি।';
+
   static String questionCount(String n) => '$nটি প্রশ্ন';
   static String ayahCount(String n) => '$nটি আয়াত';
   static String ayatInSurah(String n) => '$n আয়াত';

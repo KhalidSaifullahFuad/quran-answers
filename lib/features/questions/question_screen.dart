@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
@@ -9,6 +8,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/navigation.dart';
 import '../../shared/references.dart';
 import '../../shared/widgets.dart';
 import 'question_providers.dart';
@@ -185,7 +185,7 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
                 icon: categoryIcon(r.category),
                 title: r.questionBn,
                 meta: refsSummary(index!.citationsOf(r)),
-                onTap: () => context.push('/question/${r.slug}'),
+                onTap: () => context.openQuestion(r.slug),
                 inset: 0,
               ),
           ],

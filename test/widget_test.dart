@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/app.dart';
 import 'package:quran_answers/core/db/database_providers.dart';
+import 'package:quran_answers/core/strings.dart';
 import 'package:quran_answers/core/text/numerals.dart';
 import 'package:quran_answers/features/questions/question_providers.dart';
+import 'package:quran_answers/shared/navigation.dart';
 import 'package:quran_answers/shared/widgets.dart';
 
 /// Boots the app the way a device does: the real asset is copied out of the
@@ -184,5 +186,49 @@ void main() {
     );
 
     await unmount(tester);
+  });
+
+  testWidgets('the bottom bar switches between the four tabs', (tester) async {
+    late QuestionIndex index;
+    await tester.runAsync(() async {
+      index = await container.read(questionIndexProvider.future);
+      await container.read(surahsProvider.future);
+      await container.read(recentSlugsProvider.future);
+      await container.read(bookmarkedSlugsProvider.future);
+      final featured = questionOfTheDay(index.questions, today)!;
+      await container.read(questionDetailProvider(featured.slug).future);
+    });
+
+    await pumpApp(tester);
+    final nav = find.byType(AppBottomNav);
+    expect(nav, findsOne);
+    for (final tab in AppTab.values) {
+      expect(
+        find.descendant(of: nav, matching: find.text(tab.label)),
+        findsOne,
+      );
+    }
+
+    Future<void> openTab(AppTab tab) async {
+      await tester.tap(
+        find.descendant(of: nav, matching: find.text(tab.label)),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+
+    await openTab(AppTab.topics);
+    for (final c in index.categories.values) {
+      expect(find.text(c.nameBn), findsOne, reason: 'topic card ${c.id}');
+    }
+
+    await openTab(AppTab.surahs);
+    expect(find.text(Strings.surahsTitle), findsOne);
+    // 54 (Al-Qamar) is cited, so it is listed, badge in Bengali digits.
+    expect(find.text(bnDigits(54)), findsOne);
+
+    await openTab(AppTab.saved);
+    expect(find.text(Strings.savedEmpty), findsOne);
+    expect(find.text(Strings.historyEmpty), findsOne);
   });
 }

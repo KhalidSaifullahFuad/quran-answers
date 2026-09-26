@@ -52,7 +52,33 @@ class QuestionIndex {
   ];
 
   List<int> citationsOf(Question q) => citations[q.slug] ?? const [];
+
+  /// Questions citing at least one ayah of [surah], in authored order.
+  List<Question> citingSurah(int surah) => [
+    for (final q in questions)
+      if (citationsOf(q).any((id) => surahOfAyahId(id) == surah)) q,
+  ];
+
+  /// Surah numbers that some question cites, ascending, with how many
+  /// questions cite each.
+  Map<int, int> citedSurahs() {
+    final counts = <int, int>{};
+    for (final q in questions) {
+      for (final s in {for (final id in citationsOf(q)) surahOfAyahId(id)}) {
+        counts[s] = (counts[s] ?? 0) + 1;
+      }
+    }
+    return Map.fromEntries(
+      counts.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+    );
+  }
 }
+
+final surahsProvider = FutureProvider<Map<int, Surah>>((ref) async {
+  final db = await ref.watch(contentDatabaseProvider.future);
+  final rows = await db.allSurahs();
+  return {for (final s in rows) s.number: s};
+});
 
 final questionIndexProvider = FutureProvider<QuestionIndex>((ref) async {
   final (questions, categories, citations) = await (
@@ -72,7 +98,13 @@ final questionDetailProvider =
 /// Most recently opened question slugs, newest first.
 final recentSlugsProvider = StreamProvider<List<String>>((ref) async* {
   final db = await ref.watch(userDatabaseProvider.future);
-  yield* db.watchRecentSlugs(limit: 5);
+  yield* db.watchRecentSlugs(limit: 20);
+});
+
+/// Bookmarked question slugs, most recently added first.
+final bookmarkedSlugsProvider = StreamProvider<List<String>>((ref) async* {
+  final db = await ref.watch(userDatabaseProvider.future);
+  yield* db.watchBookmarkedSlugs().map((slugs) => slugs.toList());
 });
 
 final isBookmarkedProvider = StreamProvider.family<bool, String>((

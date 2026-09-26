@@ -88,7 +88,8 @@ lib/core/theme/                   AppColors / AppText ThemeExtensions (design to
 lib/core/strings.dart             UI chrome labels only — never content
 lib/core/text/numerals.dart       Bengali/Arabic digits, ayah end mark, Bengali date
 lib/shared/                       design primitives (widgets.dart), citation labels
-lib/features/home|questions/      home, category list, question detail
+lib/shared/navigation.dart        AppTab, bottom bar, tab-relative openQuestion/Category/Surah
+lib/features/                     home, topics, surahs, saved (tabs); category, surah, question
 tool/                             fetch_quran, validate_content, build_db
 test/core/                        6 test files
 ```
@@ -135,9 +136,14 @@ describes a different, English, dark-only app). Tokens now live in
 `lib/core/theme/`. Dark is the design default; the light "paper" palette comes
 from the `.dc.html`. `themeMode` follows the system until settings exist.
 
-Design screens still to build: search (7), saved + history (8), topics, surah
-index, ayah screen with prev/next and "same phrase in this surah", settings with
-Arabic/Bengali size sliders, methodology bottom sheet, bottom nav (9).
+Bottom nav is a `StatefulShellRoute` with four branches (হোম / বিষয় / সূরা /
+সংরক্ষিত). Detail routes are registered under every branch so the bar stays
+visible; always navigate with `context.openQuestion()` etc., never a bare
+`push('/question/..')`, or the screen lands in the wrong tab.
+
+Design screens still to build: search (7), saved ayat + folders (8), collections,
+ayah screen with prev/next and "same phrase in this surah", settings with
+Arabic/Bengali size sliders, methodology bottom sheet (9).
 
 Design features the **schema cannot yet feed** — need content fields before
 they can be built honestly:
@@ -177,5 +183,5 @@ renders at 360dp using the bundled fonts, not on a device.
 ## Still needed from the user
 
 1. The original `.docx`/`.pdf` for the real content migration.
-2. App name and final package id (currently `com.hastech.quran_answers`).
-3. A physical Android device for step 6 verification.
+2. ~~Package id~~ — now `com.fuad.quran_answers` (iOS `com.fuad.quranAnswers`). App name stays Quran Answers.
+3. ~~Device check~~ — user confirmed Bengali and Arabic render correctly on device.

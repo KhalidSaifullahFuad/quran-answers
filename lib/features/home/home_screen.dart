@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/navigation.dart';
 import '../../shared/references.dart';
 import '../../shared/widgets.dart';
 import '../questions/question_providers.dart';
@@ -82,7 +82,7 @@ class _Body extends ConsumerWidget {
             icon: Icons.history_rounded,
             title: lastRead.questionBn,
             meta: _meta(index, lastRead),
-            onTap: () => context.push('/question/${lastRead.slug}'),
+            onTap: () => context.openQuestion(lastRead.slug),
           ),
         ],
         const SizedBox(height: 26),
@@ -100,7 +100,7 @@ class _Body extends ConsumerWidget {
                 TopicChip(
                   label: c.nameBn,
                   icon: categoryIcon(c.id),
-                  onTap: () => context.push('/category/${c.id}'),
+                  onTap: () => context.openCategory(c.id),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -121,7 +121,7 @@ class _Body extends ConsumerWidget {
             icon: categoryIcon(q.category),
             title: q.questionBn,
             meta: _meta(index, q),
-            onTap: () => context.push('/question/${q.slug}'),
+            onTap: () => context.openQuestion(q.slug),
           ),
       ],
     );
@@ -155,7 +155,7 @@ class _FeaturedCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(Space.radiusCard),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => context.push('/question/${question.slug}'),
+          onTap: () => context.openQuestion(question.slug),
           child: Padding(
             padding: const EdgeInsets.all(18),
             child: Column(

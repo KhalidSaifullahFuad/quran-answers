@@ -4,17 +4,25 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quran_answers/app.dart';
 import 'package:quran_answers/core/db/content_db.dart';
 import 'package:quran_answers/core/db/content_search.dart';
 import 'package:quran_answers/core/db/database_providers.dart';
 import 'package:quran_answers/core/strings.dart';
 import 'package:quran_answers/core/text/numerals.dart';
+import 'package:quran_answers/core/theme/typography.dart';
+import 'package:quran_answers/features/about/about_screen.dart';
+import 'package:quran_answers/features/ayah/ayah_screen.dart';
+import 'package:quran_answers/features/home/home_screen.dart';
 import 'package:quran_answers/features/questions/question_providers.dart';
 import 'package:quran_answers/features/search/search_screen.dart';
+import 'package:quran_answers/features/settings/settings_provider.dart';
+import 'package:quran_answers/features/settings/settings_screen.dart';
 import 'package:quran_answers/shared/ayah_card.dart';
 import 'package:quran_answers/shared/navigation.dart';
 import 'package:quran_answers/shared/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Boots the app the way a device does: the real asset is copied out of the
 /// bundle, opened, and queried. Only the target directory, the opener and the
@@ -29,12 +37,16 @@ import 'package:quran_answers/shared/widgets.dart';
 void main() {
   late Directory directory;
   late ProviderContainer container;
+  late SharedPreferences prefs;
   final today = DateTime(2026, 9, 23);
 
-  setUp(() {
+  setUp(() async {
     directory = Directory.systemTemp.createTempSync('app_test');
+    SharedPreferences.setMockInitialValues({});
+    prefs = await SharedPreferences.getInstance();
     container = ProviderContainer(
       overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
         appDirectoryProvider.overrideWith((ref) async => directory),
         databaseOpenerProvider.overrideWithValue(NativeDatabase.new),
         todayProvider.overrideWithValue(today),
@@ -69,6 +81,22 @@ void main() {
     // Not pumpAndSettle: a loading state is an indeterminate spinner, which
     // animates forever. One frame is enough once providers are resolved.
     await tester.pump();
+  }
+
+  /// Navigates the home tab to [path], as a tap on a link there would.
+  Future<void> goTo(WidgetTester tester, String path) async {
+    GoRouter.of(tester.element(find.byType(HomeScreen))).go(path);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+  }
+
+  /// Resolves what the home screen watches, so the app boots straight to it.
+  Future<QuestionIndex> resolveHome() async {
+    final index = await container.read(questionIndexProvider.future);
+    await container.read(recentSlugsProvider.future);
+    final featured = questionOfTheDay(index.questions, today)!;
+    await container.read(questionDetailProvider(featured.slug).future);
+    return index;
   }
 
   /// Runs fake frames and real-time slices alternately until [done] holds.
@@ -359,4 +387,169 @@ void main() {
       await unmount(tester);
     },
   );
+
+  testWidgets(
+    'an ayah opens with its context, neighbours and citing questions',
+    (tester) async {
+      late QuestionIndex index;
+      late AyahPage page;
+      late AyahPage next;
+      await tester.runAsync(() async {
+        index = await resolveHome();
+        page = (await container.read(
+          ayahPageProvider((surah: 54, ayah: 15)).future,
+        ))!;
+        next = (await container.read(
+          ayahPageProvider((surah: 54, ayah: 16)).future,
+        ))!;
+        for (final id in [ayahId(54, 15), ayahId(54, 16)]) {
+          await container.read(isAyahBookmarkedProvider(id).future);
+        }
+      });
+      expect(page.before.map((a) => a.ayah), [13, 14]);
+      expect(page.after.map((a) => a.ayah), [16, 17]);
+      expect(page.previous, (surah: 54, ayah: 14));
+      expect(page.next, (surah: 54, ayah: 16));
+
+      await pumpApp(tester);
+      await goTo(tester, '/ayah/54/15');
+
+      // The verse itself is a full card; its neighbours are shown around it.
+      final card = find.byType(AyahCard);
+      expect(card, findsOne);
+      expect(
+        find.descendant(of: card, matching: find.text(page.ayah.translationBn)),
+        findsOne,
+      );
+      for (final a in [...page.before, ...page.after]) {
+        expect(
+          find.text(a.translationBn, skipOffstage: false),
+          findsOne,
+          reason: 'context verse 54:${a.ayah}',
+        );
+      }
+      expect(find.text(Strings.citingThisAyah, skipOffstage: false), findsOne);
+      // Scoped to the ayah screen: home, beneath it, lists the same question.
+      expect(
+        find.descendant(
+          of: find.byType(AyahScreen),
+          matching: find.text(
+            index.bySlug('muddakkir-al-qamar')!.questionBn,
+            skipOffstage: false,
+          ),
+          skipOffstage: false,
+        ),
+        findsOne,
+      );
+
+      final nextButton = find.text(Strings.nextAyah, skipOffstage: false);
+      await tester.ensureVisible(nextButton);
+      await tester.pump();
+      await tester.tap(nextButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(
+        find.descendant(
+          of: find.byType(AyahCard),
+          matching: find.text(next.ayah.translationBn),
+        ),
+        findsOne,
+      );
+    },
+  );
+
+  test('the first and last verses of the mushaf have one neighbour', () async {
+    final first = (await container.read(
+      ayahPageProvider((surah: 1, ayah: 1)).future,
+    ))!;
+    expect(first.previous, isNull);
+    expect(first.next, (surah: 1, ayah: 2));
+
+    final opening = (await container.read(
+      ayahPageProvider((surah: 2, ayah: 1)).future,
+    ))!;
+    expect(opening.previous, (surah: 1, ayah: 7));
+
+    final last = (await container.read(
+      ayahPageProvider((surah: 114, ayah: 6)).future,
+    ))!;
+    expect(last.next, isNull);
+    expect(last.before.map((a) => a.ayah), [4, 5]);
+    expect(last.after, isEmpty);
+
+    expect(
+      await container.read(ayahPageProvider((surah: 1, ayah: 8)).future),
+      isNull,
+    );
+  });
+
+  testWidgets('settings change the theme and text size, and are kept', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      await resolveHome();
+      await container.read(previewAyahProvider.future);
+    });
+
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(Strings.settings));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.byType(SettingsScreen), findsOne);
+
+    await tester.tap(find.text(Strings.themeDark));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(
+      Theme.of(tester.element(find.byType(SettingsScreen))).brightness,
+      Brightness.dark,
+    );
+    expect(prefs.getString('themeMode'), 'dark');
+
+    await container.read(settingsProvider.notifier).setArabicScale(1.4);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    final arabic = tester.widget<Text>(
+      find.descendant(
+        of: find.descendant(
+          of: find.byType(SettingsScreen),
+          matching: find.byType(ArabicText),
+        ),
+        matching: find.byType(Text),
+      ),
+    );
+    expect(arabic.style!.fontSize, closeTo(26 * 1.4, .001));
+    expect(prefs.getDouble('arabicScale'), 1.4);
+    // Reading text is untouched by the Arabic size.
+    expect(
+      AppText.of(tester.element(find.byType(SettingsScreen))).answer.fontSize,
+      17,
+    );
+  });
+
+  testWidgets('about credits the translation from the database', (
+    tester,
+  ) async {
+    late Map<String, String> meta;
+    await tester.runAsync(() async {
+      await resolveHome();
+      meta = await container.read(contentMetadataProvider.future);
+    });
+
+    await pumpApp(tester);
+    await goTo(tester, '/about');
+    expect(find.byType(AboutScreen), findsOne);
+    expect(
+      find.text('${meta['translationName']} · ${meta['translationAuthor']}'),
+      findsOne,
+    );
+    expect(find.textContaining('SIL Open Font License'), findsNWidgets(3));
+
+    await tester.ensureVisible(find.text(Strings.methodology));
+    await tester.pump();
+    await tester.tap(find.text(Strings.methodology));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text(Strings.methodologyPoints.first), findsOne);
+  });
 }

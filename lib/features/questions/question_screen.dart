@@ -12,6 +12,7 @@ import '../../shared/ayah_card.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
 import '../../shared/widgets.dart';
+import '../about/methodology_sheet.dart';
 import 'question_providers.dart';
 
 /// A question, its compiled answer, and every ayah it cites in full.
@@ -139,8 +140,20 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
           const SizedBox(height: 10),
           Text(q.questionBn, style: t.questionTitle),
           const SizedBox(height: 28),
-          Text(Strings.compiledAnswer, style: t.label),
-          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(child: Text(Strings.compiledAnswer, style: t.label)),
+              IconButton(
+                onPressed: () => showMethodologySheet(context),
+                tooltip: Strings.methodology,
+                visualDensity: VisualDensity.compact,
+                iconSize: 18,
+                color: c.fg3,
+                icon: const Icon(Icons.info_outline_rounded),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
           Text(q.answerBn, style: t.answer),
           const SizedBox(height: 14),
           Wrap(

@@ -9,7 +9,11 @@ import 'typography.dart';
 /// Material supplies ripples, focus and accessibility plumbing; everything the
 /// reader sees is driven by [AppColors] and [AppText], which widgets read
 /// directly. The design is flat — no elevation, no shadows, no dividers.
-ThemeData buildTheme(Brightness brightness) {
+ThemeData buildTheme(
+  Brightness brightness, {
+  double arabicScale = 1.0,
+  double bengaliScale = 1.0,
+}) {
   final c = brightness == Brightness.dark ? AppColors.dark : AppColors.light;
   final scheme =
       ColorScheme.fromSeed(
@@ -53,6 +57,22 @@ ThemeData buildTheme(Brightness brightness) {
         color: c.background,
       ),
     ),
-    extensions: [c, AppText.from(c)],
+    sliderTheme: SliderThemeData(
+      activeTrackColor: c.fg2,
+      inactiveTrackColor: c.track,
+      thumbColor: c.fg1,
+      overlayColor: c.fg1.withValues(alpha: .08),
+      showValueIndicator: ShowValueIndicator.never,
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: c.sheet,
+      surfaceTintColor: Colors.transparent,
+      showDragHandle: true,
+      dragHandleColor: c.fg4,
+    ),
+    extensions: [
+      c,
+      AppText.from(c, arabicScale: arabicScale, bengaliScale: bengaliScale),
+    ],
   );
 }

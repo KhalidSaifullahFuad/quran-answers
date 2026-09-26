@@ -39,7 +39,13 @@ class AppText extends ThemeExtension<AppText> {
     required this.cell,
   });
 
-  factory AppText.from(AppColors c) {
+  /// [arabicScale] multiplies the Qur'anic text; [bengaliScale] the reading
+  /// text (question, answer, translation). Chrome keeps its design size.
+  factory AppText.from(
+    AppColors c, {
+    double arabicScale = 1.0,
+    double bengaliScale = 1.0,
+  }) {
     const base = TextStyle(
       fontFamily: Fonts.bengali,
       fontFamilyFallback: Fonts.latinFallback,
@@ -59,7 +65,7 @@ class AppText extends ThemeExtension<AppText> {
         color: c.fg1,
       ),
       questionTitle: base.copyWith(
-        fontSize: 22,
+        fontSize: 22 * bengaliScale,
         fontWeight: FontWeight.w600,
         height: 1.5,
         color: c.fg1,
@@ -94,15 +100,19 @@ class AppText extends ThemeExtension<AppText> {
         color: c.fg3,
       ),
       answer: base.copyWith(
-        fontSize: 17,
+        fontSize: 17 * bengaliScale,
         fontWeight: FontWeight.w500,
         height: 1.65,
         color: c.fg1,
       ),
-      translation: base.copyWith(fontSize: 16, height: 1.7, color: c.fg2),
+      translation: base.copyWith(
+        fontSize: 16 * bengaliScale,
+        height: 1.7,
+        color: c.fg2,
+      ),
       arabic: TextStyle(
         fontFamily: Fonts.arabic,
-        fontSize: 26,
+        fontSize: 26 * arabicScale,
         height: 2.0,
         color: c.fg1,
       ),

@@ -78,6 +78,10 @@ flutter:
     # Fingerprint of the file above. The app compares it with the marker beside
     # its existing copy to decide whether an update needs copying out again.
     - assets/db/content.db.version
+    # The fonts' OFL texts, shown on the license page from the about screen.
+    - assets/fonts/OFL-NotoSansBengali.txt
+    - assets/fonts/OFL-AmiriQuran.txt
+    - assets/fonts/OFL-Cinzel.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -36,7 +36,7 @@ enum AppTab {
   final IconData activeIcon;
 }
 
-/// Opening a question, category, surah or search inside whichever tab is current.
+/// Opening a question, category, surah, verse or search inside whichever tab is current.
 ///
 /// Detail routes are registered under every tab, so the bottom bar stays in
 /// place and back returns to the tab's own screen. The destination path is
@@ -57,6 +57,17 @@ extension AppNavigation on BuildContext {
   void openSurah(int number) => push('$_tabPrefix/surah/$number');
 
   void openSearch() => push('$_tabPrefix/search');
+
+  void openAyah(int surah, int ayah) => push('$_tabPrefix/ayah/$surah/$ayah');
+
+  /// Steps to a neighbouring verse without growing the back stack, so back
+  /// leaves the ayah screen rather than walking through every verse read.
+  void replaceAyah(int surah, int ayah) =>
+      pushReplacement('$_tabPrefix/ayah/$surah/$ayah');
+
+  void openSettings() => push('$_tabPrefix/settings');
+
+  void openAbout() => push('$_tabPrefix/about');
 }
 
 /// The bottom bar from the design: an icon in a pill that fills when active,

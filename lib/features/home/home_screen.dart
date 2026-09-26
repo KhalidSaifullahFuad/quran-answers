@@ -24,8 +24,18 @@ class HomeScreen extends ConsumerWidget {
           data: (index) => ListView(
             padding: const EdgeInsets.only(bottom: 32),
             children: [
-              const ContentFrame(
-                child: ScreenHeader(wordmark: true, showBack: false),
+              ContentFrame(
+                child: ScreenHeader(
+                  wordmark: true,
+                  showBack: false,
+                  actions: [
+                    IconButton(
+                      onPressed: context.openSettings,
+                      tooltip: Strings.settings,
+                      icon: const Icon(Icons.settings_outlined),
+                    ),
+                  ],
+                ),
               ),
               ContentFrame(child: _Body(index: index)),
             ],

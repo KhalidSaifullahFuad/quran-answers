@@ -211,11 +211,15 @@ class TopicChip extends StatelessWidget {
               children: [
                 Icon(icon, size: 18, color: selected ? c.fg1 : c.fg2),
                 const SizedBox(width: 10),
-                Text(
-                  label,
-                  style: AppText.of(context).pill.copyWith(
-                    fontSize: 14,
-                    fontWeight: selected ? FontWeight.w600 : null,
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.of(context).pill.copyWith(
+                      fontSize: 14,
+                      fontWeight: selected ? FontWeight.w600 : null,
+                    ),
                   ),
                 ),
               ],

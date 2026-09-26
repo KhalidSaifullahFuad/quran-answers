@@ -7,6 +7,7 @@ import '../core/strings.dart';
 import '../core/theme/colors.dart';
 import '../core/theme/typography.dart';
 import '../features/questions/question_providers.dart';
+import 'navigation.dart';
 import 'references.dart';
 import 'widgets.dart';
 
@@ -20,6 +21,7 @@ class AyahCard extends ConsumerWidget {
     required this.ayah,
     required this.surah,
     this.actions = const [],
+    this.linkToAyah = true,
   });
 
   final Ayah ayah;
@@ -27,6 +29,10 @@ class AyahCard extends ConsumerWidget {
 
   /// Extra buttons placed before the bookmark, e.g. filing into a folder.
   final List<Widget> actions;
+
+  /// Whether the citation opens the verse on its own screen, with its context.
+  /// Off on that screen itself.
+  final bool linkToAyah;
 
   Future<void> _toggle(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
@@ -64,7 +70,12 @@ class AyahCard extends ConsumerWidget {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: RefPill(label: refLong(surah, ayah.id)),
+                  child: RefPill(
+                    label: refLong(surah, ayah.id),
+                    onTap: linkToAyah
+                        ? () => context.openAyah(ayah.surah, ayah.ayah)
+                        : null,
+                  ),
                 ),
               ),
               ...actions,

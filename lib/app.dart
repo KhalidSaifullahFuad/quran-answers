@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/strings.dart';
 import 'core/theme/theme.dart';
+import 'features/about/about_screen.dart';
+import 'features/ayah/ayah_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/questions/category_screen.dart';
 import 'features/questions/question_screen.dart';
 import 'features/saved/saved_screen.dart';
 import 'features/search/search_screen.dart';
+import 'features/settings/settings_provider.dart';
+import 'features/settings/settings_screen.dart';
 import 'features/surahs/surahs_screen.dart';
 import 'features/topics/topics_screen.dart';
 import 'shared/navigation.dart';
@@ -31,7 +36,19 @@ List<RouteBase> _detailRoutes() => [
       number: int.parse(state.pathParameters['number']!),
     ),
   ),
+  GoRoute(
+    path: 'ayah/:surah/:ayah',
+    builder: (context, state) => AyahScreen(
+      surah: int.parse(state.pathParameters['surah']!),
+      ayah: int.parse(state.pathParameters['ayah']!),
+    ),
+  ),
   GoRoute(path: 'search', builder: (context, state) => const SearchScreen()),
+  GoRoute(
+    path: 'settings',
+    builder: (context, state) => const SettingsScreen(),
+  ),
+  GoRoute(path: 'about', builder: (context, state) => const AboutScreen()),
 ];
 
 /// Routes are paths, so a question or category can later be opened from a
@@ -69,14 +86,14 @@ GoRouter buildRouter() => GoRouter(
   ],
 );
 
-class QuranAnswersApp extends StatefulWidget {
+class QuranAnswersApp extends ConsumerStatefulWidget {
   const QuranAnswersApp({super.key});
 
   @override
-  State<QuranAnswersApp> createState() => _QuranAnswersAppState();
+  ConsumerState<QuranAnswersApp> createState() => _QuranAnswersAppState();
 }
 
-class _QuranAnswersAppState extends State<QuranAnswersApp> {
+class _QuranAnswersAppState extends ConsumerState<QuranAnswersApp> {
   /// Owned by the widget rather than global, so each test gets a fresh stack.
   late final GoRouter _router = buildRouter();
 
@@ -88,14 +105,18 @@ class _QuranAnswersAppState extends State<QuranAnswersApp> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(settingsProvider);
+    ThemeData theme(Brightness b) => buildTheme(
+      b,
+      arabicScale: settings.arabicScale,
+      bengaliScale: settings.bengaliScale,
+    );
     return MaterialApp.router(
       title: Strings.appName,
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(Brightness.light),
-      darkTheme: buildTheme(Brightness.dark),
-      // The design is dark-first; the light "paper" theme follows the system
-      // until the settings screen offers a choice.
-      themeMode: ThemeMode.system,
+      theme: theme(Brightness.light),
+      darkTheme: theme(Brightness.dark),
+      themeMode: settings.themeMode,
       routerConfig: _router,
     );
   }

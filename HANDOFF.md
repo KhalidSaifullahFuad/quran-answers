@@ -1,8 +1,13 @@
 # Handoff — Quran Answers app
 
-State as of commit `430c29c`. Steps 1–6 of the plan are done, plus the bottom
-navigation and the topics / surahs / saved tabs pulled forward from steps 8–9.
-**Next is step 7 (search).** Working tree clean, 74 tests passing.
+Steps 1–7 of the plan are done, plus the bottom navigation and the topics /
+surahs / saved tabs pulled forward from steps 8–9. **Next is step 8 (saved tab
+polish).** 91 tests passing.
+
+The uncommitted `lib/web_preview*.dart`, `native_opener*.dart` and the edits to
+`main.dart` / `database_providers.dart` are a temporary Chrome preview on static
+data (not from the step-7 session). Search is not overridden there, so on web
+the search screen spins forever. Decide whether to keep or drop it.
 
 Full plan: `C:\Users\Fuad\.claude\plans\pasted-content-id-1712-want-to-smooth-rossum.md`
 
@@ -64,7 +69,7 @@ The shipped app makes **zero network calls**.
 cd D:/DEVELOPMENT/HOME_WORKSPACE/quran-answers
 
 flutter analyze
-flutter test                          # 74 tests, all passing
+flutter test                          # 91 tests, all passing
 
 dart run tool/validate_content.dart   # check content before building
 dart run tool/build_db.dart           # rebuild assets/db/content.db + .version
@@ -81,6 +86,7 @@ lib/core/text/normalize.dart      Arabic + Bengali search normalization
 lib/core/db/content_tables.dart   Drift schema, content (read-only)
 lib/core/db/content_db.dart       DB class, ayahId(), FTS table DDL + tokenizer
 lib/core/db/content_queries.dart  reads: question detail, ayah windows, etc.
+lib/core/db/content_search.dart   parseAyahRef, ftsMatchExpression, search()
 lib/core/db/content_store.dart    copies the asset out of the bundle
 lib/core/db/user_tables.dart      bookmarks, reading_history
 lib/core/db/user_db.dart          toggleBookmark, recordView, recentSlugs
@@ -89,12 +95,12 @@ lib/app.dart                      MaterialApp.router + go_router routes
 lib/core/theme/                   AppColors / AppText ThemeExtensions (design tokens)
 lib/core/strings.dart             UI chrome labels only — never content
 lib/core/text/numerals.dart       Bengali/Arabic digits, ayah end mark, Bengali date
-lib/shared/                       design primitives (widgets.dart), citation labels
+lib/shared/                       design primitives (widgets.dart), citation labels, AyahCard
 lib/shared/navigation.dart        AppTab, bottom bar, tab-relative openQuestion/Category/Surah
-lib/features/                     home, topics, surahs, saved (tabs); category, surah, question
+lib/features/                     home, topics, surahs, saved (tabs); category, surah, question, search
 tool/                             fetch_quran, validate_content, build_db
-test/core/                        6 test files (DB, queries, normalize, store)
-test/widget_test.dart             app boot, question detail, tab switching
+test/core/                        7 test files (DB, queries, search, normalize, store)
+test/widget_test.dart             app boot, question detail, tab switching, search
 ```
 
 ## Gotchas already paid for — do not rediscover
@@ -115,6 +121,15 @@ test/widget_test.dart             app boot, question detail, tab switching
   clock zone and never advances — it hangs rather than fails. Also override
   `databaseOpenerProvider` with `NativeDatabase.new` (no background isolate),
   and never use `pumpAndSettle` against the indeterminate spinner.
+- **Search** (`content_search.dart`): a query that parses as `54:15`
+  (Bengali/Arabic digits; colon, space, dot or Bengali visarga as separator)
+  skips FTS and goes to `ayahAt` + `questionsCiting`. Otherwise every word
+  becomes a quoted prefix term, ANDed; quoting means user input is never FTS
+  syntax. A bare Arabic word also tries the article-prefixed form, so qamar
+  finds al-qamar. Verse hits are capped at 50 with a separate total. Other
+  attached Arabic prefixes (wa, fa, bi, li) are **not** handled.
+- **Auto-dispose providers in widget tests:** `container.listen(...)` must also
+  run inside `runAsync`, or the query starts on the fake clock and hangs.
 - **Writing Dart via shell heredocs mangles backslashes** and Edit anchors fail
   on lines with RTL comments. Use the Write tool for files with `\u` escapes.
 
@@ -144,7 +159,12 @@ Bottom nav is a `StatefulShellRoute` with four branches (হোম / বিষ�
 visible; always navigate with `context.openQuestion()` etc., never a bare
 `push('/question/..')`, or the screen lands in the wrong tab.
 
-Design screens still to build: search (7), saved ayat + folders (8), collections,
+Search screen was built from existing primitives without re-reading the
+`.dc.html` (DesignSync is only usable under a user-started `/design-sync`);
+compare against the design's search layout when convenient. Ayah results are
+not tappable yet — wire them to `/ayah/:surah/:ayah` in step 9.
+
+Design screens still to build: saved ayat + folders (8), collections,
 ayah screen with prev/next and "same phrase in this surah", settings with
 Arabic/Bengali size sliders, methodology bottom sheet (9).
 
@@ -172,7 +192,6 @@ tearDown otherwise deadlocks.
 
 | Step | Work |
 |---|---|
-| 7 | Search: FTS + `54:15` reference parser, with prefix matching. Wire the home search pill. |
 | 8 | Saved tab polish: ayah bookmarks (needs a user-db table), folders, clear history. Question bookmarks + history list already work. |
 | 9 | Standalone ayah screen (`/ayah/:surah/:ayah`, context verses via `ayahWindow`, prev/next, questions citing it — `questionsCiting` exists), settings (theme, Arabic/Bengali size), about + credits (fonts OFL + translation), methodology bottom sheet, settings gear on home. Topics and surahs tabs already exist. |
 | 10 | Dark/light setting, app icon, Play Store assets |

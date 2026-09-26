@@ -41,7 +41,19 @@ abstract final class Strings {
       'প্রশ্নের পাতায় বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
   static const historyEmpty = 'এখনো কোনো প্রশ্ন পড়া হয়নি।';
 
+  static const searchPrompt =
+      'প্রশ্নের শব্দ, আরবি বা বাংলা শব্দ, অথবা আয়াত নম্বর (৫৪:১৫) লিখুন।';
+  static const noResults = 'কিছু পাওয়া যায়নি।';
+  static const clearSearch = 'মুছুন';
+  static const searchQuestions = 'প্রশ্ন';
+  static const searchAyat = 'আয়াত';
+  static const citingThisAyah = 'এই আয়াত যেসব প্রশ্নের প্রমাণ';
+
   static String questionCount(String n) => '$nটি প্রশ্ন';
   static String ayahCount(String n) => '$nটি আয়াত';
   static String ayatInSurah(String n) => '$n আয়াত';
+  static String noSuchAyah(String surah, String ayah) =>
+      'সূরা $surah-এ $ayah নম্বর আয়াত নেই।';
+  static String firstOfTotal(String shown, String total) =>
+      'মোট $totalটি আয়াতের প্রথম $shownটি দেখানো হলো। আরও নির্দিষ্ট করে লিখুন।';
 }

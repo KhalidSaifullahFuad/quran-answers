@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/app.dart';
+import 'package:quran_answers/core/db/content_search.dart';
 import 'package:quran_answers/core/db/database_providers.dart';
 import 'package:quran_answers/core/strings.dart';
 import 'package:quran_answers/core/text/numerals.dart';
 import 'package:quran_answers/features/questions/question_providers.dart';
+import 'package:quran_answers/features/search/search_screen.dart';
+import 'package:quran_answers/shared/ayah_card.dart';
 import 'package:quran_answers/shared/navigation.dart';
 import 'package:quran_answers/shared/widgets.dart';
 
@@ -230,5 +233,42 @@ void main() {
     await openTab(AppTab.saved);
     expect(find.text(Strings.savedEmpty), findsOne);
     expect(find.text(Strings.historyEmpty), findsOne);
+  });
+
+  testWidgets('the home search pill finds a verse by reference', (
+    tester,
+  ) async {
+    const query = '৫৪:১৫';
+    late QuestionIndex index;
+    await tester.runAsync(() async {
+      index = await container.read(questionIndexProvider.future);
+      await container.read(recentSlugsProvider.future);
+      final featured = questionOfTheDay(index.questions, today)!;
+      await container.read(questionDetailProvider(featured.slug).future);
+    });
+    // Auto-disposed: held open by a listener so the screen finds it resolved.
+    // Subscribed inside runAsync, or the query starts on the fake clock.
+    late ProviderSubscription<AsyncValue<SearchResults>> results;
+    await tester.runAsync(() async {
+      results = container.listen(searchResultsProvider(query), (_, _) {});
+      await container.read(searchResultsProvider(query).future);
+    });
+    addTearDown(() => results.close());
+
+    await pumpApp(tester);
+    await tester.tap(find.byType(SearchFieldButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.text(Strings.searchPrompt), findsOne);
+    await tester.enterText(find.byType(TextField), query);
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+
+    final r = results.read().value!;
+    expect(find.byType(AyahCard), findsOne);
+    expect(find.text(r.refAyah!.translationBn), findsOne);
+    expect(find.text(Strings.citingThisAyah), findsOne);
+    expect(find.text(index.bySlug('muddakkir-al-qamar')!.questionBn), findsOne);
   });
 }

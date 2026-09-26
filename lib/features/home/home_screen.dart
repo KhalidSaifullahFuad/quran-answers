@@ -61,9 +61,10 @@ class _Body extends ConsumerWidget {
             children: [
               Text(Strings.tagline, style: t.display),
               const SizedBox(height: 16),
-              // Search arrives in the next step; the field is placed now so
-              // the layout does not shift when it starts working.
-              const SearchFieldButton(hint: Strings.searchHint),
+              SearchFieldButton(
+                hint: Strings.searchHint,
+                onTap: context.openSearch,
+              ),
             ],
           ),
         ),
@@ -81,7 +82,7 @@ class _Body extends ConsumerWidget {
           QuestionTile(
             icon: Icons.history_rounded,
             title: lastRead.questionBn,
-            meta: _meta(index, lastRead),
+            meta: index.rowMeta(lastRead),
             onTap: () => context.openQuestion(lastRead.slug),
           ),
         ],
@@ -120,19 +121,12 @@ class _Body extends ConsumerWidget {
           QuestionTile(
             icon: categoryIcon(q.category),
             title: q.questionBn,
-            meta: _meta(index, q),
+            meta: index.rowMeta(q),
             onTap: () => context.openQuestion(q.slug),
           ),
       ],
     );
   }
-}
-
-/// `শব্দ ও পরিভাষা • ৫৪:১৫, ৫৪:১৭, ৫৪:২২ +৩`.
-String _meta(QuestionIndex index, Question q) {
-  final category = index.categories[q.category]?.nameBn;
-  final refs = refsSummary(index.citationsOf(q));
-  return [?category, if (refs.isNotEmpty) refs].join(' • ');
 }
 
 /// Today's question: its first cited ayah, the question, the citation.

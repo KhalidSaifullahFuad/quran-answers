@@ -7,6 +7,7 @@ import 'features/home/home_screen.dart';
 import 'features/questions/category_screen.dart';
 import 'features/questions/question_screen.dart';
 import 'features/saved/saved_screen.dart';
+import 'features/search/search_screen.dart';
 import 'features/surahs/surahs_screen.dart';
 import 'features/topics/topics_screen.dart';
 import 'shared/navigation.dart';
@@ -30,6 +31,7 @@ List<RouteBase> _detailRoutes() => [
       number: int.parse(state.pathParameters['number']!),
     ),
   ),
+  GoRoute(path: 'search', builder: (context, state) => const SearchScreen()),
 ];
 
 /// Routes are paths, so a question or category can later be opened from a

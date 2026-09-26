@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
 import '../../core/db/database_providers.dart';
+import '../../shared/references.dart';
 
 /// Read-model providers shared by the home, category and question screens.
 ///
@@ -52,6 +53,13 @@ class QuestionIndex {
   ];
 
   List<int> citationsOf(Question q) => citations[q.slug] ?? const [];
+
+  /// Row meta for a question: `শব্দ ও পরিভাষা • ৫৪:১৫, ৫৪:১৭, ৫৪:২২ +৩`.
+  String rowMeta(Question q) {
+    final category = categories[q.category]?.nameBn;
+    final refs = refsSummary(citationsOf(q));
+    return [?category, if (refs.isNotEmpty) refs].join(' • ');
+  }
 
   /// Questions citing at least one ayah of [surah], in authored order.
   List<Question> citingSurah(int surah) => [

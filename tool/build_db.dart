@@ -6,7 +6,10 @@
 // JSON is the reviewable source of truth; this file is the build artifact. Both
 // are committed, but only the JSON is ever edited by hand.
 
+import 'dart:convert';
 import 'dart:io';
+
+import 'package:crypto/crypto.dart';
 
 import 'package:drift/native.dart';
 import 'package:quran_answers/core/db/content_db.dart';
@@ -147,10 +150,28 @@ Future<void> main() async {
   await db.customStatement('VACUUM');
   await db.close();
 
+  // A fingerprint of the finished file, written beside it as a tiny asset.
+  //
+  // The app copies the database out of its bundle on first launch and has no
+  // way to tell a new bundled database from the copy it already made. Comparing
+  // this marker is that signal. It is a digest of the content rather than a
+  // build timestamp, so rebuilding unchanged content does not force every
+  // installed app to rewrite 10 MB after an unrelated release.
+  final digest = sha256.convert(file.readAsBytesSync());
+  final marker = File('$outputPath.version');
+  marker.writeAsStringSync('''
+contentVersion=${questions.contentVersion}
+schemaVersion=${db.schemaVersion}
+sha256=$digest
+''', encoding: utf8);
+
   final kb = file.lengthSync() / 1024;
   stdout.writeln(
     'Wrote $outputPath: ${mushaf.surahs.length} surahs, '
     '${ayahRows.length} ayat, ${published.length} questions, '
     '${links.length} citations, ${(kb / 1024).toStringAsFixed(1)} MB.',
+  );
+  stdout.writeln(
+    'Wrote ${marker.path}: sha256 ${digest.toString().substring(0, 16)}...',
   );
 }

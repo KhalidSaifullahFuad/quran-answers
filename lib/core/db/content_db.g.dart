@@ -2149,6 +2149,9 @@ abstract class _$ContentDatabase extends GeneratedDatabase {
     questionAyahs,
     meta,
   ];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
 typedef $$SurahsTableCreateCompanionBuilder =

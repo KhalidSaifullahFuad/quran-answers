@@ -1,0 +1,16 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # Store DateTime as ISO-8601 text instead of unix seconds.
+          #
+          # Second granularity is too coarse for what these columns are for:
+          # bookmarks and reading history are ordered by time, and two entries
+          # created in the same second would come back in an undefined order,
+          # so a list of "most recent first" would not reliably be one. Text
+          # timestamps keep sub-second precision and sort correctly as strings.
+          #
+          # Safe to set here because no version has shipped yet. Changing it
+          # later would require migrating existing rows.
+          store_date_time_values_as_text: true

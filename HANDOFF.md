@@ -1,7 +1,6 @@
 # Handoff — Quran Answers app
 
-State as of commit `eccbfc0`. Steps 1–5 of the plan are done. Next is step 6,
-with a design import in front of it.
+Steps 1–6 of the plan are done. Next is step 7 (search).
 
 Full plan: `C:\Users\Fuad\.claude\plans\pasted-content-id-1712-want-to-smooth-rossum.md`
 
@@ -84,7 +83,12 @@ lib/core/db/content_store.dart    copies the asset out of the bundle
 lib/core/db/user_tables.dart      bookmarks, reading_history
 lib/core/db/user_db.dart          toggleBookmark, recordView, recentSlugs
 lib/core/db/database_providers.dart  Riverpod wiring
-lib/app.dart                      PLACEHOLDER screen — delete at step 6
+lib/app.dart                      MaterialApp.router + go_router routes
+lib/core/theme/                   AppColors / AppText ThemeExtensions (design tokens)
+lib/core/strings.dart             UI chrome labels only — never content
+lib/core/text/numerals.dart       Bengali/Arabic digits, ayah end mark, Bengali date
+lib/shared/                       design primitives (widgets.dart), citation labels
+lib/features/home|questions/      home, category list, question detail
 tool/                             fetch_quran, validate_content, build_db
 test/core/                        6 test files
 ```
@@ -122,39 +126,53 @@ tiding" question occurs once in the definite form (78:2) and once indefinite
 7:156 says nothing about hajj or the talbiyah. See its `reviewNote`. Do not
 re-raise it.
 
+## Design (imported at step 6)
+
+Source: claude.ai/design project `2e3fb7db-7db7-43c6-b11c-0965d3087574`,
+`Quran Answers App.dc.html`, built on `quran-majeed-design-system`. The
+`.dc.html` is the screen to match; the design system supplies tokens only (it
+describes a different, English, dark-only app). Tokens now live in
+`lib/core/theme/`. Dark is the design default; the light "paper" palette comes
+from the `.dc.html`. `themeMode` follows the system until settings exist.
+
+Design screens still to build: search (7), saved + history (8), topics, surah
+index, ayah screen with prev/next and "same phrase in this surah", settings with
+Arabic/Bengali size sliders, methodology bottom sheet, bottom nav (9).
+
+Design features the **schema cannot yet feed** — need content fields before
+they can be built honestly:
+- question kind (কোথায় / কতবার / নির্দেশনা) and the segmented filter
+- lead/detail split of the answer; highlighted phrase inside the Arabic
+- interpretive note block ("ব্যাখ্যামূলক টীকা · কুরআনের পাঠ নয়")
+- topic icons and curated collections
+- **Bengali transliterated surah names** (আল-কামার). The DB has only the
+  meaning (চাঁদ) and English. `surahLabel()` in `lib/shared/references.dart`
+  uses English for now and is the one place to switch.
+
+Fonts: Noto Sans Bengali (static 400/500/600), Amiri Quran, Cinzel (variable,
+wordmark only), all OFL, licenses in `assets/fonts/`. Noto Sans Bengali has no
+Latin or ASCII punctuation; `Fonts.latinFallback` (Roboto) covers those.
+The ayah ornament is joined with a no-break space, or it wraps onto its own line.
+
+Widget tests that open a question must end with `drain`/`unmount` (see
+`test/widget_test.dart`): `recordView` writes on the fake clock while Drift
+work from provider setup is in the real zone, and closing the user DB from
+tearDown otherwise deadlocks.
+
 ## Next steps
-
-**Step 6 is preceded by a design import.** The user has a design at
-`https://claude.ai/design/p/2e3fb7db-7db7-43c6-b11c-0965d3087574?file=Quran+Answers+App.dc.html`
-built on a `quran-majeed-design-system`. It needs `/design-login` first, then the
-`DesignSync` tool (`list_files`, `get_file`) to read:
-
-- `Quran Answers App.dc.html`
-- `_ds/quran-majeed-design-system-b396c861-4920-478c-a09b-f98fcd8c6ceb/tokens/*.css`
-  (colors, effects, fonts, spacing, typography), `styles.css`, `_ds_bundle.js`
-- `support.js`
-
-Open question to ask the user: is the design system the source of truth for the
-whole app, or is the `.dc.html` screen the thing to match?
-
-Take layout, colors, type scale and spacing from the design. **Never take
-Arabic or Bengali strings from it** — text always comes from the database.
-
-Then:
 
 | Step | Work |
 |---|---|
-| 6 | Theme + bundled fonts (Noto Sans Bengali, Amiri Quran — both OFL), home, question list, detail with real Arabic/Bengali rendering |
-| 7 | Search: FTS + `54:15` reference parser, with prefix matching |
-| 8 | Bookmarks and history UI (data layer already exists) |
-| 9 | Topics, standalone ayah screen with context verses, settings, about + credits |
-| 10 | Dark mode, app icon, Play Store assets |
+| 7 | Search: FTS + `54:15` reference parser, with prefix matching. Wire the home search pill. |
+| 8 | Bookmarks and history UI (bookmark toggle + history write already on the detail screen) |
+| 9 | Topics, standalone ayah screen with context verses, settings, about + credits (fonts + translation) |
+| 10 | Dark/light setting, app icon, Play Store assets |
 | 11 | Full content migration from the user's original `.docx`/`.pdf` |
 
 Arabic needs `textDirection: TextDirection.rtl` and `height: >= 1.9` or
 diacritics clip. Verify rendering on a **physical Android device** — Chrome's
-font fallback differs and proves nothing. `flutter devices` currently lists no
-Android device.
+font fallback differs and proves nothing. Step 6 was checked only with golden
+renders at 360dp using the bundled fonts, not on a device.
 
 ## Still needed from the user
 

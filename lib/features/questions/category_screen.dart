@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../core/strings.dart';
+import '../../core/text/numerals.dart';
+import '../../core/theme/colors.dart';
+import '../../core/theme/typography.dart';
+import '../../shared/references.dart';
+import '../../shared/widgets.dart';
+import 'question_providers.dart';
+
+/// Every question in one category.
+class CategoryScreen extends ConsumerWidget {
+  const CategoryScreen({super.key, required this.categoryId});
+
+  final String categoryId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final index = ref.watch(questionIndexProvider);
+    return Scaffold(
+      body: SafeArea(
+        child: AsyncBody(
+          value: index,
+          data: (index) {
+            final category = index.categories[categoryId];
+            final questions = index.inCategory(categoryId);
+            return ListView(
+              padding: const EdgeInsets.only(bottom: 32),
+              children: [
+                ContentFrame(child: ScreenHeader(title: category?.nameBn)),
+                ContentFrame(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          Space.gutter,
+                          4,
+                          Space.gutter,
+                          10,
+                        ),
+                        child: Text(
+                          Strings.questionCount(bnDigits(questions.length)),
+                          style: AppText.of(
+                            context,
+                          ).meta.copyWith(fontSize: 13.5),
+                        ),
+                      ),
+                      for (final q in questions)
+                        QuestionTile(
+                          icon: categoryIcon(q.category),
+                          title: q.questionBn,
+                          meta: refsSummary(index.citationsOf(q)),
+                          onTap: () => context.push('/question/${q.slug}'),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

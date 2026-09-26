@@ -24,6 +24,18 @@ void main() {
     expect(rows.map((c) => c.id), ['words', 'quran-itself', 'worship']);
   });
 
+  test(
+    'allCitations groups ayah ids per question in the cited order',
+    () async {
+      final citations = await db.allCitations();
+      expect(citations['muddakkir-al-qamar'], [
+        for (final a in [15, 17, 22, 32, 40, 51]) ayahId(54, a),
+      ]);
+      expect(citations['naba-azeem'], [ayahId(78, 2), ayahId(38, 67)]);
+      expect(citations.length, (await db.allQuestions()).length);
+    },
+  );
+
   test('a question detail resolves its ayat in the cited order', () async {
     final detail = await db.questionDetail('muddakkir-al-qamar');
     expect(detail, isNotNull);

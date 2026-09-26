@@ -56,6 +56,24 @@ extension ContentQueries on ContentDatabase {
     return [for (final slug in slugs) ?bySlug[slug]];
   }
 
+  /// Every citation as `slug → ayah ids`, each list in the authored order.
+  ///
+  /// Lets a list screen label every row with its references in one query
+  /// instead of one per row.
+  Future<Map<String, List<int>>> allCitations() async {
+    final rows =
+        await (select(questionAyahs)..orderBy([
+              (qa) => OrderingTerm.asc(qa.questionSlug),
+              (qa) => OrderingTerm.asc(qa.sortOrder),
+            ]))
+            .get();
+    final bySlug = <String, List<int>>{};
+    for (final r in rows) {
+      (bySlug[r.questionSlug] ??= []).add(r.ayahId);
+    }
+    return bySlug;
+  }
+
   Future<Question?> questionBySlug(String slug) =>
       (select(questions)..where((q) => q.slug.equals(slug))).getSingleOrNull();
 

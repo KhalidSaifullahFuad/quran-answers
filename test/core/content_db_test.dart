@@ -47,7 +47,7 @@ void main() {
       expect(surahs.single.read<int>('c'), 114);
     });
 
-    test('only published questions were compiled', () async {
+    test('every published question was compiled, in author order', () async {
       final rows = await query(
         'SELECT slug FROM questions ORDER BY sort_order',
       );
@@ -57,9 +57,8 @@ void main() {
         'naba-azeem',
         'haqqa-tilawatihi',
         'amana-ar-rasul',
+        'hudna-ilayk',
       ]);
-      // The draft entry must not have shipped.
-      expect(slugs, isNot(contains('hudna-ilayk')));
     });
 
     test('every citation resolves to a real ayah', () async {

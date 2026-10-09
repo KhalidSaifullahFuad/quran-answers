@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/database_providers.dart';
 import '../../core/strings.dart';
@@ -105,12 +106,12 @@ class AboutScreen extends ConsumerWidget {
                         children: [
                           TopicChip(
                             label: Strings.methodology,
-                            icon: Icons.fact_check_outlined,
+                            icon: IconsaxPlusLinear.task_square,
                             onTap: () => showMethodologySheet(context),
                           ),
                           TopicChip(
                             label: Strings.licenses,
-                            icon: Icons.description_outlined,
+                            icon: IconsaxPlusLinear.document_text,
                             onTap: () => showLicensePage(
                               context: context,
                               applicationName: Strings.appName,

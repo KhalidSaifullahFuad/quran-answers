@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 /// Color tokens from the imported design (`Quran Answers App.dc.html`, built on
 /// the quran-majeed design system).
 ///
-/// The design is near-monochrome: hierarchy comes from four foreground grays,
-/// and the only color is reserved for scripture — Qur'anic text sits on a green
-/// tint ([evidence]) and cited positions are marked in [highlight]. Keeping the
-/// green for Qur'an only is what lets a reader tell verse from commentary at a
-/// glance, so do not reuse it for ordinary accents.
+/// The design is near-monochrome: hierarchy comes from four foreground grays.
+/// Qur'anic text sits on a flat neutral block ([evidence]) and the only color,
+/// green [highlight], marks cited positions and the evidence icon. Keep the
+/// green for Qur'an only, and small, so do not reuse it for ordinary accents.
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
   const AppColors({
@@ -71,7 +70,7 @@ class AppColors extends ThemeExtension<AppColors> {
     fg3: Color(0xFF8C8C8C),
     fg4: Color(0xFF6E6E6E),
     divider: Color(0xFF262626),
-    evidence: Color(0xFF12291F),
+    evidence: Color(0xFF1C1C1C),
     highlight: Color(0xFF20C08D),
     scrim: Color(0x9E000000),
   );
@@ -89,7 +88,7 @@ class AppColors extends ThemeExtension<AppColors> {
     fg3: Color(0xFF5A605B),
     fg4: Color(0xFF767B76),
     divider: Color(0xFFE0DAD0),
-    evidence: Color(0xFFE2EDE5),
+    evidence: Color(0xFFEBE7DF),
     highlight: Color(0xFF0F7A57),
     scrim: Color(0x6B14140F),
   );

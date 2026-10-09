@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../core/db/content_db.dart';
 import '../core/text/numerals.dart';
@@ -32,8 +33,9 @@ String refsSummary(List<int> ayahIds) {
 /// Keyed by category id with a neutral fallback, so a category added in content
 /// without an entry here still renders.
 IconData categoryIcon(String categoryId) => switch (categoryId) {
-  'words' => Icons.translate_rounded,
-  'quran-itself' => Icons.menu_book_rounded,
-  'worship' => Icons.mosque_rounded,
-  _ => Icons.label_rounded,
+  'words' => IconsaxPlusLinear.translate,
+  'quran-itself' => IconsaxPlusLinear.book_1,
+  // Iconsax has no mosque; the crescent stands in.
+  'worship' => IconsaxPlusLinear.moon,
+  _ => IconsaxPlusLinear.tag,
 };

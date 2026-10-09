@@ -13,7 +13,10 @@ uncommitted diff in `main.dart` (a `kIsWeb` override line + two imports) and
 `database_providers.dart` (conditional `native_opener` import); commit around
 those hunks.
 
-Full plan: `C:\Users\Fuad\.claude\plans\pasted-content-id-1712-want-to-smooth-rossum.md`
+**Plan + progress checklist: `PLAN.md`** (repo root). Tick steps there as they
+land; add a step before starting any new request. The original plan is
+`C:\Users\Fuad\.claude\plans\pasted-content-id-1712-want-to-smooth-rossum.md`
+(historical; `PLAN.md` supersedes it).
 
 ## What this app is
 
@@ -200,6 +203,20 @@ test/settings_test.dart           settings persistence + clamping
   checked), `privacy-policy.md` (EN + BN, needs date + email + hosting),
   `README.md` (build, Data safety and content-rating answers, 12-tester /
   14-day closed-test rule for new accounts).
+
+## After step 10 (visual polish, step 12)
+
+- **No green fill on verses.** The user disliked the green tint behind ayat.
+  `AppColors.evidence` is now neutral (= `card`: `#1C1C1C` / `#EBE7DF`); green
+  survives only as `highlight` (evidence icon, cited cells). The home
+  question-of-the-day snippet sits inside a card, so it uses `c.track`.
+- **Icons are Iconsax** (`iconsax_plus`, app.iconsax.io) — no Material
+  `Icons.` left in `lib/`. Linear by default, Bold for on/selected states.
+  Bookmark = `archive_1` (Iconsax's ribbon). Chevrons are always Linear
+  `arrow_left_1` / `arrow_right_3` (Bold draws different shapes). No mosque
+  glyph exists; the worship topic uses `moon`.
+- Verified: format, analyze and 105 tests clean. No test looks icons up by
+  `Icons.*`. Not yet seen on a device.
 
 ## Content status
 

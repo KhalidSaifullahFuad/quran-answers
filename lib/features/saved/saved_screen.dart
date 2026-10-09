@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/db/database_providers.dart';
@@ -94,12 +95,12 @@ class _FolderBar extends ConsumerWidget {
           children: [
             _SheetTitle(f.name),
             ListTile(
-              leading: const Icon(Icons.edit_outlined),
+              leading: const Icon(IconsaxPlusLinear.edit_2),
               title: const Text(Strings.renameFolder),
               onTap: () => Navigator.pop(context, _FolderAction.rename),
             ),
             ListTile(
-              leading: const Icon(Icons.delete_outline_rounded),
+              leading: const Icon(IconsaxPlusLinear.trash),
               title: const Text(Strings.deleteFolder),
               onTap: () => Navigator.pop(context, _FolderAction.delete),
             ),
@@ -140,7 +141,7 @@ class _FolderBar extends ConsumerWidget {
         children: [
           TopicChip(
             label: Strings.allFolders,
-            icon: Icons.bookmarks_outlined,
+            icon: IconsaxPlusLinear.save_2,
             selected: selected == null,
             onTap: () => onSelect(null),
           ),
@@ -149,8 +150,8 @@ class _FolderBar extends ConsumerWidget {
             TopicChip(
               label: f.name,
               icon: selected == f.id
-                  ? Icons.folder_rounded
-                  : Icons.folder_outlined,
+                  ? IconsaxPlusBold.folder
+                  : IconsaxPlusLinear.folder,
               selected: selected == f.id,
               onTap: () => onSelect(f.id),
               onLongPress: () => _manage(context, ref, f),
@@ -159,7 +160,7 @@ class _FolderBar extends ConsumerWidget {
           const SizedBox(width: 8),
           TopicChip(
             label: Strings.newFolder,
-            icon: Icons.create_new_folder_outlined,
+            icon: IconsaxPlusLinear.folder_add,
             onTap: () => _create(context, ref),
           ),
         ],
@@ -242,7 +243,7 @@ class _SavedLists extends ConsumerWidget {
           if (questions.isEmpty) note(Strings.savedEmpty),
           for (final (q, inFolder) in questions)
             QuestionTile(
-              icon: Icons.bookmark_rounded,
+              icon: IconsaxPlusBold.archive_1,
               title: q.questionBn,
               meta: _meta(q, inFolder),
               onTap: () => context.openQuestion(q.slug),
@@ -342,7 +343,7 @@ class _History extends ConsumerWidget {
           ),
         for (final q in questions)
           QuestionTile(
-            icon: Icons.history_rounded,
+            icon: IconsaxPlusLinear.clock_1,
             title: q.questionBn,
             meta: refsSummary(index.citationsOf(q)),
             onTap: () => context.openQuestion(q.slug),
@@ -368,7 +369,9 @@ class _FileButton extends StatelessWidget {
       iconSize: 20,
       color: current == null ? c.fg3 : c.fg2,
       icon: Icon(
-        current == null ? Icons.drive_file_move_outline : Icons.folder_rounded,
+        current == null
+            ? IconsaxPlusLinear.folder_open
+            : IconsaxPlusBold.folder,
       ),
       onPressed: () async {
         // The container, not ref: filing can remove this row from a filtered
@@ -386,7 +389,7 @@ class _FileButton extends StatelessWidget {
                 const _SheetTitle(Strings.moveToFolder),
                 _choiceTile(
                   context,
-                  Icons.folder_off_outlined,
+                  IconsaxPlusLinear.folder_cross,
                   Strings.noFolder,
                   const _Choice(null),
                   selected: current == null,
@@ -394,14 +397,14 @@ class _FileButton extends StatelessWidget {
                 for (final f in folders)
                   _choiceTile(
                     context,
-                    Icons.folder_outlined,
+                    IconsaxPlusLinear.folder,
                     f.name,
                     _Choice(f.id),
                     selected: current == f.id,
                   ),
                 _choiceTile(
                   context,
-                  Icons.create_new_folder_outlined,
+                  IconsaxPlusLinear.folder_add,
                   Strings.newFolder,
                   const _Choice.create(),
                 ),
@@ -432,7 +435,7 @@ class _FileButton extends StatelessWidget {
   }) => ListTile(
     leading: Icon(icon),
     title: Text(label),
-    trailing: selected ? const Icon(Icons.check_rounded) : null,
+    trailing: selected ? const Icon(IconsaxPlusLinear.tick_circle) : null,
     onTap: () => Navigator.pop(context, value),
   );
 }

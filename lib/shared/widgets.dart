@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../core/strings.dart';
 import '../core/text/numerals.dart';
@@ -58,7 +59,7 @@ class ScreenHeader extends StatelessWidget {
               IconButton(
                 onPressed: () => Navigator.of(context).maybePop(),
                 tooltip: Strings.back,
-                icon: const Icon(Icons.chevron_left_rounded, size: 30),
+                icon: const Icon(IconsaxPlusLinear.arrow_left_1, size: 30),
               ),
             if (wordmark) Text(Strings.wordmark, style: text.wordmark),
             Expanded(
@@ -151,7 +152,11 @@ class SearchFieldButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 children: [
-                  Icon(Icons.search_rounded, size: 20, color: c.fg2),
+                  Icon(
+                    IconsaxPlusLinear.search_normal_1,
+                    size: 20,
+                    color: c.fg2,
+                  ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Text(

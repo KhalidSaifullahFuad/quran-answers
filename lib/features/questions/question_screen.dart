@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
@@ -86,8 +87,8 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
                       onPressed: _toggleBookmark,
                       tooltip: Strings.bookmark,
                       isSelected: bookmarked ?? false,
-                      icon: const Icon(Icons.bookmark_border_rounded),
-                      selectedIcon: const Icon(Icons.bookmark_rounded),
+                      icon: const Icon(IconsaxPlusLinear.archive_1),
+                      selectedIcon: const Icon(IconsaxPlusBold.archive_1),
                     ),
                   ],
                 ),
@@ -149,7 +150,7 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
                 visualDensity: VisualDensity.compact,
                 iconSize: 18,
                 color: c.fg3,
-                icon: const Icon(Icons.info_outline_rounded),
+                icon: const Icon(IconsaxPlusLinear.info_circle),
               ),
             ],
           ),
@@ -173,7 +174,7 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
           const SizedBox(height: 28),
           Row(
             children: [
-              Icon(Icons.menu_book_rounded, size: 18, color: c.highlight),
+              Icon(IconsaxPlusLinear.book_1, size: 18, color: c.highlight),
               const SizedBox(width: 8),
               Expanded(child: Text(Strings.quranEvidence, style: t.section)),
               Text(

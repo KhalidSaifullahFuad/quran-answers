@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/strings.dart';
@@ -32,7 +33,7 @@ class HomeScreen extends ConsumerWidget {
                     IconButton(
                       onPressed: context.openSettings,
                       tooltip: Strings.settings,
-                      icon: const Icon(Icons.settings_outlined),
+                      icon: const Icon(IconsaxPlusLinear.setting_2),
                     ),
                   ],
                 ),
@@ -90,7 +91,7 @@ class _Body extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           QuestionTile(
-            icon: Icons.history_rounded,
+            icon: IconsaxPlusLinear.clock_1,
             title: lastRead.questionBn,
             meta: index.rowMeta(lastRead),
             onTap: () => context.openQuestion(lastRead.slug),
@@ -181,7 +182,8 @@ class _FeaturedCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(14, 6, 14, 4),
                     decoration: BoxDecoration(
-                      color: c.evidence,
+                      // Sits inside a card, so one step up from [evidence].
+                      color: c.track,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: ArabicText(
@@ -209,13 +211,17 @@ class _FeaturedCard extends ConsumerWidget {
                                   detail!.surahOf(first),
                                   first.id,
                                 ),
-                                icon: Icons.menu_book_rounded,
+                                icon: IconsaxPlusLinear.book_1,
                               ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Text(Strings.answerAndEvidence, style: t.link),
-                    Icon(Icons.chevron_right_rounded, size: 18, color: c.fg2),
+                    Icon(
+                      IconsaxPlusLinear.arrow_right_3,
+                      size: 18,
+                      color: c.fg2,
+                    ),
                   ],
                 ),
               ],

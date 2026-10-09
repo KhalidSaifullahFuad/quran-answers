@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../core/db/content_db.dart';
 import '../core/db/database_providers.dart';
@@ -86,8 +87,8 @@ class AyahCard extends ConsumerWidget {
                 visualDensity: VisualDensity.compact,
                 iconSize: 21,
                 color: c.fg2,
-                icon: const Icon(Icons.bookmark_border_rounded),
-                selectedIcon: const Icon(Icons.bookmark_rounded),
+                icon: const Icon(IconsaxPlusLinear.archive_1),
+                selectedIcon: const Icon(IconsaxPlusBold.archive_1),
               ),
             ],
           ),

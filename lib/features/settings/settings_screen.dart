@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
@@ -56,17 +57,17 @@ class SettingsScreen extends ConsumerWidget {
                           (
                             ThemeMode.system,
                             Strings.themeSystem,
-                            Icons.brightness_auto_rounded,
+                            IconsaxPlusLinear.autobrightness,
                           ),
                           (
                             ThemeMode.light,
                             Strings.themeLight,
-                            Icons.light_mode_rounded,
+                            IconsaxPlusLinear.sun_1,
                           ),
                           (
                             ThemeMode.dark,
                             Strings.themeDark,
-                            Icons.dark_mode_rounded,
+                            IconsaxPlusLinear.moon,
                           ),
                         ])
                           TopicChip(
@@ -118,12 +119,12 @@ class SettingsScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   _LinkRow(
-                    icon: Icons.fact_check_outlined,
+                    icon: IconsaxPlusLinear.task_square,
                     label: Strings.methodology,
                     onTap: () => showMethodologySheet(context),
                   ),
                   _LinkRow(
-                    icon: Icons.info_outline_rounded,
+                    icon: IconsaxPlusLinear.info_circle,
                     label: Strings.about,
                     onTap: context.openAbout,
                   ),
@@ -205,7 +206,7 @@ class _LinkRow extends StatelessWidget {
             Icon(icon, size: 20, color: c.fg2),
             const SizedBox(width: 14),
             Expanded(child: Text(label, style: t.rowTitle)),
-            Icon(Icons.chevron_right_rounded, color: c.fg3),
+            Icon(IconsaxPlusLinear.arrow_right_3, color: c.fg3),
           ],
         ),
       ),

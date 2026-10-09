@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
@@ -322,7 +323,9 @@ class _StepButton extends StatelessWidget {
       ),
     );
     final chevron = Icon(
-      leading ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+      leading
+          ? IconsaxPlusLinear.arrow_left_1
+          : IconsaxPlusLinear.arrow_right_3,
       size: 22,
       color: color,
     );

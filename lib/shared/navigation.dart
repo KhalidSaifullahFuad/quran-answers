@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../core/strings.dart';
 import '../core/theme/colors.dart';
@@ -8,24 +9,24 @@ import '../core/theme/typography.dart';
 /// The four tabs, in order. Each is a branch with its own navigation stack,
 /// so switching tabs keeps where the reader was in each.
 enum AppTab {
-  home('/', Strings.navHome, Icons.home_outlined, Icons.home_rounded),
+  home('/', Strings.navHome, IconsaxPlusLinear.home_2, IconsaxPlusBold.home_2),
   topics(
     '/topics',
     Strings.navTopics,
-    Icons.grid_view_outlined,
-    Icons.grid_view_rounded,
+    IconsaxPlusLinear.category,
+    IconsaxPlusBold.category,
   ),
   surahs(
     '/surahs',
     Strings.navSurahs,
-    Icons.menu_book_outlined,
-    Icons.menu_book_rounded,
+    IconsaxPlusLinear.book_1,
+    IconsaxPlusBold.book_1,
   ),
   saved(
     '/saved',
     Strings.navSaved,
-    Icons.bookmark_border_rounded,
-    Icons.bookmark_rounded,
+    IconsaxPlusLinear.archive_1,
+    IconsaxPlusBold.archive_1,
   );
 
   const AppTab(this.path, this.label, this.icon, this.activeIcon);

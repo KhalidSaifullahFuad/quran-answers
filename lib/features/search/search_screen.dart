@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_search.dart';
 import '../../core/db/database_providers.dart';
@@ -86,7 +87,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       IconButton(
                         onPressed: () => Navigator.of(context).maybePop(),
                         tooltip: Strings.back,
-                        icon: const Icon(Icons.chevron_left_rounded, size: 30),
+                        icon: const Icon(
+                          IconsaxPlusLinear.arrow_left_1,
+                          size: 30,
+                        ),
                       ),
                       Expanded(child: _field(c, t)),
                     ],
@@ -138,12 +142,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             borderRadius: BorderRadius.all(Radius.circular(99)),
             borderSide: BorderSide.none,
           ),
-          prefixIcon: Icon(Icons.search_rounded, size: 20, color: c.fg2),
+          prefixIcon: Icon(
+            IconsaxPlusLinear.search_normal_1,
+            size: 20,
+            color: c.fg2,
+          ),
           suffixIcon: _controller.text.isEmpty
               ? null
               : IconButton(
                   tooltip: Strings.clearSearch,
-                  icon: Icon(Icons.close_rounded, size: 18, color: c.fg2),
+                  icon: Icon(
+                    IconsaxPlusLinear.close_circle,
+                    size: 18,
+                    color: c.fg2,
+                  ),
                   onPressed: () {
                     _controller.clear();
                     _setQuery('');

@@ -221,7 +221,7 @@ test/settings_test.dart           settings persistence + clamping
 ## Content status
 
 **200 questions (all published after the author's review of 2026-10-10/17),
-280 citations, 9 categories** since step 11; rulings are in `PLAN.md` and
+280 citations, 11 categories** since step 11; rulings are in `PLAN.md` and
 `content/source/review-2026-10-09.md`. New entries carry `source` (PDF number)
 and a `reviewNote`. An answer ships with no ayah only if marked
 `"noAyah": true` (7 do, by the author's ruling). Slugs `ku-NNN` follow the PDF numbering — never renumber

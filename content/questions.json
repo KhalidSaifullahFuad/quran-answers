@@ -45,28 +45,40 @@
       "sortOrder": 5
     },
     {
-      "id": "society",
-      "nameBn": "পরিবার, সমাজ ও লেনদেন",
-      "nameEn": "Family, society and dealings",
+      "id": "family",
+      "nameBn": "পরিবার ও সম্পর্ক",
+      "nameEn": "Family and relations",
       "sortOrder": 6
+    },
+    {
+      "id": "charity",
+      "nameBn": "দান ও খরচ",
+      "nameEn": "Charity and spending",
+      "sortOrder": 7
+    },
+    {
+      "id": "conduct",
+      "nameBn": "আচরণ, লেনদেন ও বিধান",
+      "nameEn": "Conduct, dealings and law",
+      "sortOrder": 8
     },
     {
       "id": "akhirah",
       "nameBn": "আখিরাত",
       "nameEn": "The hereafter",
-      "sortOrder": 7
+      "sortOrder": 9
     },
     {
       "id": "signs",
       "nameBn": "নিদর্শন ও সৃষ্টি",
       "nameEn": "Signs and creation",
-      "sortOrder": 8
+      "sortOrder": 10
     },
     {
       "id": "not-in-quran",
       "nameBn": "যা কুরআনে নেই",
       "nameEn": "Not in the Qur'an",
-      "sortOrder": 9
+      "sortOrder": 11
     }
   ],
   "questions": [
@@ -354,7 +366,7 @@
     {
       "slug": "ku-022",
       "status": "published",
-      "category": "society",
+      "category": "family",
       "sortOrder": 22,
       "questionBn": "কুরআনের আমলে পুরুষ ও নারী সমান, এটা কোন আয়াতে আছে?",
       "answerBn": "সূরা আন-নিসা ৪:১২৪; সূরা আলে ইমরান ৩:১৯৫।",
@@ -463,7 +475,7 @@
     {
       "slug": "ku-030",
       "status": "published",
-      "category": "society",
+      "category": "quran-itself",
       "sortOrder": 30,
       "questionBn": "“যারা নিজ হাতে কিতাব রচনা করে তারা ধ্বংস” এটা কোথায় বলা হয়েছে?",
       "answerBn": "সূরা আল-বাকারা ২:৭৯।",
@@ -619,7 +631,7 @@
     {
       "slug": "ku-042",
       "status": "published",
-      "category": "society",
+      "category": "family",
       "sortOrder": 42,
       "questionBn": "সন্তানকে শিক্ষা দেওয়ার পদ্ধতি কোন আয়াতে উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা লুকমান ৩১:১৩।",
@@ -632,7 +644,7 @@
     {
       "slug": "ku-043",
       "status": "published",
-      "category": "society",
+      "category": "akhirah",
       "sortOrder": 43,
       "questionBn": "পেটে আগুন দিয়ে ভর্তি করবে কারা? এদের পরিচয় কোন আয়াতে উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-বাকারা ২:১৭৪; সূরা আন-নিসা ৪:১০।",
@@ -737,7 +749,7 @@
     {
       "slug": "ku-051",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 51,
       "questionBn": "“কুরআন অনুযায়ী তাহীয়া তথা সালাম না দিলে আজাব নাজিল হবে” কথাটি কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মুজাদালা ৫৮:৮।",
@@ -1152,7 +1164,7 @@
     {
       "slug": "ku-082",
       "status": "published",
-      "category": "society",
+      "category": "charity",
       "sortOrder": 82,
       "questionBn": "“যাকাত পরিশোধ না করলে তারা কাফির” এটি কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা ফুসসিলাত ৪১:৭।",
@@ -1165,7 +1177,7 @@
     {
       "slug": "ku-083",
       "status": "published",
-      "category": "society",
+      "category": "quran-itself",
       "sortOrder": 83,
       "questionBn": "সূরা তাহ্রিম- ৬৬ ঃ ১ নম্বর আয়াতের ব্যাখ্যা কোন আয়াতে পাওয়া যায়?",
       "answerBn": "সূরা আল-মায়িদা ৫:৮৭।",
@@ -1300,7 +1312,7 @@
     {
       "slug": "ku-092",
       "status": "published",
-      "category": "society",
+      "category": "iman",
       "sortOrder": 92,
       "questionBn": "মাগদুব বা অভিশপ্ত কারা?",
       "answerBn": "যারা নাযিলকৃত বিধান না মেনে তুচ্ছ মূল্য গ্রহণ করে। সূরা আল-বাকারা ২:৯০; সূরা আলে ইমরান ৩:১১২।",
@@ -1314,7 +1326,7 @@
     {
       "slug": "ku-093",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 93,
       "questionBn": "“নিকটবর্তী কাফিরদের বিরুদ্ধে সশস্ত্র যুদ্ধ করো” এটি কোথায় বলা হয়েছে?",
       "answerBn": "সূরা আত-তাওবা ৯:১২৩।",
@@ -1354,7 +1366,7 @@
     {
       "slug": "ku-096",
       "status": "published",
-      "category": "society",
+      "category": "family",
       "sortOrder": 96,
       "questionBn": "“পিতা মাতার সঙ্গে সদাচরণ করার নির্দেশ” কোন আয়াতে করা হয়েছে?",
       "answerBn": "সূরা আন-নিসা ৪:৩৬; সূরা আল-ইসরা ১৭:২৩; সূরা আল-আনকাবূত ২৯:৮।",
@@ -1395,7 +1407,7 @@
     {
       "slug": "ku-099",
       "status": "published",
-      "category": "society",
+      "category": "charity",
       "sortOrder": 99,
       "questionBn": "“মাল খরচ করে পরিশুদ্ধ হতে হবে” এটি কোন আয়াতে রয়েছে?",
       "answerBn": "সূরা আল-লাইল ৯২:১৮।",
@@ -1553,7 +1565,7 @@
     {
       "slug": "ku-111",
       "status": "published",
-      "category": "society",
+      "category": "family",
       "sortOrder": 111,
       "questionBn": "ওসিয়াত করা আবশ্যক বা বাধ্যতামূলক কোন আয়াতে আছে?",
       "answerBn": "সূরা আল-বাকারা ২:১৮০।",
@@ -1872,7 +1884,7 @@
     {
       "slug": "ku-135",
       "status": "published",
-      "category": "society",
+      "category": "family",
       "sortOrder": 135,
       "questionBn": "“পালিত পুত্র কি নিজের পুত্র?” এটা কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "না। সূরা আল-আহযাব ৩৩:৪।",
@@ -2254,7 +2266,7 @@
     {
       "slug": "ku-164",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 164,
       "questionBn": "“ওজনে কম দেওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মুতাফফিফীন ৮৩:১; সূরা আশ-শুআরা ২৬:১৮১–১৮৩।",
@@ -2270,7 +2282,7 @@
     {
       "slug": "ku-165",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 165,
       "questionBn": "“ইয়াতিমদের প্রতি কঠোর হয়োনা” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আদ-দুহা ৯৩:৯।",
@@ -2283,7 +2295,7 @@
     {
       "slug": "ku-166",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 166,
       "questionBn": "“কেউ কিছু চাইতে আসলে ধমক দিয়ে কথা বলা যাবে না” কোথায় উল্লেখ আছে?",
       "answerBn": "সূরা আদ-দুহা ৯৩:১০।",
@@ -2296,7 +2308,7 @@
     {
       "slug": "ku-167",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 167,
       "questionBn": "“দৈনন্দিন ব্যবহার্য কোন জিনিস চাইতে আসলে থাকলে ফিরিয়ে দেওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মাঊন ১০৭:৭।",
@@ -2630,7 +2642,7 @@
     {
       "slug": "ku-192",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 192,
       "questionBn": "“সমাজে বিশৃঙ্খলার শাস্তি কি” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মায়িদা ৫:৩৩।",
@@ -2694,7 +2706,7 @@
     {
       "slug": "ku-197",
       "status": "published",
-      "category": "society",
+      "category": "charity",
       "sortOrder": 197,
       "questionBn": "“অভাব-অনটনে, সুখে-দুঃখে সর্ব অবস্থায় আল্লাহ্র বিধান বাস্তবায়নে খরচ করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আলে ইমরান ৩:১৩৪।",
@@ -2707,7 +2719,7 @@
     {
       "slug": "ku-198",
       "status": "published",
-      "category": "society",
+      "category": "charity",
       "sortOrder": 198,
       "questionBn": "“যখনই আয় হবে ঠিক তখনই আল্লাহ্র বিধান বাস্তবায়নে খরচ করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-আনআম ৬:১৪১।",
@@ -2720,7 +2732,7 @@
     {
       "slug": "ku-199",
       "status": "published",
-      "category": "society",
+      "category": "charity",
       "sortOrder": 199,
       "questionBn": "“খরচ করা ছাড়া পরিশুদ্ধ হওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-লাইল ৯২:১৮।",
@@ -2733,7 +2745,7 @@
     {
       "slug": "ku-200",
       "status": "published",
-      "category": "society",
+      "category": "conduct",
       "sortOrder": 200,
       "questionBn": "“আল্লাহ্র বিধান বাস্তবায়নের জন্য আমাদের কি করণীয়” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আশ-শূরা ৪২:১৩; সূরা আল-হাজ্জ ২২:৪১; সূরা আন-নূর ২৪:৫৫।",

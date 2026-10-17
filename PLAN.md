@@ -4,7 +4,7 @@
 >
 > Design: claude.ai/design project `2e3fb7db-7db7-43c6-b11c-0965d3087574` → `Quran Answers App.dc.html` (built on `quran-majeed-design-system`). Session-to-session gotchas live in `HANDOFF.md`.
 
-**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Remaining: category approval (11.3c) and screenshots (11.4).
+**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Remaining: screenshots (11.4).
 
 
 ## Context
@@ -114,7 +114,7 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 - [x] **11.3b-4** (2026-10-10) Author confirmed the §4 spelling fixes in question text.
 - [x] **11.3b-5** (2026-10-17) Deep dive: ku-162 published with ref 19:34; ku-178 published as the source has it (12:46, not corrected).
 - [x] **11.3b** (2026-10-17) Deep dive: ku-151 published with refs 2:196 and 48:27. Review complete: 200 published, 0 draft.
-- [ ] **11.3c** Author approves the 9 categories (words, quran-itself, iman, worship, prophets, society, akhirah, signs, not-in-quran).
+- [x] **11.3c** (2026-10-17) Categories approved "for now" after splitting the catch-all `society` into family, charity, conduct; 030/083 → quran-itself, 092 → iman, 043 → akhirah. Now 11: words, quran-itself, iman, worship, prophets, family, charity, conduct, akhirah, signs, not-in-quran.
 - [ ] **11.4** Rebuild `content.db`, rerun `flutter test tool/render_assets_test.dart` to regenerate store screenshots.
 🛑 **Checkpoint:** author reviews the migrated set.
 

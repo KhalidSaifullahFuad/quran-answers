@@ -31,17 +31,22 @@ class ContentFrame extends StatelessWidget {
 }
 
 /// The 52dp bar at the top of every screen: back button or wordmark, an
-/// optional title, then actions.
+/// optional title (or any [child], such as the search field), then actions.
+///
+/// Edges line up with the page gutter: a title with no back button starts on
+/// it, and the last action's glyph ends on it (6dp pad + 12dp button inset).
 class ScreenHeader extends StatelessWidget {
   const ScreenHeader({
     super.key,
     this.title,
+    this.child,
     this.wordmark = false,
     this.showBack = true,
     this.actions = const [],
-  });
+  }) : assert(title == null || child == null);
 
   final String? title;
+  final Widget? child;
   final bool wordmark;
   final bool showBack;
   final List<Widget> actions;
@@ -52,28 +57,33 @@ class ScreenHeader extends StatelessWidget {
     return SizedBox(
       height: Space.headerHeight,
       child: Padding(
-        padding: EdgeInsets.only(left: showBack ? 4 : Space.gutter, right: 6),
+        padding: EdgeInsets.only(
+          left: showBack ? 4 : Space.gutter,
+          right: actions.isEmpty ? Space.gutter : 6,
+        ),
         child: Row(
           children: [
             if (showBack)
               IconButton(
                 onPressed: () => Navigator.of(context).maybePop(),
                 tooltip: Strings.back,
-                icon: const Icon(IconsaxPlusLinear.arrow_left_1, size: 30),
+                icon: const Icon(IconsaxPlusLinear.arrow_left_1),
               ),
             if (wordmark) Text(Strings.wordmark, style: text.wordmark),
             Expanded(
-              child: title == null
-                  ? const SizedBox.shrink()
-                  : Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        title!,
-                        style: text.screenTitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+              child:
+                  child ??
+                  (title == null
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: EdgeInsets.only(left: showBack ? 4 : 0),
+                          child: Text(
+                            title!,
+                            style: text.screenTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )),
             ),
             ...actions,
           ],

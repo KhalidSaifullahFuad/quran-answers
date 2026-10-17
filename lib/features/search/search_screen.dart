@@ -77,27 +77,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ContentFrame(
-              child: SizedBox(
-                height: Space.headerHeight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 4, right: Space.gutter),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.of(context).maybePop(),
-                        tooltip: Strings.back,
-                        icon: const Icon(
-                          IconsaxPlusLinear.arrow_left_1,
-                          size: 30,
-                        ),
-                      ),
-                      Expanded(child: _field(c, t)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            ContentFrame(child: ScreenHeader(child: _field(c, t))),
             Expanded(
               child: _query.isEmpty
                   ? _Message(Strings.searchPrompt)
@@ -137,7 +117,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           filled: true,
           fillColor: c.track,
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 11),
+          // 41dp tall like the home search pill (15 × 1.4 line + 2 × 10), so
+          // the field doesn't grow when search opens. The icon boxes would
+          // otherwise force Material's 48dp minimum.
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(99)),
             borderSide: BorderSide.none,
@@ -147,9 +130,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             size: 20,
             color: c.fg2,
           ),
+          prefixIconConstraints: const BoxConstraints(minWidth: 48),
+          suffixIconConstraints: const BoxConstraints(minWidth: 44),
           suffixIcon: _controller.text.isEmpty
               ? null
               : IconButton(
+                  constraints: const BoxConstraints(minWidth: 44),
+                  padding: EdgeInsets.zero,
+                  style: IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   tooltip: Strings.clearSearch,
                   icon: Icon(
                     IconsaxPlusLinear.close_circle,

@@ -44,7 +44,7 @@ class SurahsScreen extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           Space.gutter,
-                          0,
+                          8,
                           Space.gutter,
                           8,
                         ),
@@ -174,7 +174,7 @@ class SurahQuestionsScreen extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           Space.gutter,
-                          4,
+                          8,
                           Space.gutter,
                           10,
                         ),

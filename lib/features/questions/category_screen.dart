@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
-import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
@@ -29,18 +28,14 @@ class CategoryScreen extends ConsumerWidget {
             return ListView(
               padding: const EdgeInsets.only(bottom: 32),
               children: [
-                ContentFrame(child: ScreenHeader(title: category?.nameBn)),
                 ContentFrame(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
+                  child: ScreenHeader(
+                    title: category?.nameBn,
+                    actions: [
+                      // Plain meta text, not a button: padded so it ends on
+                      // the gutter like an action glyph would.
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          Space.gutter,
-                          4,
-                          Space.gutter,
-                          10,
-                        ),
+                        padding: const EdgeInsets.only(left: 12, right: 12),
                         child: Text(
                           Strings.questionCount(bnDigits(questions.length)),
                           style: AppText.of(
@@ -48,6 +43,14 @@ class CategoryScreen extends ConsumerWidget {
                           ).meta.copyWith(fontSize: 13.5),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                ContentFrame(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 8),
                       for (final q in questions)
                         QuestionTile(
                           icon: CategoryIcon(q.category),

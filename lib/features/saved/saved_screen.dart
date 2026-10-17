@@ -47,6 +47,7 @@ class _SavedScreenState extends ConsumerState<SavedScreen> {
               const ContentFrame(
                 child: ScreenHeader(title: Strings.navSaved, showBack: false),
               ),
+              const SizedBox(height: 8),
               _FolderBar(
                 folders: folders,
                 selected: folder,

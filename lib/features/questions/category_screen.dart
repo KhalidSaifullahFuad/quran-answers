@@ -50,7 +50,7 @@ class CategoryScreen extends ConsumerWidget {
                       ),
                       for (final q in questions)
                         QuestionTile(
-                          icon: categoryIcon(q.category),
+                          icon: CategoryIcon(q.category),
                           title: q.questionBn,
                           meta: refsSummary(index.citationsOf(q)),
                           onTap: () => context.openQuestion(q.slug),

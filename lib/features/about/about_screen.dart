@@ -106,12 +106,12 @@ class AboutScreen extends ConsumerWidget {
                         children: [
                           TopicChip(
                             label: Strings.methodology,
-                            icon: IconsaxPlusLinear.task_square,
+                            icon: const Icon(IconsaxPlusLinear.task_square),
                             onTap: () => showMethodologySheet(context),
                           ),
                           TopicChip(
                             label: Strings.licenses,
-                            icon: IconsaxPlusLinear.document_text,
+                            icon: const Icon(IconsaxPlusLinear.document_text),
                             onTap: () => showLicensePage(
                               context: context,
                               applicationName: Strings.appName,

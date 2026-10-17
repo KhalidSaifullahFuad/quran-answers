@@ -226,7 +226,7 @@ class _Results extends ConsumerWidget {
             const SizedBox(height: 4),
             for (final q in questions)
               QuestionTile(
-                icon: categoryIcon(q.category),
+                icon: CategoryIcon(q.category),
                 title: q.questionBn,
                 meta: index?.rowMeta(q) ?? '',
                 onTap: () => context.openQuestion(q.slug),

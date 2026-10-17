@@ -217,7 +217,7 @@ class _Body extends ConsumerWidget {
             ),
           for (final q in page.citing)
             QuestionTile(
-              icon: categoryIcon(q.category),
+              icon: CategoryIcon(q.category),
               title: q.questionBn,
               meta: index?.rowMeta(q) ?? '',
               onTap: () => context.openQuestion(q.slug),

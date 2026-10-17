@@ -16,69 +16,87 @@
   "categories": [
     {
       "id": "words",
-      "nameBn": "শব্দ ও বাক্যাংশ",
-      "nameEn": "Words and phrases",
+      "nameBn": "আরবি শব্দ ও পরিভাষা",
+      "nameEn": "Arabic words and terms",
       "sortOrder": 1
     },
     {
       "id": "quran-itself",
-      "nameBn": "কুরআন নিজের সম্পর্কে",
-      "nameEn": "The Qur'an about itself",
+      "nameBn": "কুরআন ও ওহি",
+      "nameEn": "The Qur'an and revelation",
       "sortOrder": 2
     },
     {
       "id": "iman",
-      "nameBn": "ঈমান ও তাওহীদ",
-      "nameEn": "Iman and tawhid",
+      "nameBn": "ঈমান, তাওহিদ ও শিরক",
+      "nameEn": "Iman, tawhid and shirk",
       "sortOrder": 3
     },
     {
       "id": "worship",
-      "nameBn": "ছলাত ও ইবাদত",
+      "nameBn": "সালাত ও ইবাদত",
       "nameEn": "Salat and worship",
       "sortOrder": 4
     },
     {
-      "id": "prophets",
-      "nameBn": "নবী-রাসূল ও ঘটনা",
-      "nameEn": "Prophets and narratives",
+      "id": "dua",
+      "nameBn": "দোয়া, সালাম ও আল্লাহর স্মরণ",
+      "nameEn": "Dua, salam and remembrance",
       "sortOrder": 5
+    },
+    {
+      "id": "prophets",
+      "nameBn": "নবী-রাসূল ও তাঁদের ঘটনা",
+      "nameEn": "Prophets and their stories",
+      "sortOrder": 6
     },
     {
       "id": "family",
       "nameBn": "পরিবার ও সম্পর্ক",
       "nameEn": "Family and relations",
-      "sortOrder": 6
-    },
-    {
-      "id": "charity",
-      "nameBn": "দান ও খরচ",
-      "nameEn": "Charity and spending",
       "sortOrder": 7
     },
     {
-      "id": "conduct",
-      "nameBn": "আচরণ, লেনদেন ও বিধান",
-      "nameEn": "Conduct, dealings and law",
+      "id": "wealth",
+      "nameBn": "সম্পদ, দান ও লেনদেন",
+      "nameEn": "Wealth, charity and dealings",
       "sortOrder": 8
     },
     {
-      "id": "akhirah",
-      "nameBn": "আখিরাত",
-      "nameEn": "The hereafter",
+      "id": "ethics",
+      "nameBn": "নৈতিকতা, অধিকার ও সামাজিক দায়িত্ব",
+      "nameEn": "Ethics, rights and social duty",
       "sortOrder": 9
     },
     {
-      "id": "signs",
-      "nameBn": "নিদর্শন ও সৃষ্টি",
-      "nameEn": "Signs and creation",
+      "id": "law",
+      "nameBn": "বিধিবিধান, হালাল-হারাম ও বিচার",
+      "nameEn": "Rulings, halal-haram and justice",
       "sortOrder": 10
     },
     {
-      "id": "not-in-quran",
-      "nameBn": "যা কুরআনে নেই",
-      "nameEn": "Not in the Qur'an",
+      "id": "akhirah",
+      "nameBn": "আখিরাত, কিয়ামত ও বিচার",
+      "nameEn": "Hereafter, resurrection and judgement",
       "sortOrder": 11
+    },
+    {
+      "id": "signs",
+      "nameBn": "আল্লাহর সৃষ্টি ও নিদর্শন",
+      "nameEn": "Allah's creation and signs",
+      "sortOrder": 12
+    },
+    {
+      "id": "calendar",
+      "nameBn": "সময়, মাস ও পঞ্জিকা",
+      "nameEn": "Time, months and calendar",
+      "sortOrder": 13
+    },
+    {
+      "id": "not-in-quran",
+      "nameBn": "যা কুরআনে উল্লেখ নেই",
+      "nameEn": "Not mentioned in the Qur'an",
+      "sortOrder": 14
     }
   ],
   "questions": [
@@ -127,7 +145,7 @@
     {
       "slug": "amana-ar-rasul",
       "status": "published",
-      "category": "quran-itself",
+      "category": "iman",
       "sortOrder": 4,
       "questionBn": "“আমানার রাসূল” — অর্থাৎ রাসূল ঈমান এনেছেন — কোন আয়াতে আছে?",
       "answerBn": "সূরা আল-বাকারা ২:২৮৫-এ। সম্পূর্ণ কুরআনে এই বাক্যাংশটি কেবল এখানেই এসেছে।",
@@ -151,7 +169,7 @@
     {
       "slug": "ku-006",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 6,
       "questionBn": "আল্লাহকে সাক্ষী রাখার জন্য কি শব্দ পাঠ করতে হবে?",
       "answerBn": "“ইন্নি উশহিদুল্লাহ” — আমি আল্লাহকে সাক্ষী রাখছি। সূরা হূদ ১১:৫৪।",
@@ -327,7 +345,7 @@
     {
       "slug": "ku-019",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 19,
       "questionBn": "তাওবা করার পদ্ধতির আয়াতটি উল্লেখ করুন।",
       "answerBn": "“সুবহানাকা তুবতু ইলাইকা ওয়া আনা আওয়ালুল মুমিনীন।” সূরা আল-আরাফ ৭:১৪৩।",
@@ -366,7 +384,7 @@
     {
       "slug": "ku-022",
       "status": "published",
-      "category": "family",
+      "category": "ethics",
       "sortOrder": 22,
       "questionBn": "কুরআনের আমলে পুরুষ ও নারী সমান, এটা কোন আয়াতে আছে?",
       "answerBn": "সূরা আন-নিসা ৪:১২৪; সূরা আলে ইমরান ৩:১৯৫।",
@@ -605,7 +623,7 @@
     {
       "slug": "ku-040",
       "status": "published",
-      "category": "signs",
+      "category": "calendar",
       "sortOrder": 40,
       "questionBn": "বার মাস কোন আয়াতে উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আত-তাওবা ৯:৩৬।",
@@ -749,7 +767,7 @@
     {
       "slug": "ku-051",
       "status": "published",
-      "category": "conduct",
+      "category": "dua",
       "sortOrder": 51,
       "questionBn": "“কুরআন অনুযায়ী তাহীয়া তথা সালাম না দিলে আজাব নাজিল হবে” কথাটি কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মুজাদালা ৫৮:৮।",
@@ -762,7 +780,7 @@
     {
       "slug": "ku-052",
       "status": "published",
-      "category": "signs",
+      "category": "calendar",
       "sortOrder": 52,
       "questionBn": "“চান্দ্রপঞ্জিকা (Lunar Calendar)” কোন আয়াত দ্বারা প্রমাণিত?",
       "answerBn": "সূরা ইউনুস ১০:৫; সূরা ইয়াসীন ৩৬:৩৯।",
@@ -855,7 +873,7 @@
     {
       "slug": "ku-059",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 59,
       "questionBn": "“নবী রাসুলের সালাম দেওয়ার পদ্ধতি” কোন আয়াতে উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আন-নামল ২৭:৫৯; সূরা আস-সাফফাত ৩৭:১৮১।",
@@ -1099,7 +1117,7 @@
     {
       "slug": "ku-077",
       "status": "published",
-      "category": "iman",
+      "category": "ethics",
       "sortOrder": 77,
       "questionBn": "মুসলিম সমাজের রূপরেখা কোন আয়াত দ্বারা প্রমাণিত?",
       "answerBn": "সূরা আত-তাওবা ৯:৭১।",
@@ -1164,7 +1182,7 @@
     {
       "slug": "ku-082",
       "status": "published",
-      "category": "charity",
+      "category": "wealth",
       "sortOrder": 82,
       "questionBn": "“যাকাত পরিশোধ না করলে তারা কাফির” এটি কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা ফুসসিলাত ৪১:৭।",
@@ -1326,7 +1344,7 @@
     {
       "slug": "ku-093",
       "status": "published",
-      "category": "conduct",
+      "category": "law",
       "sortOrder": 93,
       "questionBn": "“নিকটবর্তী কাফিরদের বিরুদ্ধে সশস্ত্র যুদ্ধ করো” এটি কোথায় বলা হয়েছে?",
       "answerBn": "সূরা আত-তাওবা ৯:১২৩।",
@@ -1407,7 +1425,7 @@
     {
       "slug": "ku-099",
       "status": "published",
-      "category": "charity",
+      "category": "wealth",
       "sortOrder": 99,
       "questionBn": "“মাল খরচ করে পরিশুদ্ধ হতে হবে” এটি কোন আয়াতে রয়েছে?",
       "answerBn": "সূরা আল-লাইল ৯২:১৮।",
@@ -1459,7 +1477,7 @@
     {
       "slug": "ku-103",
       "status": "published",
-      "category": "words",
+      "category": "dua",
       "sortOrder": 103,
       "questionBn": "“সালামের সাথে মোবারাকাতান তৈইয়্যিবাহ্” এটা কত নাম্বার আয়াতে আছে?",
       "answerBn": "সূরা আন-নূর ২৪:৬১।",
@@ -1485,7 +1503,7 @@
     {
       "slug": "ku-105",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 105,
       "questionBn": "শহর কে পবিত্র রাখার দোয়া কোন আয়াতে উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা সাবা ৩৪:১৫।",
@@ -1498,7 +1516,7 @@
     {
       "slug": "ku-106",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 106,
       "questionBn": "যানবাহনে আরোহনের দোয়া কোন সূরায় রয়েছে?",
       "answerBn": "সূরা আয-যুখরুফ ৪৩:১৩।",
@@ -1565,7 +1583,7 @@
     {
       "slug": "ku-111",
       "status": "published",
-      "category": "family",
+      "category": "law",
       "sortOrder": 111,
       "questionBn": "ওসিয়াত করা আবশ্যক বা বাধ্যতামূলক কোন আয়াতে আছে?",
       "answerBn": "সূরা আল-বাকারা ২:১৮০।",
@@ -1790,7 +1808,7 @@
     {
       "slug": "ku-128",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 128,
       "questionBn": "“কুরআন পড়ার শুরুতে শয়তান থেকে আল্লাহ্র নিকট পানাহ্ চাইতে হবে” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আন-নাহল ১৬:৯৮।",
@@ -1803,7 +1821,7 @@
     {
       "slug": "ku-129",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 129,
       "questionBn": "“কুরআন পড়ার শুরুতে কিভাবে শয়তান থেকে পানাহ্ চাইবো” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মুমিনূন ২৩:৯৭, ৯৮।",
@@ -1960,7 +1978,7 @@
     {
       "slug": "ku-141",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 141,
       "questionBn": "“সালামুন আলা আয়্যুব কঠিন ও জটিল রোগে আক্রান্ত হয়েছিল কি দোয়া পাঠ করেছিলেন” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-আম্বিয়া ২১:৮৩।",
@@ -1973,7 +1991,7 @@
     {
       "slug": "ku-142",
       "status": "published",
-      "category": "worship",
+      "category": "dua",
       "sortOrder": 142,
       "questionBn": "“অসুস্থ হলে আমরা কি পাঠ করব?” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-আম্বিয়া ২১:৮৩।",
@@ -2065,7 +2083,7 @@
     {
       "slug": "ku-149",
       "status": "published",
-      "category": "akhirah",
+      "category": "calendar",
       "sortOrder": 149,
       "questionBn": "“আমাদের গণনার ১০০০ বছর সমান আল্লাহ্র নিকট ১ দিন” এটা কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-হাজ্জ ২২:৪৭।",
@@ -2266,7 +2284,7 @@
     {
       "slug": "ku-164",
       "status": "published",
-      "category": "conduct",
+      "category": "wealth",
       "sortOrder": 164,
       "questionBn": "“ওজনে কম দেওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মুতাফফিফীন ৮৩:১; সূরা আশ-শুআরা ২৬:১৮১–১৮৩।",
@@ -2282,7 +2300,7 @@
     {
       "slug": "ku-165",
       "status": "published",
-      "category": "conduct",
+      "category": "ethics",
       "sortOrder": 165,
       "questionBn": "“ইয়াতিমদের প্রতি কঠোর হয়োনা” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আদ-দুহা ৯৩:৯।",
@@ -2295,7 +2313,7 @@
     {
       "slug": "ku-166",
       "status": "published",
-      "category": "conduct",
+      "category": "ethics",
       "sortOrder": 166,
       "questionBn": "“কেউ কিছু চাইতে আসলে ধমক দিয়ে কথা বলা যাবে না” কোথায় উল্লেখ আছে?",
       "answerBn": "সূরা আদ-দুহা ৯৩:১০।",
@@ -2308,7 +2326,7 @@
     {
       "slug": "ku-167",
       "status": "published",
-      "category": "conduct",
+      "category": "ethics",
       "sortOrder": 167,
       "questionBn": "“দৈনন্দিন ব্যবহার্য কোন জিনিস চাইতে আসলে থাকলে ফিরিয়ে দেওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মাঊন ১০৭:৭।",
@@ -2642,7 +2660,7 @@
     {
       "slug": "ku-192",
       "status": "published",
-      "category": "conduct",
+      "category": "law",
       "sortOrder": 192,
       "questionBn": "“সমাজে বিশৃঙ্খলার শাস্তি কি” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-মায়িদা ৫:৩৩।",
@@ -2706,7 +2724,7 @@
     {
       "slug": "ku-197",
       "status": "published",
-      "category": "charity",
+      "category": "wealth",
       "sortOrder": 197,
       "questionBn": "“অভাব-অনটনে, সুখে-দুঃখে সর্ব অবস্থায় আল্লাহ্র বিধান বাস্তবায়নে খরচ করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আলে ইমরান ৩:১৩৪।",
@@ -2719,7 +2737,7 @@
     {
       "slug": "ku-198",
       "status": "published",
-      "category": "charity",
+      "category": "wealth",
       "sortOrder": 198,
       "questionBn": "“যখনই আয় হবে ঠিক তখনই আল্লাহ্র বিধান বাস্তবায়নে খরচ করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-আনআম ৬:১৪১।",
@@ -2732,7 +2750,7 @@
     {
       "slug": "ku-199",
       "status": "published",
-      "category": "charity",
+      "category": "wealth",
       "sortOrder": 199,
       "questionBn": "“খরচ করা ছাড়া পরিশুদ্ধ হওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-লাইল ৯২:১৮।",
@@ -2745,7 +2763,7 @@
     {
       "slug": "ku-200",
       "status": "published",
-      "category": "conduct",
+      "category": "law",
       "sortOrder": 200,
       "questionBn": "“আল্লাহ্র বিধান বাস্তবায়নের জন্য আমাদের কি করণীয়” কোথায় উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আশ-শূরা ৪২:১৩; সূরা আল-হাজ্জ ২২:৪১; সূরা আন-নূর ২৪:৫৫।",

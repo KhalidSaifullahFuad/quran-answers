@@ -133,9 +133,9 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
           if (category != null)
             Row(
               children: [
-                Icon(categoryIcon(category.id), size: 14, color: c.fg3),
+                CategoryIcon(category.id, size: 14, color: c.fg3),
                 const SizedBox(width: 6),
-                Text(category.nameBn, style: t.label),
+                Flexible(child: Text(category.nameBn, style: t.label)),
               ],
             ),
           const SizedBox(height: 10),
@@ -164,7 +164,7 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
             const SizedBox(height: 4),
             for (final r in related)
               QuestionTile(
-                icon: categoryIcon(r.category),
+                icon: CategoryIcon(r.category),
                 title: r.questionBn,
                 meta: refsSummary(index!.citationsOf(r)),
                 onTap: () => context.openQuestion(r.slug),

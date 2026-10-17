@@ -141,7 +141,7 @@ class _FolderBar extends ConsumerWidget {
         children: [
           TopicChip(
             label: Strings.allFolders,
-            icon: IconsaxPlusLinear.save_2,
+            icon: const Icon(IconsaxPlusLinear.save_2),
             selected: selected == null,
             onTap: () => onSelect(null),
           ),
@@ -149,9 +149,11 @@ class _FolderBar extends ConsumerWidget {
             const SizedBox(width: 8),
             TopicChip(
               label: f.name,
-              icon: selected == f.id
-                  ? IconsaxPlusBold.folder
-                  : IconsaxPlusLinear.folder,
+              icon: Icon(
+                selected == f.id
+                    ? IconsaxPlusBold.folder
+                    : IconsaxPlusLinear.folder,
+              ),
               selected: selected == f.id,
               onTap: () => onSelect(f.id),
               onLongPress: () => _manage(context, ref, f),
@@ -160,7 +162,7 @@ class _FolderBar extends ConsumerWidget {
           const SizedBox(width: 8),
           TopicChip(
             label: Strings.newFolder,
-            icon: IconsaxPlusLinear.folder_add,
+            icon: const Icon(IconsaxPlusLinear.folder_add),
             onTap: () => _create(context, ref),
           ),
         ],
@@ -243,7 +245,7 @@ class _SavedLists extends ConsumerWidget {
           if (questions.isEmpty) note(Strings.savedEmpty),
           for (final (q, inFolder) in questions)
             QuestionTile(
-              icon: IconsaxPlusBold.archive_1,
+              icon: const Icon(IconsaxPlusBold.archive_1),
               title: q.questionBn,
               meta: _meta(q, inFolder),
               onTap: () => context.openQuestion(q.slug),
@@ -343,7 +345,7 @@ class _History extends ConsumerWidget {
           ),
         for (final q in questions)
           QuestionTile(
-            icon: IconsaxPlusLinear.clock_1,
+            icon: const Icon(IconsaxPlusLinear.clock_1),
             title: q.questionBn,
             meta: refsSummary(index.citationsOf(q)),
             onTap: () => context.openQuestion(q.slug),

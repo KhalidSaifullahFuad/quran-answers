@@ -185,7 +185,7 @@ class SurahQuestionsScreen extends ConsumerWidget {
                       ),
                     for (final q in index.citingSurah(number))
                       QuestionTile(
-                        icon: categoryIcon(q.category),
+                        icon: CategoryIcon(q.category),
                         title: q.questionBn,
                         meta: refsSummary(index.citationsOf(q)),
                         onTap: () => context.openQuestion(q.slug),

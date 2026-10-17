@@ -91,7 +91,7 @@ class _Body extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           QuestionTile(
-            icon: IconsaxPlusLinear.clock_1,
+            icon: const Icon(IconsaxPlusLinear.clock_1),
             title: lastRead.questionBn,
             meta: index.rowMeta(lastRead),
             onTap: () => context.openQuestion(lastRead.slug),
@@ -111,7 +111,7 @@ class _Body extends ConsumerWidget {
               for (final c in index.categories.values) ...[
                 TopicChip(
                   label: c.nameBn,
-                  icon: categoryIcon(c.id),
+                  icon: CategoryIcon(c.id),
                   onTap: () => context.openCategory(c.id),
                 ),
                 const SizedBox(width: 8),
@@ -130,7 +130,7 @@ class _Body extends ConsumerWidget {
         const SizedBox(height: 4),
         for (final q in index.questions)
           QuestionTile(
-            icon: categoryIcon(q.category),
+            icon: CategoryIcon(q.category),
             title: q.questionBn,
             meta: index.rowMeta(q),
             onTap: () => context.openQuestion(q.slug),

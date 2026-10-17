@@ -72,7 +72,7 @@ class SettingsScreen extends ConsumerWidget {
                         ])
                           TopicChip(
                             label: label,
-                            icon: icon,
+                            icon: Icon(icon),
                             selected: settings.themeMode == mode,
                             onTap: () => notifier.setThemeMode(mode),
                           ),

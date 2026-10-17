@@ -124,6 +124,13 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 - [x] **12.3** Run `dart format lib`, `flutter analyze`, `flutter test` on 12.1–12.2, then commit.
 🛑 **Checkpoint:** author checks the new look on device.
 
+### Step 13: Design customization (author-led)
+- [x] **13.1** Own Iconsax icon per category (words quote_up, quran-itself book, iman heart, worship moon, prophets messages_2, family profile_2user, wealth money_send, ethics people, law judge, dua message_favorite, calendar calendar, akhirah unlimited, signs tree, not-in-quran minus_cirlce); none reuse nav/settings glyphs. Test: every category has a distinct, non-fallback icon.
+🛑 **Checkpoint:** author checks the icons on device.
+- [x] **13.2** Two-tone category icons: Iconsax Plus has no Bulk set, so `DuoIcon` layers the Bold glyph at low opacity under the Linear one. `categoryIcon()` returns a line/fill pair; `TopicChip`, `QuestionTile` and the topic card take an icon widget sized and coloured through `IconTheme`.
+- [x] **13.3** Topics screen: squarish two-column tiles (bare 28px icon top-left, title and count pinned to the bottom edge, height ≈0.66× width; title 17, count 13.5). Grid is built as rows with `IntrinsicHeight` + stretch, so both tiles in a row match when one title wraps to two lines so the grid fills the screen instead of half of it. Tiles keep a square minimum height and grow with large text.
+- [x] **13.4** (2026-10-18) Author's 14 categories replace the 11: words, quran-itself (কুরআন ও ওহি), iman (+ শিরক), worship, **dua** (দোয়া, সালাম ও আল্লাহর স্মরণ), prophets, family, charity → **wealth** (সম্পদ, দান ও লেনদেন), conduct → **ethics** (নৈতিকতা, অধিকার ও সামাজিক দায়িত্ব), **law** (বিধিবিধান, হালাল-হারাম ও বিচার), akhirah (আখিরাত, কিয়ামত ও বিচার), signs (আল্লাহর সৃষ্টি ও নিদর্শন), **calendar** (সময়, মাস ও পঞ্জিকা), not-in-quran. Moves: amana-ar-rasul → iman; 006, 019, 051, 059, 103, 105, 106, 128, 129, 141, 142 → dua; 164 → wealth; 022, 077 → ethics; 093, 111, 192, 200 → law; 040, 052, 149 → calendar. Icons: dua message_favorite, wealth money_send, ethics people, law judge, calendar calendar. Phrase-location questions (লা ইলাহা ইল্লাল্লাহ্, আল্লাহু আকবার, …) stay in words. Question-screen category label now `Flexible` (the longer names overflowed). `content.db` rebuilt.
+
 ### Later (not scheduled)
 - [ ] Right before Play Store submission (app feature-complete): rerun `flutter test tool/render_assets_test.dart` to regenerate `store/screenshots/` (last made 2026-09-26 from 5 questions).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.

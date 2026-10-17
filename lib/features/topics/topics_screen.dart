@@ -10,7 +10,7 @@ import '../../shared/references.dart';
 import '../../shared/widgets.dart';
 import '../questions/question_providers.dart';
 
-/// Every category as a card in a two-column grid.
+/// Every category as a square-ish tile in a two-column grid.
 class TopicsScreen extends ConsumerWidget {
   const TopicsScreen({super.key});
 
@@ -37,20 +37,41 @@ class TopicsScreen extends ConsumerWidget {
                   ),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      const gap = 8.0;
+                      const gap = 10.0;
                       final width = (constraints.maxWidth - gap) / 2;
-                      return Wrap(
-                        spacing: gap,
-                        runSpacing: gap,
+                      final cats = index.categories.values.toList();
+                      Widget tile(int i) {
+                        final c = cats[i];
+                        return _TopicCard(
+                          minHeight: width * 0.66,
+                          title: c.nameBn,
+                          count: index.inCategory(c.id).length,
+                          icon: CategoryIcon(c.id),
+                          onTap: () => context.openCategory(c.id),
+                        );
+                      }
+
+                      // Rows rather than a Wrap, so a two-line title
+                      // stretches its neighbour to the same height.
+                      return Column(
                         children: [
-                          for (final c in index.categories.values)
-                            SizedBox(
-                              width: width,
-                              child: _TopicCard(
-                                title: c.nameBn,
-                                count: index.inCategory(c.id).length,
-                                icon: categoryIcon(c.id),
-                                onTap: () => context.openCategory(c.id),
+                          for (var i = 0; i < cats.length; i += 2)
+                            Padding(
+                              padding: EdgeInsets.only(top: i == 0 ? 0 : gap),
+                              child: IntrinsicHeight(
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(child: tile(i)),
+                                    const SizedBox(width: gap),
+                                    Expanded(
+                                      child: i + 1 < cats.length
+                                          ? tile(i + 1)
+                                          : const SizedBox(),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                         ],
@@ -69,15 +90,18 @@ class TopicsScreen extends ConsumerWidget {
 
 class _TopicCard extends StatelessWidget {
   const _TopicCard({
+    required this.minHeight,
     required this.title,
     required this.count,
     required this.icon,
     required this.onTap,
   });
 
+  /// Keeps tiles square-ish; a long title or large text can still grow them.
+  final double minHeight;
   final String title;
   final int count;
-  final IconData icon;
+  final Widget icon;
   final VoidCallback onTap;
 
   @override
@@ -90,27 +114,34 @@ class _TopicCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 58),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          child: Row(
-            children: [
-              Icon(icon, size: 22, color: c.fg1),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: t.rowTitle.copyWith(fontSize: 14.5, height: 1.35),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(Strings.questionCount(bnDigits(count)), style: t.meta),
-                  ],
-                ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: minHeight),
+          // Tight height (minimum or content, whichever is taller) so the
+          // Spacer can pin the title to the bottom edge.
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconTheme.merge(
+                    data: IconThemeData(size: 28, color: c.fg1),
+                    child: icon,
+                  ),
+                  const Spacer(),
+                  const SizedBox(height: 12),
+                  Text(
+                    title,
+                    style: t.rowTitle.copyWith(fontSize: 17, height: 1.35),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    Strings.questionCount(bnDigits(count)),
+                    style: t.meta.copyWith(color: c.fg2, fontSize: 13.5),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

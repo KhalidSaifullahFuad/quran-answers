@@ -178,6 +178,41 @@ class SearchFieldButton extends StatelessWidget {
   }
 }
 
+/// An outline glyph and its filled twin, for [DuoIcon].
+typedef DuoIconData = ({IconData line, IconData fill});
+
+/// A two-tone icon: the filled glyph tinted under the outline.
+///
+/// Iconsax Plus ships no Bulk style, but its Bold and Linear glyphs share a
+/// grid, so stacking them gives the same look in a single colour.
+class DuoIcon extends StatelessWidget {
+  const DuoIcon(this.icon, {super.key, this.size, this.color});
+
+  final DuoIconData icon;
+  final double? size;
+  final Color? color;
+
+  /// How strongly the fill shows under the outline.
+  static const fillOpacity = .28;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = IconTheme.of(context);
+    final ink = color ?? theme.color!;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Icon(
+          icon.fill,
+          size: size,
+          color: ink.withValues(alpha: ink.a * fillOpacity),
+        ),
+        Icon(icon.line, size: size, color: ink),
+      ],
+    );
+  }
+}
+
 /// A pill with an icon: a topic shortcut on home, a folder filter on the saved
 /// tab.
 class TopicChip extends StatelessWidget {
@@ -191,7 +226,9 @@ class TopicChip extends StatelessWidget {
   });
 
   final String label;
-  final IconData icon;
+
+  /// Usually an [Icon] or [DuoIcon]; sized and coloured by the chip.
+  final Widget icon;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final bool selected;
@@ -214,7 +251,13 @@ class TopicChip extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, size: 18, color: selected ? c.fg1 : c.fg2),
+                IconTheme.merge(
+                  data: IconThemeData(
+                    size: 18,
+                    color: selected ? c.fg1 : c.fg2,
+                  ),
+                  child: icon,
+                ),
                 const SizedBox(width: 10),
                 Flexible(
                   child: Text(
@@ -269,7 +312,8 @@ class QuestionTile extends StatelessWidget {
     this.trailing,
   });
 
-  final IconData icon;
+  /// Usually an [Icon] or [DuoIcon]; sized and coloured by the tile.
+  final Widget icon;
   final String title;
   final String meta;
   final VoidCallback? onTap;
@@ -295,7 +339,10 @@ class QuestionTile extends StatelessWidget {
               width: 34,
               height: 34,
               decoration: BoxDecoration(color: c.track, shape: BoxShape.circle),
-              child: Icon(icon, size: 16, color: c.fg3),
+              child: IconTheme.merge(
+                data: IconThemeData(size: 16, color: c.fg3),
+                child: icon,
+              ),
             ),
             const SizedBox(width: 14),
             Expanded(

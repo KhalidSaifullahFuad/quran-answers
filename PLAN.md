@@ -4,7 +4,7 @@
 >
 > Design: claude.ai/design project `2e3fb7db-7db7-43c6-b11c-0965d3087574` → `Quran Answers App.dc.html` (built on `quran-majeed-design-system`). Session-to-session gotchas live in `HANDOFF.md`.
 
-**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Remaining: screenshots (11.4).
+**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Store screenshots deferred until the app is feature-complete (see Later).
 
 
 ## Context
@@ -115,7 +115,7 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 - [x] **11.3b-5** (2026-10-17) Deep dive: ku-162 published with ref 19:34; ku-178 published as the source has it (12:46, not corrected).
 - [x] **11.3b** (2026-10-17) Deep dive: ku-151 published with refs 2:196 and 48:27. Review complete: 200 published, 0 draft.
 - [x] **11.3c** (2026-10-17) Categories approved "for now" after splitting the catch-all `society` into family, charity, conduct; 030/083 → quran-itself, 092 → iman, 043 → akhirah. Now 11: words, quran-itself, iman, worship, prophets, family, charity, conduct, akhirah, signs, not-in-quran.
-- [ ] **11.4** Rebuild `content.db`, rerun `flutter test tool/render_assets_test.dart` to regenerate store screenshots.
+- [x] **11.4** `content.db` rebuilt with all 200 questions.
 🛑 **Checkpoint:** author reviews the migrated set.
 
 ### Step 12: Visual polish (after step 10)
@@ -125,6 +125,7 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 🛑 **Checkpoint:** author checks the new look on device.
 
 ### Later (not scheduled)
+- [ ] Right before Play Store submission (app feature-complete): rerun `flutter test tool/render_assets_test.dart` to regenerate `store/screenshots/` (last made 2026-09-26 from 5 questions).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.
 - [ ] Design features waiting on content fields: question kind + segmented filter, lead/detail answer split, highlighted phrase in the Arabic, interpretive-note block, curated collections, Bengali transliterated surah names.
 - [ ] "Same phrase in this surah" on the ayah screen (needs phrase data).

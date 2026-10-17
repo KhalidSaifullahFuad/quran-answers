@@ -220,7 +220,15 @@ test/settings_test.dart           settings persistence + clamping
 
 ## Content status
 
-5 questions, 11 citations, 3 categories. Translation 163, Sheikh Mujibur Rahman
+**200 questions (all published after the author's review of 2026-10-10/17),
+280 citations, 9 categories** since step 11; rulings are in `PLAN.md` and
+`content/source/review-2026-10-09.md`. New entries carry `source` (PDF number)
+and a `reviewNote`. An answer ships with no ayah only if marked
+`"noAyah": true` (7 do, by the author's ruling). Slugs `ku-NNN` follow the PDF numbering — never renumber
+them, bookmarks depend on them. Python run with `-I` ignores
+`PYTHONIOENCODING`; use `-X utf8` to print Bengali on Windows.
+
+Before step 11: 5 questions, 11 citations, 3 categories. Translation 163, Sheikh Mujibur Rahman
 (Darussalaam) — credit it in the About screen. Four questions were verified
 programmatically against the mushaf. Corrections already made: the "great
 tiding" question occurs once in the definite form (78:2) and once indefinite

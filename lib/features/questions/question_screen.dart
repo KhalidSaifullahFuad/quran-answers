@@ -156,41 +156,8 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
           ),
           const SizedBox(height: 4),
           Text(q.answerBn, style: t.answer),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(Strings.evidence, style: t.meta),
-              for (final a in detail.ayahs)
-                RefPill(label: refShort(a.id), onTap: () => _scrollTo(a.id)),
-            ],
-          ),
-          if (_OccurrenceGrid.applies(detail)) ...[
-            const SizedBox(height: 28),
-            _OccurrenceGrid(detail: detail, onOpen: _scrollTo),
-          ],
-          const SizedBox(height: 28),
-          Row(
-            children: [
-              Icon(IconsaxPlusLinear.book_1, size: 18, color: c.highlight),
-              const SizedBox(width: 8),
-              Expanded(child: Text(Strings.quranEvidence, style: t.section)),
-              Text(
-                Strings.ayahCount(bnDigits(detail.ayahs.length)),
-                style: t.meta,
-              ),
-            ],
-          ),
-          for (final a in detail.ayahs) ...[
-            const SizedBox(height: 12),
-            AyahCard(
-              key: _cardKeys.putIfAbsent(a.id, GlobalKey.new),
-              ayah: a,
-              surah: detail.surahOf(a),
-            ),
-          ],
+          // A "not in the Qur'an" answer has nothing to cite.
+          if (detail.ayahs.isNotEmpty) ..._evidence(context, detail),
           if (related.isNotEmpty) ...[
             const SizedBox(height: 28),
             SectionTitle(Strings.relatedQuestions),
@@ -207,6 +174,45 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
         ],
       ),
     );
+  }
+
+  List<Widget> _evidence(BuildContext context, QuestionWithAyahs detail) {
+    final c = AppColors.of(context);
+    final t = AppText.of(context);
+    return [
+      const SizedBox(height: 14),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(Strings.evidence, style: t.meta),
+          for (final a in detail.ayahs)
+            RefPill(label: refShort(a.id), onTap: () => _scrollTo(a.id)),
+        ],
+      ),
+      if (_OccurrenceGrid.applies(detail)) ...[
+        const SizedBox(height: 28),
+        _OccurrenceGrid(detail: detail, onOpen: _scrollTo),
+      ],
+      const SizedBox(height: 28),
+      Row(
+        children: [
+          Icon(IconsaxPlusLinear.book_1, size: 18, color: c.highlight),
+          const SizedBox(width: 8),
+          Expanded(child: Text(Strings.quranEvidence, style: t.section)),
+          Text(Strings.ayahCount(bnDigits(detail.ayahs.length)), style: t.meta),
+        ],
+      ),
+      for (final a in detail.ayahs) ...[
+        const SizedBox(height: 12),
+        AyahCard(
+          key: _cardKeys.putIfAbsent(a.id, GlobalKey.new),
+          ayah: a,
+          surah: detail.surahOf(a),
+        ),
+      ],
+    ];
   }
 }
 

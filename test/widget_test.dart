@@ -24,6 +24,8 @@ import 'package:quran_answers/shared/navigation.dart';
 import 'package:quran_answers/shared/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/authored_content.dart';
+
 /// Boots the app the way a device does: the real asset is copied out of the
 /// bundle, opened, and queried. Only the target directory, the opener and the
 /// date are substituted — path_provider has no implementation in a test, a
@@ -137,14 +139,25 @@ void main() {
       final featured = questionOfTheDay(index.questions, today)!;
       await container.read(questionDetailProvider(featured.slug).future);
     });
-    expect(index.questions, hasLength(5));
+    expect([
+      for (final q in index.questions) q.slug,
+    ], AuthoredContent.load().publishedSlugs);
 
     await pumpApp(tester);
 
     expect(find.text('QURAN ANSWERS'), findsOne);
     expect(find.text(bnDayMonth(today)), findsOne);
     for (final c in index.categories.values) {
-      expect(find.text(c.nameBn), findsOne, reason: 'topic chip ${c.id}');
+      // Rows also show their category name when they cite no ayah, so look
+      // only inside the chips.
+      expect(
+        find.descendant(
+          of: find.byType(TopicChip),
+          matching: find.text(c.nameBn),
+        ),
+        findsOne,
+        reason: 'topic chip ${c.id}',
+      );
     }
     for (final q in index.questions) {
       expect(
@@ -217,6 +230,34 @@ void main() {
       () async => (await userDb.recentSlugs()).firstOrNull == slug,
     );
 
+    await unmount(tester);
+  });
+
+  testWidgets('a "not in the Qur\'an" answer shows no empty evidence', (
+    tester,
+  ) async {
+    const slug = 'ku-173';
+    await tester.runAsync(() async {
+      await resolveHome();
+      await container.read(questionDetailProvider(slug).future);
+      await container.read(isBookmarkedProvider(slug).future);
+    });
+
+    await pumpApp(tester);
+    await goTo(tester, '/question/$slug');
+
+    final detail = container.read(questionDetailProvider(slug)).value!;
+    expect(detail.ayahs, isEmpty);
+    expect(find.text(detail.question.answerBn), findsOne);
+    expect(find.text(Strings.evidence), findsNothing);
+    expect(find.text(Strings.quranEvidence), findsNothing);
+
+    // Let the history write land before the databases close.
+    final userDb = container.read(userDatabaseProvider).value!;
+    await drain(
+      tester,
+      () async => (await userDb.recentSlugs()).firstOrNull == slug,
+    );
     await unmount(tester);
   });
 

@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/core/db/content_db.dart';
 import 'package:quran_answers/core/db/content_queries.dart';
 
+import '../support/authored_content.dart';
+
 /// Reads against the built database asset.
 void main() {
   late ContentDatabase db;
@@ -21,7 +23,7 @@ void main() {
 
   test('categories come back in the authored order', () async {
     final rows = await db.allCategories();
-    expect(rows.map((c) => c.id), ['words', 'quran-itself', 'worship']);
+    expect(rows.map((c) => c.id), AuthoredContent.load().categoryIds);
   });
 
   test(
@@ -32,7 +34,8 @@ void main() {
         for (final a in [15, 17, 22, 32, 40, 51]) ayahId(54, a),
       ]);
       expect(citations['naba-azeem'], [ayahId(78, 2), ayahId(38, 67)]);
-      expect(citations.length, (await db.allQuestions()).length);
+      // A "not in the Qur'an" answer cites nothing and has no entry.
+      expect(citations.keys.toSet(), AuthoredContent.load().citingSlugs);
     },
   );
 
@@ -129,7 +132,7 @@ void main() {
     final meta = await db.metadata();
     expect(meta['translationName'], 'Sheikh Mujibur Rahman');
     expect(meta['translationAuthor'], isNotEmpty);
-    expect(meta['contentVersion'], '1');
+    expect(meta['contentVersion'], '${AuthoredContent.load().contentVersion}');
     expect(meta['ayahCount'], '6236');
   });
 }

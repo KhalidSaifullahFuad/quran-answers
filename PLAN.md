@@ -4,7 +4,7 @@
 >
 > Design: claude.ai/design project `2e3fb7db-7db7-43c6-b11c-0965d3087574` → `Quran Answers App.dc.html` (built on `quran-majeed-design-system`). Session-to-session gotchas live in `HANDOFF.md`.
 
-**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) blocked on the author's original `.docx`/`.pdf`.
+**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Remaining: category approval (11.3c) and screenshots (11.4).
 
 
 ## Context
@@ -38,7 +38,7 @@ Pinned on purpose: `drift >=2.34.0 <2.35.0` (2.35+ needs a `meta` newer than the
 3. **JSON is the source of truth; SQLite is the build artifact.** `tool/build_db.dart` compiles `questions.json` + `quran.json` → `assets/db/content.db`.
 4. **Questions are keyed by slug**, never by integer id (ids change on every rebuild).
 5. **One shared normalizer** (`lib/core/text/normalize.dart`) for the FTS index and the runtime query; if they diverge, search silently returns nothing.
-6. **An answer whose cited ayah does not support it does not ship** without the author's explicit say-so (`status: "draft"` excludes an entry).
+6. **An answer whose cited ayah does not support it does not ship** without the author's explicit say-so (`status: "draft"` excludes an entry). An answer ships with no ayah only when the author marks it `"noAyah": true` (ruling of 2026-10-10).
 7. **The shipped app makes zero network calls.** The release manifest has no INTERNET permission; the privacy policy depends on it.
 
 ## Data model
@@ -103,10 +103,18 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 - [x] **10.2** Play Store kit in `store/`: listing, privacy policy, Data safety answers, generated screenshots.
 🛑 **Checkpoint:** author supplies keystore, contact email and privacy-policy hosting URL.
 
-### Step 11: Content migration ⏳ blocked
-- [ ] **11.1** Author supplies the original `.docx`/`.pdf`.
-- [ ] **11.2** Extract every entry into `questions.json` (Bengali text + `refs` from the quran.com links); discard all Arabic from the document.
-- [ ] **11.3** Verify each entry: does the cited ayah support the answer? Human pass; mismatches go back to the author.
+### Step 11: Content migration
+- [x] **11.1** Author supplies the original: `E:\Downloads\09 Oct 26 Known - unknown competitions (1).pdf` (16 pages, **200 questions**). Its text layer is Bijoy/SutonnyMJ legacy encoding, so Bengali is read from the page images, not copied.
+  Decisions (2026-10-09): **interpretive or unsupported answers → draft + reviewNote for the author**; **light cleanup** (question verbatim, answer a short sentence with surah name + ayah numbers, no added claims); **Claude proposes ~8 categories, author approves**. The ~20 answers without any ayah are listed for the author to rule on one by one (pending).
+- [x] **11.2** All 200 transcribed verbatim from the page images into `content/source/known-unknown-2026-10-09.part{1..4}.json` (no Arabic), then entered in `questions.json` as `ku-001`…`ku-200` (the 5 pilot slugs keep theirs). Content version 2.
+- [x] **11.3a** First review pass by Claude: every answer read against its ayah; counts and phrases checked in the Arabic. **152 published, 48 draft.** Reference typos fixed (60 → 18:39, 76 → 17:71, 9 count corrected, 174 + 2:249). Validator now allows a draft without refs (published still needs one; tested).
+- [x] **11.3b-1** (2026-10-10) Author ruled on §1 (no ayah cited): "not in the Qur'an" answers ship as is with no ayah (6); the rest get their ayah added (11); ku-194 keeps its original answer with no ayah. An entry ships without refs only if the author marks it `"noAyah": true` (validator, tested); the question screen hides the empty evidence row/section (tested). Review file gets a "Resolved" column per ruled section.
+- [x] **11.3b-2** (2026-10-10) Author ruled on §2 (interpretive): 27 published with the original answer and refs; ku-151, ku-162, ku-178 stay draft for a deep dive.
+- [x] **11.3b-3** (2026-10-10) Author confirmed the 4 corrections in §3 (ku-009, ku-060, ku-076, ku-174).
+- [x] **11.3b-4** (2026-10-10) Author confirmed the §4 spelling fixes in question text.
+- [x] **11.3b-5** (2026-10-17) Deep dive: ku-162 published with ref 19:34; ku-178 published as the source has it (12:46, not corrected).
+- [x] **11.3b** (2026-10-17) Deep dive: ku-151 published with refs 2:196 and 48:27. Review complete: 200 published, 0 draft.
+- [ ] **11.3c** Author approves the 9 categories (words, quran-itself, iman, worship, prophets, society, akhirah, signs, not-in-quran).
 - [ ] **11.4** Rebuild `content.db`, rerun `flutter test tool/render_assets_test.dart` to regenerate store screenshots.
 🛑 **Checkpoint:** author reviews the migrated set.
 
@@ -134,3 +142,4 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 ## Open items
 - Methodology wording: author review.
 - Keystore, contact email, privacy-policy hosting URL (`store/README.md`).
+- Git remote: none yet. Author will create a (private) repo and share the URL; then `git remote add origin <url>` + push.

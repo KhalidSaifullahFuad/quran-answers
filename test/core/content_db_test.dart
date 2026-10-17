@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/core/db/content_db.dart';
 import 'package:quran_answers/core/text/normalize.dart';
 
+import '../support/authored_content.dart';
+
 /// Exercises the built asset, not a fixture.
 ///
 /// The point is the FTS index: `unicode61` decides token boundaries by Unicode
@@ -52,13 +54,7 @@ void main() {
         'SELECT slug FROM questions ORDER BY sort_order',
       );
       final slugs = rows.map((r) => r.read<String>('slug')).toList();
-      expect(slugs, [
-        'muddakkir-al-qamar',
-        'naba-azeem',
-        'haqqa-tilawatihi',
-        'amana-ar-rasul',
-        'hudna-ilayk',
-      ]);
+      expect(slugs, AuthoredContent.load().publishedSlugs);
     });
 
     test('every citation resolves to a real ayah', () async {
@@ -69,13 +65,16 @@ void main() {
       expect(orphans, isEmpty);
     });
 
-    test('no published question lacks a citation', () async {
+    test('only answers the author marked noAyah lack a citation', () async {
       final bare = await query(
         'SELECT q.slug FROM questions q '
         'LEFT JOIN question_ayahs qa ON qa.question_slug = q.slug '
         'WHERE qa.question_slug IS NULL',
       );
-      expect(bare, isEmpty);
+      final authored = AuthoredContent.load();
+      expect({
+        for (final r in bare) r.read<String>('slug'),
+      }, authored.publishedSlugs.toSet().difference(authored.citingSlugs));
     });
 
     test('ayah ids are the documented arithmetic', () async {

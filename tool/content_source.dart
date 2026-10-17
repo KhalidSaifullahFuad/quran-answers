@@ -142,10 +142,18 @@ List<ContentError> validate(Questions questions, Mushaf mushaf) {
     }
 
     final refs = (q['refs'] as List?)?.cast<String>() ?? const [];
-    if (refs.isEmpty) {
+    // Set per entry by the author: the answer ships without an ayah, e.g. one
+    // saying the claim is not in the Qur'an.
+    final noAyah = q['noAyah'] == true;
+    if (refs.isEmpty && status != 'draft' && !noAyah) {
       // The whole premise of the app is that answers are grounded in ayat, so
-      // an answer with no reference is a content bug, not an edge case.
+      // a published answer with no reference is a content bug, not an edge
+      // case. A draft may lack one while the author decides what it cites; it
+      // never reaches the database.
       errors.add(ContentError(where, 'no ayah references'));
+    }
+    if (noAyah && refs.isNotEmpty) {
+      errors.add(ContentError(where, 'noAyah is set but refs are given'));
     }
     final seen = <String>{};
     for (final ref in refs) {

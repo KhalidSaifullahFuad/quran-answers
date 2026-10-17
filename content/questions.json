@@ -1,5 +1,5 @@
 {
-  "contentVersion": 1,
+  "contentVersion": 2,
   "_comment": [
     "Source of truth for the Q&A content. Authored and reviewed here, then",
     "compiled into assets/db/content.db by tool/build_db.dart.",
@@ -14,9 +14,60 @@
     "whose cited ayah does not actually support the answer."
   ],
   "categories": [
-    { "id": "words", "nameBn": "শব্দ ও পরিভাষা", "nameEn": "Words and terms", "sortOrder": 1 },
-    { "id": "quran-itself", "nameBn": "কুরআন নিজের সম্পর্কে", "nameEn": "The Qur'an about itself", "sortOrder": 2 },
-    { "id": "worship", "nameBn": "ইবাদত", "nameEn": "Worship", "sortOrder": 3 }
+    {
+      "id": "words",
+      "nameBn": "শব্দ ও বাক্যাংশ",
+      "nameEn": "Words and phrases",
+      "sortOrder": 1
+    },
+    {
+      "id": "quran-itself",
+      "nameBn": "কুরআন নিজের সম্পর্কে",
+      "nameEn": "The Qur'an about itself",
+      "sortOrder": 2
+    },
+    {
+      "id": "iman",
+      "nameBn": "ঈমান ও তাওহীদ",
+      "nameEn": "Iman and tawhid",
+      "sortOrder": 3
+    },
+    {
+      "id": "worship",
+      "nameBn": "ছলাত ও ইবাদত",
+      "nameEn": "Salat and worship",
+      "sortOrder": 4
+    },
+    {
+      "id": "prophets",
+      "nameBn": "নবী-রাসূল ও ঘটনা",
+      "nameEn": "Prophets and narratives",
+      "sortOrder": 5
+    },
+    {
+      "id": "society",
+      "nameBn": "পরিবার, সমাজ ও লেনদেন",
+      "nameEn": "Family, society and dealings",
+      "sortOrder": 6
+    },
+    {
+      "id": "akhirah",
+      "nameBn": "আখিরাত",
+      "nameEn": "The hereafter",
+      "sortOrder": 7
+    },
+    {
+      "id": "signs",
+      "nameBn": "নিদর্শন ও সৃষ্টি",
+      "nameEn": "Signs and creation",
+      "sortOrder": 8
+    },
+    {
+      "id": "not-in-quran",
+      "nameBn": "যা কুরআনে নেই",
+      "nameEn": "Not in the Qur'an",
+      "sortOrder": 9
+    }
   ],
   "questions": [
     {
@@ -26,7 +77,14 @@
       "sortOrder": 1,
       "questionBn": "“মুদ্দাক্কির” শব্দটি ছয়বার কোন সূরায় এসেছে?",
       "answerBn": "সূরা আল-কামার (৫৪)-এ ছয়বার এসেছে — আয়াত ১৫, ১৭, ২২, ৩২, ৪০ ও ৫১। সম্পূর্ণ কুরআনে শব্দটি কেবল এই সূরাতেই পাওয়া যায়।",
-      "refs": ["54:15", "54:17", "54:22", "54:32", "54:40", "54:51"],
+      "refs": [
+        "54:15",
+        "54:17",
+        "54:22",
+        "54:32",
+        "54:40",
+        "54:51"
+      ],
       "reviewNote": "Verified against the fetched mushaf: six occurrences, exactly these ayat, and nowhere else in the Qur'an."
     },
     {
@@ -36,7 +94,10 @@
       "sortOrder": 2,
       "questionBn": "কুরআনকে “মহাসংবাদ” কোথায় কতবার বলা হয়েছে?",
       "answerBn": "দুই জায়গায়। সূরা আন-নাবা ৭৮:২-এ নির্দিষ্ট রূপে “আন-নাবাইল আজীম”, এবং সূরা সাদ ৩৮:৬৭-এ অনির্দিষ্ট রূপে “নাবাউন আজীম”।",
-      "refs": ["78:2", "38:67"],
+      "refs": [
+        "78:2",
+        "38:67"
+      ],
       "reviewNote": "Verified: these are the only two ayat pairing the naba root with azeem. The source document called it two occurrences of the definite phrase; the definite form occurs once (78:2), the indefinite once (38:67), so the wording here is corrected."
     },
     {
@@ -46,7 +107,9 @@
       "sortOrder": 3,
       "questionBn": "“হাক্কা তিলাওয়াতিহি” কোন সূরার কোন আয়াতে উল্লেখ করা হয়েছে?",
       "answerBn": "সূরা আল-বাকারা ২:১২১-এ। সম্পূর্ণ কুরআনে এই বাক্যাংশটি কেবল এখানেই এসেছে।",
-      "refs": ["2:121"],
+      "refs": [
+        "2:121"
+      ],
       "reviewNote": "Verified: single occurrence in the mushaf."
     },
     {
@@ -56,7 +119,9 @@
       "sortOrder": 4,
       "questionBn": "“আমানার রাসূল” — অর্থাৎ রাসূল ঈমান এনেছেন — কোন আয়াতে আছে?",
       "answerBn": "সূরা আল-বাকারা ২:২৮৫-এ। সম্পূর্ণ কুরআনে এই বাক্যাংশটি কেবল এখানেই এসেছে।",
-      "refs": ["2:285"],
+      "refs": [
+        "2:285"
+      ],
       "reviewNote": "Verified: single occurrence in the mushaf."
     },
     {
@@ -66,8 +131,2619 @@
       "sortOrder": 5,
       "questionBn": "“লাব্বাইক”-এর পরিবর্তে হজ্জের সময় কী পাঠ করতে হবে?",
       "answerBn": "সূরা আল-আ‘রাফ ৭:১৫৬ — “ইন্না হুদনা ইলাইকা”, অর্থ: নিশ্চয় আমরা আপনার দিকেই প্রত্যাবর্তন করেছি।",
-      "refs": ["7:156"],
+      "refs": [
+        "7:156"
+      ],
       "reviewNote": "PUBLISHED AT THE AUTHOR'S EXPLICIT DIRECTION, with the discrepancy below unresolved. The phrase does occur in 7:156 and only there, so the reference is correct. But 7:156 is part of Musa's supplication and says nothing about hajj or about replacing the talbiyah, so the question as phrased asserts a ruling the cited ayah does not support. Either rephrase the question to what the ayah actually says, or supply a reference that establishes the hajj claim."
+    },
+    {
+      "slug": "ku-006",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 6,
+      "questionBn": "আল্লাহকে সাক্ষী রাখার জন্য কি শব্দ পাঠ করতে হবে?",
+      "answerBn": "“ইন্নি উশহিদুল্লাহ” — আমি আল্লাহকে সাক্ষী রাখছি। সূরা হূদ ১১:৫৪।",
+      "refs": [
+        "11:54"
+      ],
+      "source": "known-unknown-2026-10-09 #6",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-007",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 7,
+      "questionBn": "“আহম্মদ” শব্দটি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আস-সফ ৬১:৬।",
+      "refs": [
+        "61:6"
+      ],
+      "source": "known-unknown-2026-10-09 #7",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-008",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 8,
+      "questionBn": "“লা ইলাহা ইল্লাল্লাহ্” এ বাক্য কুরআনে কোথায় কতবার আছে?",
+      "answerBn": "দুই বার এসেছে। সূরা মুহাম্মাদ ৪৭:১৯; সূরা আস-সাফফাত ৩৭:৩৫।",
+      "refs": [
+        "47:19",
+        "37:35"
+      ],
+      "source": "known-unknown-2026-10-09 #8",
+      "reviewNote": "Verified: “la ilaha illallah” occurs exactly at 37:35 and 47:19."
+    },
+    {
+      "slug": "ku-009",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 9,
+      "questionBn": "“ফাতহান ক্বরীবা” কুরআনে কোথায় কতবার আছে?",
+      "answerBn": "দুই বার এসেছে। সূরা আল-ফাতহ ৪৮:১৮, ২৭।",
+      "refs": [
+        "48:18",
+        "48:27"
+      ],
+      "source": "known-unknown-2026-10-09 #9",
+      "reviewNote": "Correction confirmed by the author (review 2026-10-10, §3); do not re-raise. Corrected: “fathan qariba” occurs twice (48:18, 48:27, verified); the source also cited 48:1, which is “fathan mubina”."
+    },
+    {
+      "slug": "ku-010",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 10,
+      "questionBn": "“কাউসার” এর ব্যাখ্যা কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-বাকারা ২:২৬৯।",
+      "refs": [
+        "2:269"
+      ],
+      "source": "known-unknown-2026-10-09 #10",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 2:269 is about wisdom (hikmah) bringing “much good”; it does not mention kawthar."
+    },
+    {
+      "slug": "ku-011",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 11,
+      "questionBn": "“তাফসীর” শব্দটি কুরআনে কতবার আছে?",
+      "answerBn": "একবার। সূরা আল-ফুরকান ২৫:৩৩।",
+      "refs": [
+        "25:33"
+      ],
+      "source": "known-unknown-2026-10-09 #11",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. “Tafsira” occurs once, 25:33 (verified)."
+    },
+    {
+      "slug": "ku-012",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 12,
+      "questionBn": "“কুরআন ব্যাখ্যাকৃত” এই বিষয়ে যে কোন একটি আয়াত উল্লেখ করুন।",
+      "answerBn": "সূরা হূদ ১১:১; সূরা আল-ইসরা ১৭:১২; সূরা আল-আনআম ৬:১১৪।",
+      "refs": [
+        "11:1",
+        "17:12",
+        "6:114"
+      ],
+      "source": "known-unknown-2026-10-09 #12",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-013",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 13,
+      "questionBn": "ঈমানের ঘোষণা দিতে হবে এটি কোন আয়াতে নির্দেশ করা হয়েছে?",
+      "answerBn": "সূরা আন-নিসা ৪:১৩৬।",
+      "refs": [
+        "4:136"
+      ],
+      "source": "known-unknown-2026-10-09 #13",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-014",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 14,
+      "questionBn": "“আসলামতু” আমি মুসলিম/আমি আত্মসমর্পণ করলাম এটা কতবার আছে?",
+      "answerBn": "তিনবার এসেছে। সূরা আল-বাকারা ২:১৩১; সূরা আলে ইমরান ৩:২০; সূরা আন-নামল ২৭:৪৪।",
+      "refs": [
+        "2:131",
+        "3:20",
+        "27:44"
+      ],
+      "source": "known-unknown-2026-10-09 #14",
+      "reviewNote": "Verified: “aslamtu” occurs exactly at 2:131, 3:20, 27:44."
+    },
+    {
+      "slug": "ku-015",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 15,
+      "questionBn": "“কুরআন-ই” একমাত্র সুদৃঢ় সত্য পথ দেখায় কোন আয়াতে বলা হয়েছে?",
+      "answerBn": "সূরা আল-ইসরা ১৭:৯।",
+      "refs": [
+        "17:9"
+      ],
+      "source": "known-unknown-2026-10-09 #15",
+      "reviewNote": "The ayah says this Qur'an guides to the most upright way; “only” is the question's framing."
+    },
+    {
+      "slug": "ku-016",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 16,
+      "questionBn": "হে রসূল তুমি কিতাব কি ঈমান কি জানতে না, কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আশ-শূরা ৪২:৫২।",
+      "refs": [
+        "42:52"
+      ],
+      "source": "known-unknown-2026-10-09 #16",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-017",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 17,
+      "questionBn": "“মারহাবা” শব্দটি কুরআনের কোথায় আছে?",
+      "answerBn": "সূরা সাদ ৩৮:৫৯, ৬০।",
+      "refs": [
+        "38:59",
+        "38:60"
+      ],
+      "source": "known-unknown-2026-10-09 #17",
+      "reviewNote": "Verified: “marhaban” occurs only at 38:59 and 38:60 (both “la marhaban”)."
+    },
+    {
+      "slug": "ku-018",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 18,
+      "questionBn": "“মা-আযাল্লাহ্” কোন আয়াতে আছে?",
+      "answerBn": "সূরা ইউসুফ ১২:২৩।",
+      "refs": [
+        "12:23"
+      ],
+      "source": "known-unknown-2026-10-09 #18",
+      "reviewNote": "Verified at 12:23; the phrase also occurs at 12:79."
+    },
+    {
+      "slug": "ku-019",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 19,
+      "questionBn": "তাওবা করার পদ্ধতির আয়াতটি উল্লেখ করুন।",
+      "answerBn": "“সুবহানাকা তুবতু ইলাইকা ওয়া আনা আওয়ালুল মুমিনীন।” সূরা আল-আরাফ ৭:১৪৩।",
+      "refs": [
+        "7:143"
+      ],
+      "source": "known-unknown-2026-10-09 #19",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-020",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 20,
+      "questionBn": "“আমি কিতাবে কোন কিছু বাদ দেইনি” এটা কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনআম ৬:৩৮।",
+      "refs": [
+        "6:38"
+      ],
+      "source": "known-unknown-2026-10-09 #20",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-021",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 21,
+      "questionBn": "কুরআনের প্রতি ঈমানের ঘোষণা কি ভাবে দিতে হবে?",
+      "answerBn": "“আমানতু বিমা আনযালাল্লাহু মিন কিতাব।” সূরা আশ-শূরা ৪২:১৫।",
+      "refs": [
+        "42:15"
+      ],
+      "source": "known-unknown-2026-10-09 #21",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-022",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 22,
+      "questionBn": "কুরআনের আমলে পুরুষ ও নারী সমান, এটা কোন আয়াতে আছে?",
+      "answerBn": "সূরা আন-নিসা ৪:১২৪; সূরা আলে ইমরান ৩:১৯৫।",
+      "refs": [
+        "4:124",
+        "3:195"
+      ],
+      "source": "known-unknown-2026-10-09 #22",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-023",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 23,
+      "questionBn": "হে আমার রব আপনি আমার হায়াত বা আমার জীবন বাড়িয়ে দিন এটা কোন আয়াতে আছে?",
+      "answerBn": "এই রকম কোনো আয়াত নেই। সূরা আন-নাহল ১৬:৯৭।",
+      "refs": [
+        "16:97"
+      ],
+      "source": "known-unknown-2026-10-09 #23",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-024",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 24,
+      "questionBn": "কুরআনের যে কোন ছয়টি নাম উল্লেখ করুন।",
+      "answerBn": "সূরা আল-ফুরকান ২৫:১; সূরা আল-আনআম ৬:১১৪; সূরা আন-নিসা ৪:১৭৪; সূরা আল-বাকারা ২:২, ১৮৫।",
+      "refs": [
+        "25:1",
+        "6:114",
+        "4:174",
+        "2:2",
+        "2:185"
+      ],
+      "source": "known-unknown-2026-10-09 #24",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Question asks for six names; the answer lists five (Furqan, Mufassal, Burhan, Huda, Bayyinah). Author to add the sixth."
+    },
+    {
+      "slug": "ku-025",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 25,
+      "questionBn": "ছলাত প্রতিষ্ঠার পূর্ব শর্ত কি?",
+      "answerBn": "মুশরিক না হওয়া। সূরা আর-রূম ৩০:৩১।",
+      "refs": [
+        "30:31"
+      ],
+      "source": "known-unknown-2026-10-09 #25",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. 30:31 joins “establish salat” with “do not be of the mushrikin”."
+    },
+    {
+      "slug": "ku-026",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 26,
+      "questionBn": "কুরআন-ই একমাত্র সর্বউত্তম হাদীছ আয়াতটি উল্লেখ করুন।",
+      "answerBn": "“আল্লাহু নাযযালা আহসানাল হাদীস।” সূরা আয-যুমার ৩৯:২৩।",
+      "refs": [
+        "39:23"
+      ],
+      "source": "known-unknown-2026-10-09 #26",
+      "reviewNote": "The ayah calls it the best hadith; “only” is the question's framing."
+    },
+    {
+      "slug": "ku-027",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 27,
+      "questionBn": "সব ভাষাই আল্লাহ্র আয়াত, কোন আয়াতে আছে?",
+      "answerBn": "সূরা আর-রূম ৩০:২২।",
+      "refs": [
+        "30:22"
+      ],
+      "source": "known-unknown-2026-10-09 #27",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-028",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 28,
+      "questionBn": "“সমস্ত আমলের ব্যাপারে প্রশ্ন করা হবে” কোন আয়াতে আছে?",
+      "answerBn": "সূরা আন-নাহল ১৬:৯৩।",
+      "refs": [
+        "16:93"
+      ],
+      "source": "known-unknown-2026-10-09 #28",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-029",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 29,
+      "questionBn": "“প্রথমে কাফির হইয়ো না” কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-বাকারা ২:৪১।",
+      "refs": [
+        "2:41"
+      ],
+      "source": "known-unknown-2026-10-09 #29",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-030",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 30,
+      "questionBn": "“যারা নিজ হাতে কিতাব রচনা করে তারা ধ্বংস” এটা কোথায় বলা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:৭৯।",
+      "refs": [
+        "2:79"
+      ],
+      "source": "known-unknown-2026-10-09 #30",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-031",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 31,
+      "questionBn": "“লাশ-সৎকার” কোন সূরার কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৩১।",
+      "refs": [
+        "5:31"
+      ],
+      "source": "known-unknown-2026-10-09 #31",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-032",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 32,
+      "questionBn": "“মুচকি হাসি” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নামল ২৭:১৯।",
+      "refs": [
+        "27:19"
+      ],
+      "source": "known-unknown-2026-10-09 #32",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-033",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 33,
+      "questionBn": "“এই কুরআন বাদ দিয়ে অন্য কুরআন নিয়ে আসো” এটা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ইউনুস ১০:১৫।",
+      "refs": [
+        "10:15"
+      ],
+      "source": "known-unknown-2026-10-09 #33",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-034",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 34,
+      "questionBn": "খেলাধুলার কথা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ইউসুফ ১২:১২।",
+      "refs": [
+        "12:12"
+      ],
+      "source": "known-unknown-2026-10-09 #34",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-035",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 35,
+      "questionBn": "মিথ্যা রচনার শাস্তি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-জাসিয়া ৪৫:৭।",
+      "refs": [
+        "45:7"
+      ],
+      "source": "known-unknown-2026-10-09 #35",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-036",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 36,
+      "questionBn": "নিকৃষ্ট জালিম কারা, আয়াত দিয়ে উল্লেখ করুন।",
+      "answerBn": "সূরা আল-আনআম ৬:২১।",
+      "refs": [
+        "6:21"
+      ],
+      "source": "known-unknown-2026-10-09 #36",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-037",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 37,
+      "questionBn": "“কুরআনের প্রতিটি আয়াত এক একটি হাদিস” আয়াতটি উল্লেখ করুন।",
+      "answerBn": "সূরা আল-জাসিয়া ৪৫:৬।",
+      "refs": [
+        "45:6"
+      ],
+      "source": "known-unknown-2026-10-09 #37",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 45:6 asks “in what hadith after Allah and His ayat will they believe”; it does not say every ayah is a hadith."
+    },
+    {
+      "slug": "ku-038",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 38,
+      "questionBn": "মুসলিমের সংজ্ঞার একটি আয়াত উল্লেখ করুন।",
+      "answerBn": "সূরা আয-যুখরুফ ৪৩:৬৯।",
+      "refs": [
+        "43:69"
+      ],
+      "source": "known-unknown-2026-10-09 #38",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-039",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 39,
+      "questionBn": "“আল্লাহু আকবার” শব্দটি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনআম ৬:১৯।",
+      "refs": [
+        "6:19"
+      ],
+      "source": "known-unknown-2026-10-09 #39",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: The phrase “Allahu akbar” (as a takbir) does not occur in 6:19 or anywhere in the mushaf (verified). 6:19 has “akbaru shahadah”."
+    },
+    {
+      "slug": "ku-040",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 40,
+      "questionBn": "বার মাস কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আত-তাওবা ৯:৩৬।",
+      "refs": [
+        "9:36"
+      ],
+      "source": "known-unknown-2026-10-09 #40",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-041",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 41,
+      "questionBn": "“যায়েদ” নামটি কোন সূরায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আহযাব ৩৩:৩৭।",
+      "refs": [
+        "33:37"
+      ],
+      "source": "known-unknown-2026-10-09 #41",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-042",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 42,
+      "questionBn": "সন্তানকে শিক্ষা দেওয়ার পদ্ধতি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা লুকমান ৩১:১৩।",
+      "refs": [
+        "31:13"
+      ],
+      "source": "known-unknown-2026-10-09 #42",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-043",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 43,
+      "questionBn": "পেটে আগুন দিয়ে ভর্তি করবে কারা? এদের পরিচয় কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:১৭৪; সূরা আন-নিসা ৪:১০।",
+      "refs": [
+        "2:174",
+        "4:10"
+      ],
+      "source": "known-unknown-2026-10-09 #43",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-044",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 44,
+      "questionBn": "“কুরআনে সকল কল্যাণে পরিপূর্ণ” এটি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আরাফ ৭:১৩৭।",
+      "refs": [
+        "7:137"
+      ],
+      "source": "known-unknown-2026-10-09 #44",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 7:137 is about Bani Isra'il inheriting the land; it does not describe the Qur'an as full of every good."
+    },
+    {
+      "slug": "ku-045",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 45,
+      "questionBn": "“ঘর থেকে কিবলা নির্ধারণ করো” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ইউনুস ১০:৮৭।",
+      "refs": [
+        "10:87"
+      ],
+      "source": "known-unknown-2026-10-09 #45",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-046",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 46,
+      "questionBn": "সন্তানদেরকে শির্ক মুক্ত রাখার আবেদন কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ইবরাহীম ১৪:৩৫।",
+      "refs": [
+        "14:35"
+      ],
+      "source": "known-unknown-2026-10-09 #46",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-047",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 47,
+      "questionBn": "“এই কুরআন বনী ইসরাইলের ব্যাপারে বর্ণনা করে” আয়াতটি উল্লেখ করুন।",
+      "answerBn": "সূরা আন-নামল ২৭:৭৬।",
+      "refs": [
+        "27:76"
+      ],
+      "source": "known-unknown-2026-10-09 #47",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-048",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 48,
+      "questionBn": "“শির্ক করলে জান্নাত হারাম” কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৭২।",
+      "refs": [
+        "5:72"
+      ],
+      "source": "known-unknown-2026-10-09 #48",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-049",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 49,
+      "questionBn": "“দুই ইলাহ্ গ্রহণ করো না” এটি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নাহল ১৬:৫১।",
+      "refs": [
+        "16:51"
+      ],
+      "source": "known-unknown-2026-10-09 #49",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-050",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 50,
+      "questionBn": "“শুধু এই কুরআনকে অনুসরণ কর” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আল-আনআম ৬:১৫৫।",
+      "refs": [
+        "6:155"
+      ],
+      "source": "known-unknown-2026-10-09 #50",
+      "reviewNote": "The ayah says follow this blessed Book; “only” is the question's framing."
+    },
+    {
+      "slug": "ku-051",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 51,
+      "questionBn": "“কুরআন অনুযায়ী তাহীয়া তথা সালাম না দিলে আজাব নাজিল হবে” কথাটি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মুজাদালা ৫৮:৮।",
+      "refs": [
+        "58:8"
+      ],
+      "source": "known-unknown-2026-10-09 #51",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 58:8 condemns greeting the Prophet with a greeting Allah did not use; it does not say not giving salam brings punishment."
+    },
+    {
+      "slug": "ku-052",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 52,
+      "questionBn": "“চান্দ্রপঞ্জিকা (Lunar Calendar)” কোন আয়াত দ্বারা প্রমাণিত?",
+      "answerBn": "সূরা ইউনুস ১০:৫; সূরা ইয়াসীন ৩৬:৩৯।",
+      "refs": [
+        "10:5",
+        "36:39"
+      ],
+      "source": "known-unknown-2026-10-09 #52",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive but close: 10:5 and 36:39 give the moon stations “to know the number of years”. Author to confirm the “lunar calendar” framing."
+    },
+    {
+      "slug": "ku-053",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 53,
+      "questionBn": "“রিসালাত” শব্দটি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৬৭।",
+      "refs": [
+        "5:67"
+      ],
+      "source": "known-unknown-2026-10-09 #53",
+      "reviewNote": "Verified: “risalatahu” at 5:67 (also 6:124)."
+    },
+    {
+      "slug": "ku-054",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 54,
+      "questionBn": "“শির্কযুক্ত আমল বাতিল হবে” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আয-যুমার ৩৯:৬৫।",
+      "refs": [
+        "39:65"
+      ],
+      "source": "known-unknown-2026-10-09 #54",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-055",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 55,
+      "questionBn": "“অতঃপর পথটি তিনি আল্লাহ্ সহজ করে দিয়েছেন” এটি কোন আয়াতের অনুবাদ?",
+      "answerBn": "সূরা আবাসা ৮০:২০।",
+      "refs": [
+        "80:20"
+      ],
+      "source": "known-unknown-2026-10-09 #55",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-056",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 56,
+      "questionBn": "“কুরআন-ই একমাত্র দলিল” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনআম ৬:১৪৯; সূরা আন-নিসা ৪:১৭৪।",
+      "refs": [
+        "6:149",
+        "4:174"
+      ],
+      "source": "known-unknown-2026-10-09 #56",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 6:149 says the conclusive argument belongs to Allah; 4:174 says a proof has come. Neither says the Qur'an is the only proof."
+    },
+    {
+      "slug": "ku-057",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 57,
+      "questionBn": "“তুমি কুরআন দ্বারা মানুষকে বার বার নির্দেশ করো, যারা কঠিন আযাবকে ভয় করে” এটি কোন সূরায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা কাফ ৫০:৪৫।",
+      "refs": [
+        "50:45"
+      ],
+      "source": "known-unknown-2026-10-09 #57",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-058",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 58,
+      "questionBn": "“দিনের দুই প্রান্তে ছলাত প্রতিষ্ঠা করো” সংক্রান্ত আয়াতটি কোন সূরায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা হূদ ১১:১১৪।",
+      "refs": [
+        "11:114"
+      ],
+      "source": "known-unknown-2026-10-09 #58",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-059",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 59,
+      "questionBn": "“নবী রাসুলের সালাম দেওয়ার পদ্ধতি” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নামল ২৭:৫৯; সূরা আস-সাফফাত ৩৭:১৮১।",
+      "refs": [
+        "27:59",
+        "37:181"
+      ],
+      "source": "known-unknown-2026-10-09 #59",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-060",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 60,
+      "questionBn": "“লা কুওয়াতা ইল্লা বিল্লাহ্” এটি কোন সূরায় এসেছে?",
+      "answerBn": "সূরা আল-কাহফ ১৮:৩৯।",
+      "refs": [
+        "18:39"
+      ],
+      "source": "known-unknown-2026-10-09 #60",
+      "reviewNote": "Correction confirmed by the author (review 2026-10-10, §3); do not re-raise. Corrected: the source cited 18:3; the phrase is at 18:39 (verified, its only occurrence)."
+    },
+    {
+      "slug": "ku-061",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 61,
+      "questionBn": "“মুয়াজ্জিন” শব্দটি কুরআনে কতবার উল্লেখ করা হয়েছে?",
+      "answerBn": "দুই বার এসেছে। সূরা ইউসুফ ১২:৭০; সূরা আল-আরাফ ৭:৪৪।",
+      "refs": [
+        "12:70",
+        "7:44"
+      ],
+      "source": "known-unknown-2026-10-09 #61",
+      "reviewNote": "Verified: “mu'adhdhin” occurs only at 7:44 and 12:70."
+    },
+    {
+      "slug": "ku-062",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 62,
+      "questionBn": "“ঈমাম” শব্দটি কুরআনে কতবার উল্লেখ করা হয়েছে?",
+      "answerBn": "ছয়বার। সূরা আল-বাকারা ২:১২৪; সূরা হূদ ১১:১৭; সূরা আল-ইসরা ১৭:৭১; সূরা আল-ফুরকান ২৫:৭৪; সূরা ইয়াসীন ৩৬:১২; সূরা আল-আহকাফ ৪৬:১২।",
+      "refs": [
+        "2:124",
+        "11:17",
+        "17:71",
+        "25:74",
+        "36:12",
+        "46:12"
+      ],
+      "source": "known-unknown-2026-10-09 #62",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. Singular “imam” occurs 6 times (verified; 75:5 is a different word)."
+    },
+    {
+      "slug": "ku-063",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 63,
+      "questionBn": "নদীর পরীক্ষা কোন নেতার নেতৃত্বে করা হয়েছিল?",
+      "answerBn": "সালামুন আলা তালুত। সূরা আল-বাকারা ২:২৪৯।",
+      "refs": [
+        "2:249"
+      ],
+      "source": "known-unknown-2026-10-09 #63",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-064",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 64,
+      "questionBn": "ছলাতে দুই সিজদা তথা সিজদার পরে সিজদা কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা কাফ ৫০:৪০।",
+      "refs": [
+        "50:40"
+      ],
+      "source": "known-unknown-2026-10-09 #64",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 50:40 says glorify Him “after the prostrations”; it does not describe two sajdas in salat."
+    },
+    {
+      "slug": "ku-065",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 65,
+      "questionBn": "কুরআনে প্রতিটি উদাহরণ বিদ্যমান এটি কোন আয়াতে এসেছে?",
+      "answerBn": "সূরা আয-যুমার ৩৯:২৭।",
+      "refs": [
+        "39:27"
+      ],
+      "source": "known-unknown-2026-10-09 #65",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-066",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 66,
+      "questionBn": "মৃত্যুর সময় কাদেরকে সালামুন আলাইকুম বলে সম্বর্ধনা দেওয়া হবে?",
+      "answerBn": "মুসলিমদেরকে। সূরা আন-নাহল ১৬:৩২।",
+      "refs": [
+        "16:32"
+      ],
+      "source": "known-unknown-2026-10-09 #66",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: The ayah says those taken “in a state of purity” (tayyibin); the answer says “Muslims”. Author to confirm."
+    },
+    {
+      "slug": "ku-067",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 67,
+      "questionBn": "সঙ্গবদ্ধভাবে ছলাতের কাঠামো কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নিসা ৪:১০২; সূরা আল-হাজ্জ ২২:২৬।",
+      "refs": [
+        "4:102",
+        "22:26"
+      ],
+      "source": "known-unknown-2026-10-09 #67",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-068",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 68,
+      "questionBn": "রুকুর পদ্ধতি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা সাদ ৩৮:২৪।",
+      "refs": [
+        "38:24"
+      ],
+      "source": "known-unknown-2026-10-09 #68",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 38:24 narrates Dawud falling down bowing in repentance; it does not set out a method of ruku."
+    },
+    {
+      "slug": "ku-069",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 69,
+      "questionBn": "সিজদার পদ্ধতি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ইসরা ১৭:১০৭; সূরা ত্বা-হা ২০:৭০; সূরা আশ-শুআরা ২৬:৪৬।",
+      "refs": [
+        "17:107",
+        "20:70",
+        "26:46"
+      ],
+      "source": "known-unknown-2026-10-09 #69",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-070",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 70,
+      "questionBn": "“খাতামুন নাবিয়্যিন” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আহযাব ৩৩:৪০।",
+      "refs": [
+        "33:40"
+      ],
+      "source": "known-unknown-2026-10-09 #70",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-071",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 71,
+      "questionBn": "“রহমাতুল্লিল আলামিন” কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আম্বিয়া ২১:১০৭।",
+      "refs": [
+        "21:107"
+      ],
+      "source": "known-unknown-2026-10-09 #71",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-072",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 72,
+      "questionBn": "AI (কৃত্রিম বুদ্ধিমত্তা) সিস্টেম কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নাহল ১৬:৮।",
+      "refs": [
+        "16:8"
+      ],
+      "source": "known-unknown-2026-10-09 #72",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 16:8 says Allah creates what you do not know; it does not mention AI."
+    },
+    {
+      "slug": "ku-073",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 73,
+      "questionBn": "“ভূমিকে আল্লাহ্ ওহী করেছেন” কথাটি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আয-যিলযাল ৯৯:৫।",
+      "refs": [
+        "99:5"
+      ],
+      "source": "known-unknown-2026-10-09 #73",
+      "reviewNote": "Verified: “awha laha” at 99:5."
+    },
+    {
+      "slug": "ku-074",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 74,
+      "questionBn": "“ইন্টারনেটের পাতাগুলো উম্মুক্ত করা হয়েছে” এটি কুরআনের কোন আয়াত দ্বারা প্রমাণিত?",
+      "answerBn": "সূরা আত-তাকভীর ৮১:১০।",
+      "refs": [
+        "81:10"
+      ],
+      "source": "known-unknown-2026-10-09 #74",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 81:10 is about the records being laid open; it does not mention the internet. Source also names the surah Takathur; 81 is At-Takwir."
+    },
+    {
+      "slug": "ku-075",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 75,
+      "questionBn": "অগ্নিময় সমুদ্রের কথা কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আত-তূর ৫২:৬।",
+      "refs": [
+        "52:6"
+      ],
+      "source": "known-unknown-2026-10-09 #75",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: The ayah swears by “al-bahr al-masjur”; this translation renders it “swelling sea”, not “fiery sea”. Author to confirm."
+    },
+    {
+      "slug": "ku-076",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 76,
+      "questionBn": "“আখিরাতে প্রত্যেক মানুষকে তার নেতাসহ ডাকা হবে” আয়াতটি উল্লেখ করুন?",
+      "answerBn": "সূরা আল-ইসরা ১৭:৭১।",
+      "refs": [
+        "17:71"
+      ],
+      "source": "known-unknown-2026-10-09 #76",
+      "reviewNote": "Correction confirmed by the author (review 2026-10-10, §3); do not re-raise. Corrected: the source cited “Isra 52:6”; “bi imamihim” is at 17:71 (verified, only occurrence)."
+    },
+    {
+      "slug": "ku-077",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 77,
+      "questionBn": "মুসলিম সমাজের রূপরেখা কোন আয়াত দ্বারা প্রমাণিত?",
+      "answerBn": "সূরা আত-তাওবা ৯:৭১।",
+      "refs": [
+        "9:71"
+      ],
+      "source": "known-unknown-2026-10-09 #77",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-078",
+      "status": "published",
+      "category": "signs",
+      "sortOrder": 78,
+      "questionBn": "বৃষ্টির পানিকে বরকতময় পানি বলা হয়েছে কোন আয়াতে?",
+      "answerBn": "সূরা কাফ ৫০:৯।",
+      "refs": [
+        "50:9"
+      ],
+      "source": "known-unknown-2026-10-09 #78",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-079",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 79,
+      "questionBn": "কুরআনকে আরবী ভাষায় সহজবোধ্য করে নাজিল করা হয়েছে, এটি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ইউসুফ ১২:২।",
+      "refs": [
+        "12:2"
+      ],
+      "source": "known-unknown-2026-10-09 #79",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-080",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 80,
+      "questionBn": "“এক আল্লাহ্র প্রতি ঈমান না আনা পর্যন্ত আমাদের শত্রুতা অব্যাহত থাকবে” এটি কে বলেছেন এবং কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "ইবরাহীম। সূরা আল-মুমতাহিনা ৬০:৪।",
+      "refs": [
+        "60:4"
+      ],
+      "source": "known-unknown-2026-10-09 #80",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-081",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 81,
+      "questionBn": "“ছলাতে কি ভাবে দাঁড়াতে হবে” এর পদ্ধতি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:২৩৮।",
+      "refs": [
+        "2:238"
+      ],
+      "source": "known-unknown-2026-10-09 #81",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-082",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 82,
+      "questionBn": "“যাকাত পরিশোধ না করলে তারা কাফির” এটি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ফুসসিলাত ৪১:৭।",
+      "refs": [
+        "41:7"
+      ],
+      "source": "known-unknown-2026-10-09 #82",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-083",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 83,
+      "questionBn": "সূরা তাহ্রিম- ৬৬ ঃ ১ নম্বর আয়াতের ব্যাখ্যা কোন আয়াতে পাওয়া যায়?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৮৭।",
+      "refs": [
+        "5:87"
+      ],
+      "source": "known-unknown-2026-10-09 #83",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-084",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 84,
+      "questionBn": "“ছলাতের জন্য নিদাহ্ করা হয়” এটি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৫৮।",
+      "refs": [
+        "5:58"
+      ],
+      "source": "known-unknown-2026-10-09 #84",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-085",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 85,
+      "questionBn": "“কুরআন-ই একমাত্র ওহী” এটি কোন আয়াত দ্বারা প্রমাণিত?",
+      "answerBn": "সূরা আল-আনআম ৬:১৯; সূরা ইউসুফ ১২:৩।",
+      "refs": [
+        "6:19",
+        "12:3"
+      ],
+      "source": "known-unknown-2026-10-09 #85",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 6:19 and 12:3 say this Qur'an was revealed by wahy; they do not say it is the only wahy."
+    },
+    {
+      "slug": "ku-086",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 86,
+      "questionBn": "“আল্লাহ্র বিধান প্রণয়নের কর্তৃত্বে কারও কোন অংশ নেই” এটি কে বলেছেন এবং কোথায় বলেছেন?",
+      "answerBn": "আল্লাহ বলেছেন। সূরা আল-কাহফ ১৮:২৬।",
+      "refs": [
+        "18:26"
+      ],
+      "source": "known-unknown-2026-10-09 #86",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-087",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 87,
+      "questionBn": "“কুরআনের নেতৃত্ব না মানলে নিজের হাত নিজে কামড়াবে” এটি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ফুরকান ২৫:২৭।",
+      "refs": [
+        "25:27"
+      ],
+      "source": "known-unknown-2026-10-09 #87",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 25:27 has the wrongdoer biting his hands wishing he had taken a path with the Messenger; it does not mention the Qur'an's leadership."
+    },
+    {
+      "slug": "ku-088",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 88,
+      "questionBn": "কোন কোন আয়াত দ্বারা ঈমানের ঘোষণা দিতে হবে?",
+      "answerBn": "সূরা আল-বাকারা ২:১৩৬; সূরা আলে ইমরান ৩:৮৪, ৫২, ৫৩; সূরা আশ-শূরা ৪২:১৫; সূরা আল-মায়িদা ৫:৮৩, ১১১; সূরা আল-আরাফ ৭:১২১, ১২২; সূরা ত্বা-হা ২০:৭০; সূরা আল-মুমিনূন ২৩:১০৯; সূরা আন-নূর ২৪:৪৭।",
+      "refs": [
+        "2:136",
+        "3:84",
+        "3:52",
+        "3:53",
+        "42:15",
+        "5:83",
+        "5:111",
+        "7:121",
+        "7:122",
+        "20:70",
+        "23:109",
+        "24:47"
+      ],
+      "source": "known-unknown-2026-10-09 #88",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-089",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 89,
+      "questionBn": "কোন কোন আয়াত দ্বারা শাহাদাত/সাক্ষ্য দিতে হবে?",
+      "answerBn": "সূরা আলে ইমরান ৩:৫৩; সূরা ইউনুস ১০:২৯; সূরা আর-রাদ ১৩:৪৩; সূরা আল-মায়িদা ৫:৮৩; সূরা আল-ইসরা ১৭:৯৬; সূরা আল-আনকাবূত ২৯:৫২।",
+      "refs": [
+        "3:53",
+        "10:29",
+        "13:43",
+        "5:83",
+        "17:96",
+        "29:52"
+      ],
+      "source": "known-unknown-2026-10-09 #89",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-090",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 90,
+      "questionBn": "কিয়ামতের দিন কাদের চেহারা কালো হবে এবং কেন হবে- আয়াত দ্বারা প্রমাণ করুন।",
+      "answerBn": "দুটি কারণে। সূরা আলে ইমরান ৩:১০৬; সূরা আয-যুমার ৩৯:৬০।",
+      "refs": [
+        "3:106",
+        "39:60"
+      ],
+      "source": "known-unknown-2026-10-09 #90",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-091",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 91,
+      "questionBn": "“খুমুস” শব্দটি কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনফাল ৮:৪১।",
+      "refs": [
+        "8:41"
+      ],
+      "source": "known-unknown-2026-10-09 #91",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-092",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 92,
+      "questionBn": "মাগদুব বা অভিশপ্ত কারা?",
+      "answerBn": "যারা নাযিলকৃত বিধান না মেনে তুচ্ছ মূল্য গ্রহণ করে। সূরা আল-বাকারা ২:৯০; সূরা আলে ইমরান ৩:১১২।",
+      "refs": [
+        "2:90",
+        "3:112"
+      ],
+      "source": "known-unknown-2026-10-09 #92",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-093",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 93,
+      "questionBn": "“নিকটবর্তী কাফিরদের বিরুদ্ধে সশস্ত্র যুদ্ধ করো” এটি কোথায় বলা হয়েছে?",
+      "answerBn": "সূরা আত-তাওবা ৯:১২৩।",
+      "refs": [
+        "9:123"
+      ],
+      "source": "known-unknown-2026-10-09 #93",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-094",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 94,
+      "questionBn": "“কুরআন দিয়ে পৃথিবী শাসন করা হবে” কোথায় লেখা আছে?",
+      "answerBn": "সূরা আন-নিসা ৪:১০৫; সূরা আল-আম্বিয়া ২১:১০৫।",
+      "refs": [
+        "4:105",
+        "21:105"
+      ],
+      "source": "known-unknown-2026-10-09 #94",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 4:105 says judge between people by the Book; 21:105 says the righteous will inherit the earth. Neither says the world will be ruled by the Qur'an."
+    },
+    {
+      "slug": "ku-095",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 95,
+      "questionBn": "“পথপ্রদর্শনকারী ও সাহায্যকারী হিসেবে তোমার রবই যথেষ্ট” এই আয়াতাংশটি উল্লেখ করুন।",
+      "answerBn": "“ওয়া কাফা বিরাব্বিকা হাদিয়াও ওয়া নাসীরা।” সূরা আল-ফুরকান ২৫:৩১।",
+      "refs": [
+        "25:31"
+      ],
+      "source": "known-unknown-2026-10-09 #95",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-096",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 96,
+      "questionBn": "“পিতা মাতার সঙ্গে সদাচরণ করার নির্দেশ” কোন আয়াতে করা হয়েছে?",
+      "answerBn": "সূরা আন-নিসা ৪:৩৬; সূরা আল-ইসরা ১৭:২৩; সূরা আল-আনকাবূত ২৯:৮।",
+      "refs": [
+        "4:36",
+        "17:23",
+        "29:8"
+      ],
+      "source": "known-unknown-2026-10-09 #96",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-097",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 97,
+      "questionBn": "“১০টি সূরা রচনা করে নিয়ে আসো” এই চ্যালেঞ্জটি কোন আয়াতে রয়েছে?",
+      "answerBn": "সূরা হূদ ১১:১৩।",
+      "refs": [
+        "11:13"
+      ],
+      "source": "known-unknown-2026-10-09 #97",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-098",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 98,
+      "questionBn": "“কুরআন ছাড়া তোমাদের কোন কিতাব থাকলে তা নিয়ে আসো” এটি কোন আয়াতে রয়েছে?",
+      "answerBn": "সূরা আস-সাফফাত ৩৭:১৫৭।",
+      "refs": [
+        "37:157"
+      ],
+      "source": "known-unknown-2026-10-09 #98",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-099",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 99,
+      "questionBn": "“মাল খরচ করে পরিশুদ্ধ হতে হবে” এটি কোন আয়াতে রয়েছে?",
+      "answerBn": "সূরা আল-লাইল ৯২:১৮।",
+      "refs": [
+        "92:18"
+      ],
+      "source": "known-unknown-2026-10-09 #99",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-100",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 100,
+      "questionBn": "“কুরআন প্রতিষ্ঠা করা ছাড়া কোন অস্তিত্বই থাকবে না” এটি কোথায় বলা হয়েছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৬৮।",
+      "refs": [
+        "5:68"
+      ],
+      "source": "known-unknown-2026-10-09 #100",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 5:68 tells the People of the Book they stand on nothing until they uphold the Tawrat, Injil and what was revealed; it does not say nothing will exist."
+    },
+    {
+      "slug": "ku-101",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 101,
+      "questionBn": "“কালিমাতুন তৈইয়্যিবাহ্” শব্দটি কোন সূরায় আছে?",
+      "answerBn": "সূরা ইবরাহীম ১৪:২৪।",
+      "refs": [
+        "14:24"
+      ],
+      "source": "known-unknown-2026-10-09 #101",
+      "reviewNote": "Verified: only occurrence."
+    },
+    {
+      "slug": "ku-102",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 102,
+      "questionBn": "“হায়াতুন তৈইয়্যিবাহ্” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আন-নাহল ১৬:৯৭।",
+      "refs": [
+        "16:97"
+      ],
+      "source": "known-unknown-2026-10-09 #102",
+      "reviewNote": "Verified: only occurrence."
+    },
+    {
+      "slug": "ku-103",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 103,
+      "questionBn": "“সালামের সাথে মোবারাকাতান তৈইয়্যিবাহ্” এটা কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আন-নূর ২৪:৬১।",
+      "refs": [
+        "24:61"
+      ],
+      "source": "known-unknown-2026-10-09 #103",
+      "reviewNote": "Verified: only occurrence."
+    },
+    {
+      "slug": "ku-104",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 104,
+      "questionBn": "কোন সূরার শুরুতে কুরআন সুস্পষ্ট ব্যাখ্যা করা হয়েছে?",
+      "answerBn": "সূরা হূদ ১১:১।",
+      "refs": [
+        "11:1"
+      ],
+      "source": "known-unknown-2026-10-09 #104",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-105",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 105,
+      "questionBn": "শহর কে পবিত্র রাখার দোয়া কোন আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা সাবা ৩৪:১৫।",
+      "refs": [
+        "34:15"
+      ],
+      "source": "known-unknown-2026-10-09 #105",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 34:15 describes Saba as “a good land”; it is not a du'a for keeping a city pure."
+    },
+    {
+      "slug": "ku-106",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 106,
+      "questionBn": "যানবাহনে আরোহনের দোয়া কোন সূরায় রয়েছে?",
+      "answerBn": "সূরা আয-যুখরুফ ৪৩:১৩।",
+      "refs": [
+        "43:13"
+      ],
+      "source": "known-unknown-2026-10-09 #106",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-107",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 107,
+      "questionBn": "আহসানুল হাদীস কোন আয়াতে রয়েছে?",
+      "answerBn": "সূরা আয-যুমার ৩৯:২৩।",
+      "refs": [
+        "39:23"
+      ],
+      "source": "known-unknown-2026-10-09 #107",
+      "reviewNote": "Verified: only occurrence."
+    },
+    {
+      "slug": "ku-108",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 108,
+      "questionBn": "লাহুআল হাদিস কোন আয়াতে আছে?",
+      "answerBn": "সূরা লুকমান ৩১:৬।",
+      "refs": [
+        "31:6"
+      ],
+      "source": "known-unknown-2026-10-09 #108",
+      "reviewNote": "Verified: only occurrence."
+    },
+    {
+      "slug": "ku-109",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 109,
+      "questionBn": "সালামুন আলা আদম এর দুই ছেলের কথা কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:২৭।",
+      "refs": [
+        "5:27"
+      ],
+      "source": "known-unknown-2026-10-09 #109",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-110",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 110,
+      "questionBn": "উশয়াতুন হাসানা শব্দটি কতবার আছে কুরআনে?",
+      "answerBn": "তিনবার। সূরা আল-আহযাব ৩৩:২১; সূরা আল-মুমতাহিনা ৬০:৪, ৬।",
+      "refs": [
+        "33:21",
+        "60:4",
+        "60:6"
+      ],
+      "source": "known-unknown-2026-10-09 #110",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. “Uswatun hasanah” occurs 3 times (verified)."
+    },
+    {
+      "slug": "ku-111",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 111,
+      "questionBn": "ওসিয়াত করা আবশ্যক বা বাধ্যতামূলক কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-বাকারা ২:১৮০।",
+      "refs": [
+        "2:180"
+      ],
+      "source": "known-unknown-2026-10-09 #111",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-112",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 112,
+      "questionBn": "রাসূল ও মুমিনগন ঈমান আনয়ন করেছেন কোন আয়াতে আছে?",
+      "answerBn": "সূরা আল-বাকারা ২:২৮৫।",
+      "refs": [
+        "2:285"
+      ],
+      "source": "known-unknown-2026-10-09 #112",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-113",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 113,
+      "questionBn": "“সুবাহানা রব্বিনা” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আল-ইসরা ১৭:১০৮।",
+      "refs": [
+        "17:108"
+      ],
+      "source": "known-unknown-2026-10-09 #113",
+      "reviewNote": "Verified at 17:108; the phrase also occurs at 68:29."
+    },
+    {
+      "slug": "ku-114",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 114,
+      "questionBn": "“তাবারাকাল্লাহু রব্বুল আ'লামীন” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আল-আরাফ ৭:৫৪।",
+      "refs": [
+        "7:54"
+      ],
+      "source": "known-unknown-2026-10-09 #114",
+      "reviewNote": "Verified at 7:54; the phrase also occurs at 40:64."
+    },
+    {
+      "slug": "ku-115",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 115,
+      "questionBn": "“রাতের শেষ প্রহরে উঠতে হবে” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আয-যারিয়াত ৫১:১৮।",
+      "refs": [
+        "51:18"
+      ],
+      "source": "known-unknown-2026-10-09 #115",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-116",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 116,
+      "questionBn": "“কুরআন নিয়ে রাত্রি জাগরণ” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আল-ইসরা ১৭:৭৯।",
+      "refs": [
+        "17:79"
+      ],
+      "source": "known-unknown-2026-10-09 #116",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-117",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 117,
+      "questionBn": "“সুন্নাতুল্লাহ্” কত নাম্বার আয়াতে আছে?",
+      "answerBn": "সূরা আল-আহযাব ৩৩:৩৮।",
+      "refs": [
+        "33:38"
+      ],
+      "source": "known-unknown-2026-10-09 #117",
+      "reviewNote": "Verified at 33:38; the phrase also occurs at 33:62, 35:43, 48:23 and elsewhere."
+    },
+    {
+      "slug": "ku-118",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 118,
+      "questionBn": "“বিচার দিবসের মালিক কে?” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ফাতিহা ১:৪।",
+      "refs": [
+        "1:4"
+      ],
+      "source": "known-unknown-2026-10-09 #118",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-119",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 119,
+      "questionBn": "“আমরা কার নিকট সাহায্য চাই” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ফাতিহা ১:৫।",
+      "refs": [
+        "1:5"
+      ],
+      "source": "known-unknown-2026-10-09 #119",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-120",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 120,
+      "questionBn": "“নবীরা ও রাসুলরা শির্ক করলে সমস্ত আমল বাতিল হয়ে যাবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনআম ৬:৮৮।",
+      "refs": [
+        "6:88"
+      ],
+      "source": "known-unknown-2026-10-09 #120",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-121",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 121,
+      "questionBn": "“মারিয়ামের ছেলের নাম” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা মারইয়াম ১৯:৩৪।",
+      "refs": [
+        "19:34"
+      ],
+      "source": "known-unknown-2026-10-09 #121",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-122",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 122,
+      "questionBn": "“আল্লাহ্র পরিচয়” কোন সূরাতে উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ইখলাস ১১২:১-৪।",
+      "refs": [
+        "112:1",
+        "112:2",
+        "112:3",
+        "112:4"
+      ],
+      "source": "known-unknown-2026-10-09 #122",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. The whole surah, 112:1-4."
+    },
+    {
+      "slug": "ku-123",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 123,
+      "questionBn": "“নবীরা ও রাসুলরা মানুষ” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-কাহফ ১৮:১১০; সূরা ইবরাহীম ১৪:১১।",
+      "refs": [
+        "18:110",
+        "14:11"
+      ],
+      "source": "known-unknown-2026-10-09 #123",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-124",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 124,
+      "questionBn": "“নবী ও রাসুল হাট বাজারে যেতেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ফুরকান ২৫:২০।",
+      "refs": [
+        "25:20"
+      ],
+      "source": "known-unknown-2026-10-09 #124",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-125",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 125,
+      "questionBn": "“কিয়ামতের পূর্বে সকল স্থান ধ্বংস করা হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ইসরা ১৭:৫৮।",
+      "refs": [
+        "17:58"
+      ],
+      "source": "known-unknown-2026-10-09 #125",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-126",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 126,
+      "questionBn": "“যে জানে আর যে জানে না সমান নয়” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আয-যুমার ৩৯:৯।",
+      "refs": [
+        "39:9"
+      ],
+      "source": "known-unknown-2026-10-09 #126",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-127",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 127,
+      "questionBn": "“যে রাতে দাঁড়িয়ে সিজদাবনত হয়ে আখিরাতকে ভয় করে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আয-যুমার ৩৯:৯।",
+      "refs": [
+        "39:9"
+      ],
+      "source": "known-unknown-2026-10-09 #127",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-128",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 128,
+      "questionBn": "“কুরআন পড়ার শুরুতে শয়তান থেকে আল্লাহ্র নিকট পানাহ্ চাইতে হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নাহল ১৬:৯৮।",
+      "refs": [
+        "16:98"
+      ],
+      "source": "known-unknown-2026-10-09 #128",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-129",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 129,
+      "questionBn": "“কুরআন পড়ার শুরুতে কিভাবে শয়তান থেকে পানাহ্ চাইবো” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মুমিনূন ২৩:৯৭, ৯৮।",
+      "refs": [
+        "23:97",
+        "23:98"
+      ],
+      "source": "known-unknown-2026-10-09 #129",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 23:97-98 is a general refuge formula; it does not tie it to starting a recitation (16:98 does that)."
+    },
+    {
+      "slug": "ku-130",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 130,
+      "questionBn": "“সন্তানের মত করে কুরআন চিনতে হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনআম ৬:২০।",
+      "refs": [
+        "6:20"
+      ],
+      "source": "known-unknown-2026-10-09 #130",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 6:20 says they recognise “him/it” as they recognise their sons; this translation reads it as the Messenger, not the Qur'an."
+    },
+    {
+      "slug": "ku-131",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 131,
+      "questionBn": "“কুরআন নিয়ে গভীরভাবে চিন্তা গবেষণা করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা মুহাম্মাদ ৪৭:২৪।",
+      "refs": [
+        "47:24"
+      ],
+      "source": "known-unknown-2026-10-09 #131",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-132",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 132,
+      "questionBn": "“সামেরী কে ছিলেন” আর কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সে ছিল একজন অভিশপ্ত কাফির। সূরা ত্বা-হা ২০:৮৫, ৮৭, ৯৫।",
+      "refs": [
+        "20:85",
+        "20:87",
+        "20:95"
+      ],
+      "source": "known-unknown-2026-10-09 #132",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: The cited ayat show Samiri misled the people; “accursed kafir” is not stated in them. Author to confirm."
+    },
+    {
+      "slug": "ku-133",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 133,
+      "questionBn": "“সালামুন আলা মুসা কয় রাত্রি বা কয় দিনের জন্য আল্লাহ্র নিকট গিয়েছিলেন” এটা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:৫১; সূরা আল-আরাফ ৭:১৪২।",
+      "refs": [
+        "2:51",
+        "7:142"
+      ],
+      "source": "known-unknown-2026-10-09 #133",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-134",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 134,
+      "questionBn": "“সালামুন আলা মুহাম্মদ কি মেরাজে গিয়েছিলেন?” এটা কি কুরআনে আছে যদি থাকে তাহলে কোন সূরার কত নাম্বার আয়াতে আছে?",
+      "answerBn": "এটি কুরআনুল কারীমে নেই।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #134",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): a “not in the Qur'an” answer, shipped as is with no ayah."
+    },
+    {
+      "slug": "ku-135",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 135,
+      "questionBn": "“পালিত পুত্র কি নিজের পুত্র?” এটা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "না। সূরা আল-আহযাব ৩৩:৪।",
+      "refs": [
+        "33:4"
+      ],
+      "source": "known-unknown-2026-10-09 #135",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-136",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 136,
+      "questionBn": "“সালামুন আলা ইবরাহীমকে আগুনে নিক্ষেপ করার নির্দেশ দেওয়া হয়েছিল” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আম্বিয়া ২১:৬৮।",
+      "refs": [
+        "21:68"
+      ],
+      "source": "known-unknown-2026-10-09 #136",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-137",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 137,
+      "questionBn": "“বজ্রপাত হলে কানের মধ্যে আঙ্গুল ঢুকিয়ে দেয় কারা আঙ্গুল ঢুকায়” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "কাফিররা। সূরা আল-বাকারা ২:১৯।",
+      "refs": [
+        "2:19"
+      ],
+      "source": "known-unknown-2026-10-09 #137",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-138",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 138,
+      "questionBn": "“সালামুন আলা আদমকে পৃথিবীতে বসবাসের জন্য সকল জ্ঞান দেওয়া হয়েছে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:৩১।",
+      "refs": [
+        "2:31"
+      ],
+      "source": "known-unknown-2026-10-09 #138",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 2:31 says Adam was taught “all the names”; it does not say all knowledge for living on earth."
+    },
+    {
+      "slug": "ku-139",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 139,
+      "questionBn": "“সালামুন আলা আদমের স্ত্রীর নাম কি?” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "কুরআনুল কারীমে সালামুন আলা আদমের স্ত্রীর নাম নেই।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #139",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): a “not in the Qur'an” answer, shipped as is with no ayah."
+    },
+    {
+      "slug": "ku-140",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 140,
+      "questionBn": "“সালামুন আলা ইউসুফের স্ত্রীর নাম কি” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "কুরআনুল কারীমে সালামুন আলা ইউসুফের স্ত্রীর নাম নেই।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #140",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): a “not in the Qur'an” answer, shipped as is with no ayah."
+    },
+    {
+      "slug": "ku-141",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 141,
+      "questionBn": "“সালামুন আলা আয়্যুব কঠিন ও জটিল রোগে আক্রান্ত হয়েছিল কি দোয়া পাঠ করেছিলেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আম্বিয়া ২১:৮৩।",
+      "refs": [
+        "21:83"
+      ],
+      "source": "known-unknown-2026-10-09 #141",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-142",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 142,
+      "questionBn": "“অসুস্থ হলে আমরা কি পাঠ করব?” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আম্বিয়া ২১:৮৩।",
+      "refs": [
+        "21:83"
+      ],
+      "source": "known-unknown-2026-10-09 #142",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 21:83 is Ayyub's du'a; it does not instruct what to recite when ill."
+    },
+    {
+      "slug": "ku-143",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 143,
+      "questionBn": "“কুরআন পাঠ করা ফরজ” একটা আয়াত নাম্বার উল্লেখ করুন?",
+      "answerBn": "সূরা আল-কাসাস ২৮:৮৫।",
+      "refs": [
+        "28:85"
+      ],
+      "source": "known-unknown-2026-10-09 #143",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-144",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 144,
+      "questionBn": "“জালুতকে হত্যা করেছিল কে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:২৫১।",
+      "refs": [
+        "2:251"
+      ],
+      "source": "known-unknown-2026-10-09 #144",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-145",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 145,
+      "questionBn": "“সকালে একমাসের পথ ও বিকেলে একমাসের পথ পাড়ি দিতে পারতেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা সাবা ৩৪:১২।",
+      "refs": [
+        "34:12"
+      ],
+      "source": "known-unknown-2026-10-09 #145",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-146",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 146,
+      "questionBn": "“মৃত্যুর পরেও লাঠির উপর ভর করে দাড়িয়েছিলেন কোন নবী” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা সাবা ৩৪:১৪।",
+      "refs": [
+        "34:14"
+      ],
+      "source": "known-unknown-2026-10-09 #146",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-147",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 147,
+      "questionBn": "“ছেলে সন্তানগুলো তোমাদের আর মেয়েগুলো সব আমার এটা কেমন বন্টন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নাজম ৫৩:২১, ২২।",
+      "refs": [
+        "53:21",
+        "53:22"
+      ],
+      "source": "known-unknown-2026-10-09 #147",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-148",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 148,
+      "questionBn": "“দুই জন মালাইকা পরীক্ষার জন্য পৃথিবীতে এসেছিলেন” সেই দু'জন মালাইকার নাম কি?",
+      "answerBn": "হারুত ও মারুত। সূরা আল-বাকারা ২:১০২।",
+      "refs": [
+        "2:102"
+      ],
+      "source": "known-unknown-2026-10-09 #148",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. Harut and Marut are named only at 2:102 (verified)."
+    },
+    {
+      "slug": "ku-149",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 149,
+      "questionBn": "“আমাদের গণনার ১০০০ বছর সমান আল্লাহ্র নিকট ১ দিন” এটা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-হাজ্জ ২২:৪৭।",
+      "refs": [
+        "22:47"
+      ],
+      "source": "known-unknown-2026-10-09 #149",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-150",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 150,
+      "questionBn": "“হজ্জে গিয়ে কুরবানি না করতে পারলে কাফ্ফারা হিসেবে সিয়াম পালন করতে হবে” এটা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:১৯৬।",
+      "refs": [
+        "2:196"
+      ],
+      "source": "known-unknown-2026-10-09 #150",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-151",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 151,
+      "questionBn": "“হজ্জ শেষে মাথা মুণ্ডন করতে হবে” এটা কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-বাকারা ২:১৯৬; সূরা আল-ফাতহ ৪৮:২৭।",
+      "refs": [
+        "2:196",
+        "48:27"
+      ],
+      "source": "known-unknown-2026-10-09 #151",
+      "reviewNote": "Published at the author's direction (deep dive 2026-10-17): 48:27 (shaving the head) added beside 2:196; do not re-raise."
+    },
+    {
+      "slug": "ku-152",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 152,
+      "questionBn": "“মরা মাছ পানিতে হেলতে শুরু করেছে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-কাহফ ১৮:৬১।",
+      "refs": [
+        "18:61"
+      ],
+      "source": "known-unknown-2026-10-09 #152",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-153",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 153,
+      "questionBn": "“সালামুন আলা মুসার এক থাপ্পড়ে একজন মারা গেছিল” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-কাসাস ২৮:১৫।",
+      "refs": [
+        "28:15"
+      ],
+      "source": "known-unknown-2026-10-09 #153",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-154",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 154,
+      "questionBn": "“কে বাছুর তৈরী করে আল্লাহ্র সমকক্ষ তৈরী করেছিল” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সামেরি। সূরা ত্বা-হা ২০:৮৮।",
+      "refs": [
+        "20:88"
+      ],
+      "source": "known-unknown-2026-10-09 #154",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-155",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 155,
+      "questionBn": "“গোলাম শব্দটি” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আলে ইমরান ৩:৪০; সূরা মারইয়াম ১৯:৭, ১৯; সূরা ইউসুফ ১২:১৯; সূরা আল-কাহফ ১৮:৮০; সূরা আয-যারিয়াত ৫১:২৮।",
+      "refs": [
+        "3:40",
+        "19:7",
+        "19:19",
+        "12:19",
+        "18:80",
+        "51:28"
+      ],
+      "source": "known-unknown-2026-10-09 #155",
+      "reviewNote": "Verified: ghulam occurs at these and other ayat (13 in all)."
+    },
+    {
+      "slug": "ku-156",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 156,
+      "questionBn": "“আল্লাহ্র গোলাম” কোন সূরার কত নাম্বার আয়াত?",
+      "answerBn": "“আল্লাহর গোলাম” — এমন কোনো আয়াত কুরআনুল কারীমে নেই।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #156",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): a “not in the Qur'an” answer, shipped as is with no ayah."
+    },
+    {
+      "slug": "ku-157",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 157,
+      "questionBn": "“তাহাজ্জুদ শব্দটি” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ইসরা ১৭:৭৯।",
+      "refs": [
+        "17:79"
+      ],
+      "source": "known-unknown-2026-10-09 #157",
+      "reviewNote": "Verified: only occurrence."
+    },
+    {
+      "slug": "ku-158",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 158,
+      "questionBn": "“কার চুল ও দাড়ি ধরে টান দিয়েছিলেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ত্বা-হা ২০:৯৪।",
+      "refs": [
+        "20:94"
+      ],
+      "source": "known-unknown-2026-10-09 #158",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-159",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 159,
+      "questionBn": "“কে দোলনাতে থাকতে কথা বলেছিলেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা মারইয়াম ১৯:২৯, ৩০।",
+      "refs": [
+        "19:29",
+        "19:30"
+      ],
+      "source": "known-unknown-2026-10-09 #159",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-160",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 160,
+      "questionBn": "“সালামুন আলা মারিয়ামের দেখভালের দায়িত্ব কে পেয়েছিলেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আলে ইমরান ৩:৩৭।",
+      "refs": [
+        "3:37"
+      ],
+      "source": "known-unknown-2026-10-09 #160",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-161",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 161,
+      "questionBn": "“মারিয়ামের ভায়ের নাম কি?” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "হারুন। সূরা মারইয়াম ১৯:২৮।",
+      "refs": [
+        "19:28"
+      ],
+      "source": "known-unknown-2026-10-09 #161",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 19:28 addresses Maryam as “sister of Harun”; whether Harun was her brother is not stated."
+    },
+    {
+      "slug": "ku-162",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 162,
+      "questionBn": "“পিতা ছাড়া এই পৃথিবীতে একজন মায়ের গর্ভে জন্মগ্রহণ করেছেন” তার নাম কি? কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা ইসা। সূরা মারইয়াম ১৯:৩৪।",
+      "refs": [
+        "19:34"
+      ],
+      "source": "known-unknown-2026-10-09 #162",
+      "reviewNote": "Published at the author's direction (deep dive 2026-10-17): ref changed from 19:29 to 19:34 (“this is Isa, son of Maryam”); do not re-raise."
+    },
+    {
+      "slug": "ku-163",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 163,
+      "questionBn": "“খালাতো, মামাতো, চাচাতো ও ফুফাতো বোন বিবাহের জন্য বৈধ কোন নবীর জন্য” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা মুহাম্মদ। সূরা আল-আহযাব ৩৩:৫০।",
+      "refs": [
+        "33:50"
+      ],
+      "source": "known-unknown-2026-10-09 #163",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-164",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 164,
+      "questionBn": "“ওজনে কম দেওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মুতাফফিফীন ৮৩:১; সূরা আশ-শুআরা ২৬:১৮১–১৮৩।",
+      "refs": [
+        "83:1",
+        "26:181",
+        "26:182",
+        "26:183"
+      ],
+      "source": "known-unknown-2026-10-09 #164",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-165",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 165,
+      "questionBn": "“ইয়াতিমদের প্রতি কঠোর হয়োনা” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আদ-দুহা ৯৩:৯।",
+      "refs": [
+        "93:9"
+      ],
+      "source": "known-unknown-2026-10-09 #165",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-166",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 166,
+      "questionBn": "“কেউ কিছু চাইতে আসলে ধমক দিয়ে কথা বলা যাবে না” কোথায় উল্লেখ আছে?",
+      "answerBn": "সূরা আদ-দুহা ৯৩:১০।",
+      "refs": [
+        "93:10"
+      ],
+      "source": "known-unknown-2026-10-09 #166",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-167",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 167,
+      "questionBn": "“দৈনন্দিন ব্যবহার্য কোন জিনিস চাইতে আসলে থাকলে ফিরিয়ে দেওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মাঊন ১০৭:৭।",
+      "refs": [
+        "107:7"
+      ],
+      "source": "known-unknown-2026-10-09 #167",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-168",
+      "status": "published",
+      "category": "iman",
+      "sortOrder": 168,
+      "questionBn": "“জ্বিনেরা গায়িব জানে না” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা সাবা ৩৪:১৪।",
+      "refs": [
+        "34:14"
+      ],
+      "source": "known-unknown-2026-10-09 #168",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-169",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 169,
+      "questionBn": "“পিপড়ার কথা শুনে কে মুচকি হেসেছিল?” তার নাম কি, কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা সুলাইমান। সূরা আন-নামল ২৭:১৯।",
+      "refs": [
+        "27:19"
+      ],
+      "source": "known-unknown-2026-10-09 #169",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-170",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 170,
+      "questionBn": "“তাহাজ্জুদ” শব্দের অর্থ কি?",
+      "answerBn": "রাত্রি যাপন করা। সূরা আল-ইসরা ১৭:৭৯।",
+      "refs": [
+        "17:79"
+      ],
+      "source": "known-unknown-2026-10-09 #170",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. Tahajjud occurs once, 17:79 (verified)."
+    },
+    {
+      "slug": "ku-171",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 171,
+      "questionBn": "“গোলাম” শব্দের অর্থ কি?",
+      "answerBn": "পুত্র সন্তান। সূরা আলে ইমরান ৩:৪০; সূরা মারইয়াম ১৯:৭; সূরা আয-যারিয়াত ৫১:২৮।",
+      "refs": [
+        "3:40",
+        "19:7",
+        "51:28"
+      ],
+      "source": "known-unknown-2026-10-09 #171",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. Ghulam occurs 13 times; three examples where the translation renders it “son”."
+    },
+    {
+      "slug": "ku-172",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 172,
+      "questionBn": "“কুরবানের পশুকে মালা পরাতে হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:২।",
+      "refs": [
+        "5:2"
+      ],
+      "source": "known-unknown-2026-10-09 #172",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-173",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 173,
+      "questionBn": "“তালাক তিনবার দিতে হবে” কুরআনের কোন সূরায় কত নাম্বার আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "তিন তালাক কুরআনে নেই।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #173",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): a “not in the Qur'an” answer, shipped as is with no ayah."
+    },
+    {
+      "slug": "ku-174",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 174,
+      "questionBn": "“সালামুন আলা দাউদ জালুতকে হত্যা করেছিল কার নেতৃত্বে” তার নাম কি? কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা তালুত। সূরা আল-বাকারা ২:২৪৯, ২৫১।",
+      "refs": [
+        "2:249",
+        "2:251"
+      ],
+      "source": "known-unknown-2026-10-09 #174",
+      "reviewNote": "Correction confirmed by the author (review 2026-10-10, §3); do not re-raise. Added 2:249: 2:251 alone does not name Talut; 2:249 does."
+    },
+    {
+      "slug": "ku-175",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 175,
+      "questionBn": "“সালামুন আলা মুহাম্মদকে পাগল বলছে কি কারণে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "তাঁর কাছে আয়াত আসার কারণে। সূরা আল-হিজর ১৫:৬।",
+      "refs": [
+        "15:6"
+      ],
+      "source": "known-unknown-2026-10-09 #175",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-176",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 176,
+      "questionBn": "“সালামুন আলা সোলাইমানের সামনে সিংহাসন আসছিল” সেই সিংহাসনটি কার ছিল তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সিংহাসনটি ছিল সাবার রাণীর। তাঁর নাম কুরআনুল কারীমে উল্লেখ নেই। সূরা আন-নামল ২৭:২৩, ৩৮, ৪২।",
+      "refs": [
+        "27:23",
+        "27:38",
+        "27:42"
+      ],
+      "source": "known-unknown-2026-10-09 #176",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. 27:23 her great throne, 27:38 Sulayman asks for it, 27:42 “is your throne like this?”. Her name is nowhere given."
+    },
+    {
+      "slug": "ku-177",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 177,
+      "questionBn": "“মিশরের রমণীরা তাদের হাত কেটেছিল কোন নবীকে দেখে” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা ইউসুফ। সূরা ইউসুফ ১২:৩১।",
+      "refs": [
+        "12:31"
+      ],
+      "source": "known-unknown-2026-10-09 #177",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-178",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 178,
+      "questionBn": "“আজীজে মিশর এর স্বপ্নের ব্যাখ্যা কে করেছিলেন” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা ইউসুফ। সূরা ইউসুফ ১২:৪৬।",
+      "refs": [
+        "12:46"
+      ],
+      "source": "known-unknown-2026-10-09 #178",
+      "reviewNote": "Published at the author's direction (deep dive 2026-10-17): kept as the source has it (12:46, Aziz), not corrected; do not re-raise."
+    },
+    {
+      "slug": "ku-179",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 179,
+      "questionBn": "“কাকে কুয়ার মধ্যে ফেলে দেওয়া হয়েছিল” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা ইউসুফ। সূরা ইউসুফ ১২:১৫।",
+      "refs": [
+        "12:15"
+      ],
+      "source": "known-unknown-2026-10-09 #179",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-180",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 180,
+      "questionBn": "“অতিথি আপ্যায়নের জন্য কে বাছুর ভূনা করে আনছিলেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা ইবরাহীম। সূরা হূদ ১১:৬৯।",
+      "refs": [
+        "11:69"
+      ],
+      "source": "known-unknown-2026-10-09 #180",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-181",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 181,
+      "questionBn": "“কার সাথে আল্লাহ্ রব্বুল আলামিন কথা বলেছিলেন” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা মুসা। সূরা আন-নিসা ৪:১৬৪; সূরা আল-বাকারা ২:২৫৩।",
+      "refs": [
+        "4:164",
+        "2:253"
+      ],
+      "source": "known-unknown-2026-10-09 #181",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-182",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 182,
+      "questionBn": "“শায়খুন কাবীর” অর্থ কি?",
+      "answerBn": "বয়স্ক বা বৃদ্ধ লোক। সূরা ইউসুফ ১২:৭৮; সূরা আল-কাসাস ২৮:২৩।",
+      "refs": [
+        "12:78",
+        "28:23"
+      ],
+      "source": "known-unknown-2026-10-09 #182",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. “Shaykhun kabir” occurs at 12:78 and 28:23 (verified)."
+    },
+    {
+      "slug": "ku-183",
+      "status": "published",
+      "category": "words",
+      "sortOrder": 183,
+      "questionBn": "“উজরাত” অর্থ কি?",
+      "answerBn": "বিবাহের জন্য স্বামী স্ত্রীকে যে অর্থ প্রদান করেন, তাই উজরাত। সূরা আন-নিসা ৪:২৪, ২৫; সূরা আল-মায়িদা ৫:৫; সূরা আল-আহযাব ৩৩:৫০; সূরা আল-মুমতাহিনা ৬০:১০।",
+      "refs": [
+        "4:24",
+        "4:25",
+        "5:5",
+        "33:50",
+        "60:10"
+      ],
+      "source": "known-unknown-2026-10-09 #183",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): ayah added. Ujur as bridal payment; 65:6 left out (it is nursing wages after divorce)."
+    },
+    {
+      "slug": "ku-184",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 184,
+      "questionBn": "“কার হাতের লাঠি ফেলে দিলে সাপ হয়ে যেত” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা মুসা। সূরা ত্বা-হা ২০:২০।",
+      "refs": [
+        "20:20"
+      ],
+      "source": "known-unknown-2026-10-09 #184",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-185",
+      "status": "published",
+      "category": "worship",
+      "sortOrder": 185,
+      "questionBn": "“হজ্জ কাদের উপর ফরজ করা হয়েছে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আলে ইমরান ৩:৯৭।",
+      "refs": [
+        "3:97"
+      ],
+      "source": "known-unknown-2026-10-09 #185",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-186",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 186,
+      "questionBn": "“কুরআনের হাফিজ কে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "আল্লাহ রব্বুল আলামীন। সূরা আল-হিজর ১৫:৯।",
+      "refs": [
+        "15:9"
+      ],
+      "source": "known-unknown-2026-10-09 #186",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-187",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 187,
+      "questionBn": "“কার লাঠির আঘাতে সমুদ্র দ্বিখণ্ডিত হয়েছিল” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা মুসা। সূরা আশ-শুআরা ২৬:৬৩।",
+      "refs": [
+        "26:63"
+      ],
+      "source": "known-unknown-2026-10-09 #187",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-188",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 188,
+      "questionBn": "“প্রথম মানব কে ছিলেন” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা আদম। সূরা আল-বাকারা ২:৩০।",
+      "refs": [
+        "2:30"
+      ],
+      "source": "known-unknown-2026-10-09 #188",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 2:30 announces a khalifah on earth; it does not say Adam was the first human."
+    },
+    {
+      "slug": "ku-189",
+      "status": "published",
+      "category": "not-in-quran",
+      "sortOrder": 189,
+      "questionBn": "“মৃত্যুর সময় তিনটি প্রশ্ন করা হবে” এটি কুরআনের কোন কোন সূরায় ও কত নাম্বার আয়াতে উল্লেখ করা হয়েছে?",
+      "answerBn": "কুরআনুল কারীমে এটি নেই।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #189",
+      "reviewNote": "Published at the author's direction (review 2026-10-09, §1): a “not in the Qur'an” answer, shipped as is with no ayah."
+    },
+    {
+      "slug": "ku-190",
+      "status": "published",
+      "category": "akhirah",
+      "sortOrder": 190,
+      "questionBn": "“মানবজাতির বিরুদ্ধে নবী সাক্ষী দিবেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-ফুরকান ২৫:৩০।",
+      "refs": [
+        "25:30"
+      ],
+      "source": "known-unknown-2026-10-09 #190",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §2): original answer kept; do not re-raise. Earlier note: Interpretive: 25:30 is the Messenger complaining that his people abandoned the Qur'an; it is not testimony against all mankind (see 4:41, 16:89)."
+    },
+    {
+      "slug": "ku-191",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 191,
+      "questionBn": "“সাবার রমণী পায়ের গোছা উঠিয়েছিলেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আন-নামল ২৭:৪৪।",
+      "refs": [
+        "27:44"
+      ],
+      "source": "known-unknown-2026-10-09 #191",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-192",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 192,
+      "questionBn": "“সমাজে বিশৃঙ্খলার শাস্তি কি” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-মায়িদা ৫:৩৩।",
+      "refs": [
+        "5:33"
+      ],
+      "source": "known-unknown-2026-10-09 #192",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-193",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 193,
+      "questionBn": "“জান্নাতে প্রবেশের পর তার অভিব্যক্তি প্রকাশ করেছেন” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা ইয়াসীন ৩৬:২৬।",
+      "refs": [
+        "36:26"
+      ],
+      "source": "known-unknown-2026-10-09 #193",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-194",
+      "status": "published",
+      "category": "quran-itself",
+      "sortOrder": 194,
+      "questionBn": "“কুরআনে মোট আয়াত সংখ্যা কতটি” উল্লেখ করুন?",
+      "answerBn": "সর্বমোট আয়াত সংখ্যা ৬২৩৬টি।",
+      "refs": [],
+      "noAyah": true,
+      "source": "known-unknown-2026-10-09 #194",
+      "reviewNote": "Published at the author's direction (review 2026-10-10, §1): original answer kept, no ayah (no ayah states the total; the bundled mushaf has 6,236)."
+    },
+    {
+      "slug": "ku-195",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 195,
+      "questionBn": "“কাকে মাছে খেয়েছিল” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা ইউনুস। সূরা আস-সাফফাত ৩৭:১৪২।",
+      "refs": [
+        "37:142"
+      ],
+      "source": "known-unknown-2026-10-09 #195",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-196",
+      "status": "published",
+      "category": "prophets",
+      "sortOrder": 196,
+      "questionBn": "“কাকে তার মা নদীতে ভাসিয়ে দিয়েছিল” তার নাম কি কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সালামুন আলা মুসা। সূরা আল-কাসাস ২৮:৭।",
+      "refs": [
+        "28:7"
+      ],
+      "source": "known-unknown-2026-10-09 #196",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-197",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 197,
+      "questionBn": "“অভাব-অনটনে, সুখে-দুঃখে সর্ব অবস্থায় আল্লাহ্র বিধান বাস্তবায়নে খরচ করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আলে ইমরান ৩:১৩৪।",
+      "refs": [
+        "3:134"
+      ],
+      "source": "known-unknown-2026-10-09 #197",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-198",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 198,
+      "questionBn": "“যখনই আয় হবে ঠিক তখনই আল্লাহ্র বিধান বাস্তবায়নে খরচ করতে হবে” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-আনআম ৬:১৪১।",
+      "refs": [
+        "6:141"
+      ],
+      "source": "known-unknown-2026-10-09 #198",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-199",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 199,
+      "questionBn": "“খরচ করা ছাড়া পরিশুদ্ধ হওয়া যাবে না” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আল-লাইল ৯২:১৮।",
+      "refs": [
+        "92:18"
+      ],
+      "source": "known-unknown-2026-10-09 #199",
+      "reviewNote": "Checked: the cited ayah supports the answer."
+    },
+    {
+      "slug": "ku-200",
+      "status": "published",
+      "category": "society",
+      "sortOrder": 200,
+      "questionBn": "“আল্লাহ্র বিধান বাস্তবায়নের জন্য আমাদের কি করণীয়” কোথায় উল্লেখ করা হয়েছে?",
+      "answerBn": "সূরা আশ-শূরা ৪২:১৩; সূরা আল-হাজ্জ ২২:৪১; সূরা আন-নূর ২৪:৫৫।",
+      "refs": [
+        "42:13",
+        "22:41",
+        "24:55"
+      ],
+      "source": "known-unknown-2026-10-09 #200",
+      "reviewNote": "Checked: the cited ayah supports the answer."
     }
   ]
 }

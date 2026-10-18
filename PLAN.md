@@ -23,7 +23,7 @@ Outcome: a Flutter app that ships a prebuilt SQLite database holding the full mu
 | State | Riverpod |
 | Database | Drift + SQLite (`sqlite3` 3.x bundles SQLite with FTS5; `sqlite3_flutter_libs` is end-of-life and not used) |
 | Search | SQLite FTS5 over normalized shadow columns |
-| Navigation | go_router, `StatefulShellRoute` with four tabs |
+| Navigation | go_router, `StatefulShellRoute` with five tabs |
 | UI | Material 3 plumbing + own design tokens (`AppColors` / `AppText` ThemeExtensions) |
 | Icons | Iconsax (`iconsax_plus`): Linear by default, Bold for on/selected states |
 | Settings | SharedPreferences |
@@ -54,7 +54,7 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 - Near-monochrome: hierarchy from four foreground greys; flat cards, no borders, no shadows. Dark is the default; light "paper" palette from the `.dc.html`.
 - Qur'anic text sits on a **neutral** block (`evidence`). Green (`highlight`) is used only small: cited positions and the evidence icon. No green fills.
 - Fonts: Noto Sans Bengali (UI + translation), Amiri Quran (Arabic, line height ≥ 2.0, RTL), Cinzel (wordmark only), Roboto as Latin fallback. All OFL, licenses registered.
-- Bottom nav: হোম / বিষয় / সূরা / সংরক্ষিত. Always navigate with `context.openQuestion()` etc. so the screen stays in its tab.
+- Bottom nav: হোম / প্রশ্ন / বিষয় / সূরা / সংরক্ষিত. Always navigate with `context.openQuestion()` etc. so the screen stays in its tab.
 
 ## Implementation plan: step by step
 
@@ -134,7 +134,36 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 - [x] **13.6** (2026-10-18) Category screen: question count moves from its own row into the header, right-aligned on the gutter in muted meta style; list starts 8dp below the header.
 - [x] **13.7** (2026-10-18) Search field is 41dp like the home search pill (was ~48dp from Material's icon minimums), and stays 41dp when the clear button appears.
 
+### Step 14: UI/UX audit fixes (2026-10-18, author-approved)
+Audit of every screen; author decisions: the all-questions list leaves home for its own page, reading history gets its own page, share/copy + next-question + search example chips are in, quiz mode is later.
+- [x] **14.1** Home + All questions: home drops the 200-row list ("সব দেখুন" → new All-questions page with category filter chips); topic chips capped at 5 + "সব বিষয়" (switches to Topics tab); "সর্বশেষ পড়া" up to 3 rows + "সব" → history; featured card shows its ayah only when whole (≤140 chars), never cut to 2 lines; otherwise just the ref pill. Topics gets a wide "সব প্রশ্ন" tile on top.
+- [x] **14.2** Reading history page (`history` route) moved out of Saved, with clear; Saved links to it.
+- [x] **14.3** Saved cleanup: saved ayat as compact rows (ref + one-line translation, opens the ayah screen; a navigation row, not evidence); saved question rows show their category icon; folders managed from a visible header button, not long-press only; one empty state when nothing is saved.
+- [x] **14.4** Question screen: occurrence grid removed (it repeated the ayah numbers); "প্রমাণ" pill row only with 3+ ayat; related ranked by shared ayah → shared surah → category neighbours after the current one; "পরের প্রশ্ন" at the bottom; bookmark toast redesigned (compact floating pill with status icon, text-link action: folder on save, undo on remove) for questions and ayat; folder sheet shared.
+- [x] **14.5** Small fixes: category rows numbered instead of 42 identical icons; search empty state gets example chips; surahs sort toggle (number / most questions); "রং" → "থিম".
+- [x] **14.6** Share question (question + answer + refs) and copy ayah, via `share_plus` 13.3.1; its plugin manifest declares no permissions (checked in the pub cache), so the release manifest still has no INTERNET. Search examples are Bengali + a reference only (rule 1: no Arabic in code).
+🛑 **Checkpoint:** author checks step 14 on device (toast look, home length, saved rows, share sheet).
+
+### Step 15: Home on first launch (2026-10-18)
+- [x] **15.1** Home looked empty with no history. New "পড়ে দেখুন" section between topics and the all-questions card: 5 questions, one per category, rotating daily (`QuestionIndex.dailyPicks`, date-derived like the featured question), never the featured one or one in "সর্বশেষ পড়া". Shown always. Topic chips stay a horizontal scroll (author).
+
+### Step 16: All questions as a tab (2026-10-18)
+- [x] **16.1** Fifth bottom-nav tab প্রশ্ন (`/questions`, message_question icon) showing `AllQuestionsScreen`; the pushed `questions` route and `openAllQuestions()` go.
+- [x] **16.2** The all-questions card leaves Topics and Home; Home's "পড়ে দেখুন" gets a "সব দেখুন" link that switches to the tab.
+- [x] **16.3** Inline search field on the questions tab: filters question + answer text as you type (shared `normalizeForSearch`), combined with the category chip; no match offers "পুরো কুরআনে খুঁজুন", which opens global search prefilled (`openSearch(query:)`, `?q=`).
+- [x] **16.4** Design-rule pass on the questions tab: 8dp under the header; search field and topic chips pinned while only the list scrolls; one shared `AppSearchField` for search screen + questions tab; chip rows (questions tab, saved folders) capped by `ContentFrame` on tablets.
+- [x] **16.5** (2026-10-19) Search pill and field go from 41dp to 48dp (`Space.searchHeight`): 41 was under Material's 48dp touch minimum and cramped Bengali; supersedes the 41dp of 13.7. Test pins both heights.
+- [x] **16.6** (2026-10-19) Bottom nav: icon 21 → 24dp, pill 54×27 → 60×30, bar 68 → 72dp, label 12.5sp / line 1.3 (Bengali vowel signs), inactive `fg4` → `fg3` for text contrast. Micro-animation on tap: the pill grows out from the icon's centre, the icon gives a short press-and-settle pop (~280ms), outline/filled icon cross-fade; all off when the system asks to reduce motion.
+
+### Step 17: Methodology entry points (2026-10-19)
+- [x] **17.1** Info icon beside "সংকলিত উত্তর" on the question screen (and the methodology sheet it opened) removed; the settings "উত্তর কীভাবে সংকলিত" row removed. The sheet stays reachable from the About page only.
+- [x] **17.2** Question-screen share icon: `export_1` (box + arrow) → `send_2` (paper plane), author's pick.
+- [x] **17.3** Content: `হ্র` rendered as হ + র-ফলা in আল্লাহ্র (12×) and তাহ্রিম (1×); a ZWNJ after the hasanta (`হ্‌র`) keeps the visible hasanta, as in the source. Search already strips ZWNJ. `content.db` + web preview rebuilt.
+- [x] **17.4** Content: ku-007 question word “আহম্মদ” → “আহমাদ” (author). Source snapshot under `content/source/` left as received.
+- [x] **17.5** Translation: ইহ্রাম/ইহ্রামের (5:95, 5:96) → ZWNJ after the hasanta, patched in `content/quran.json` and in `fetch_quran.dart`'s cleanup so a re-fetch keeps it. হ্রাস (5×) is standard Bengali and stays.
+
 ### Later (not scheduled)
+- [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
 - [ ] Right before Play Store submission (app feature-complete): rerun `flutter test tool/render_assets_test.dart` to regenerate `store/screenshots/` (last made 2026-09-26 from 5 questions).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.
 - [ ] Design features waiting on content fields: question kind + segmented filter, lead/detail answer split, highlighted phrase in the Arabic, interpretive-note block, curated collections, Bengali transliterated surah names.

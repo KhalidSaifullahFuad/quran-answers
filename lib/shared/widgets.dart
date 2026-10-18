@@ -157,7 +157,7 @@ class SearchFieldButton extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: SizedBox(
-            height: 41,
+            height: Space.searchHeight,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
@@ -182,6 +182,92 @@ class SearchFieldButton extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The live search field: the [SearchFieldButton] pill, typed into.
+///
+/// One widget for every screen that takes a query, so the search screen and
+/// the questions tab stay identical: as tall as the home pill, a clear
+/// button once there is text.
+class AppSearchField extends StatelessWidget {
+  const AppSearchField({
+    super.key,
+    required this.controller,
+    required this.hint,
+    required this.onChanged,
+    required this.onClear,
+    this.onSubmitted,
+    this.autofocus = false,
+  });
+
+  final TextEditingController controller;
+  final String hint;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+  final ValueChanged<String>? onSubmitted;
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.of(context);
+    final t = AppText.of(context);
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) => TextField(
+        controller: controller,
+        autofocus: autofocus,
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
+        textInputAction: TextInputAction.search,
+        // Queries may be Arabic: Noto Sans Bengali has no Arabic glyphs, so
+        // name a fallback rather than trust the platform's.
+        style: t.meta.copyWith(
+          fontSize: 15,
+          color: c.fg1,
+          fontFamilyFallback: [...Fonts.latinFallback, Fonts.arabic],
+        ),
+        cursorColor: c.fg2,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: t.meta.copyWith(fontSize: 14, color: c.fg3),
+          filled: true,
+          fillColor: c.track,
+          isDense: true,
+          // [Space.searchHeight] tall like the home pill: a 21dp line
+          // (15 × 1.4) plus 13.5 above and below. Set by padding, not the
+          // icon boxes, so the clear button appearing doesn't change it.
+          contentPadding: const EdgeInsets.symmetric(vertical: 13.5),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(99)),
+            borderSide: BorderSide.none,
+          ),
+          prefixIcon: Icon(
+            IconsaxPlusLinear.search_normal_1,
+            size: 20,
+            color: c.fg2,
+          ),
+          prefixIconConstraints: const BoxConstraints(minWidth: 48),
+          suffixIconConstraints: const BoxConstraints(minWidth: 44),
+          suffixIcon: controller.text.isEmpty
+              ? null
+              : IconButton(
+                  constraints: const BoxConstraints(minWidth: 44),
+                  padding: EdgeInsets.zero,
+                  style: IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  tooltip: Strings.clearSearch,
+                  icon: Icon(
+                    IconsaxPlusLinear.close_circle,
+                    size: 18,
+                    color: c.fg2,
+                  ),
+                  onPressed: onClear,
+                ),
         ),
       ),
     );
@@ -289,12 +375,22 @@ class TopicChip extends StatelessWidget {
   }
 }
 
-/// A heading above a block, with an optional right-hand note.
+/// A heading above a block, with an optional right-hand note or link.
 class SectionTitle extends StatelessWidget {
-  const SectionTitle(this.text, {super.key, this.trailing});
+  const SectionTitle(
+    this.text, {
+    super.key,
+    this.trailing,
+    this.actionLabel,
+    this.onAction,
+  }) : assert(trailing == null || actionLabel == null);
 
   final String text;
   final String? trailing;
+
+  /// A text link on the right, e.g. `সব দেখুন`, in place of [trailing].
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -305,7 +401,126 @@ class SectionTitle extends StatelessWidget {
       children: [
         Expanded(child: Text(text, style: t.section)),
         if (trailing != null) Text(trailing!, style: t.meta),
+        if (actionLabel != null)
+          InkWell(
+            onTap: onAction,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+              child: Text(actionLabel!, style: t.link),
+            ),
+          ),
       ],
+    );
+  }
+}
+
+/// A short confirmation floating above the bottom bar: a status icon, a line
+/// of text and at most one text-link action.
+///
+/// Compact and quiet on purpose. The SnackBar it rides in is transparent (see
+/// the theme), so only this pill shows, sized to its content rather than
+/// stretched across the screen like a button.
+void showStatusToast(
+  ScaffoldMessengerState messenger, {
+  required IconData icon,
+  required String text,
+  String? actionLabel,
+  VoidCallback? onAction,
+}) {
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        padding: EdgeInsets.zero,
+        duration: const Duration(milliseconds: 2500),
+        content: Center(
+          child: _StatusToast(
+            icon: icon,
+            text: text,
+            actionLabel: actionLabel,
+            onAction: onAction == null
+                ? null
+                : () {
+                    messenger.hideCurrentSnackBar();
+                    onAction();
+                  },
+          ),
+        ),
+      ),
+    );
+}
+
+class _StatusToast extends StatelessWidget {
+  const _StatusToast({
+    required this.icon,
+    required this.text,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final IconData icon;
+  final String text;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.of(context);
+    final t = AppText.of(context);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: EdgeInsets.fromLTRB(14, 10, actionLabel == null ? 16 : 6, 10),
+      decoration: BoxDecoration(
+        color: c.selected,
+        borderRadius: BorderRadius.circular(Space.radiusCard),
+        // The one shadow in the app: the toast floats over content.
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: dark ? .45 : .12),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: c.fg1),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              text,
+              style: t.meta.copyWith(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w500,
+                color: c.fg1,
+              ),
+            ),
+          ),
+          if (actionLabel != null) ...[
+            const SizedBox(width: 12),
+            Container(width: 1, height: 16, color: c.fg4.withValues(alpha: .5)),
+            InkWell(
+              onTap: onAction,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                child: Text(
+                  actionLabel!,
+                  style: t.link.copyWith(
+                    color: c.fg1,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -320,6 +535,7 @@ class QuestionTile extends StatelessWidget {
     this.onTap,
     this.inset = Space.gutter,
     this.trailing,
+    this.titleMaxLines,
   });
 
   /// Usually an [Icon] or [DuoIcon]; sized and coloured by the tile.
@@ -333,6 +549,9 @@ class QuestionTile extends StatelessWidget {
 
   /// Horizontal padding. Zero when the parent already pads by the gutter.
   final double inset;
+
+  /// Caps the title, e.g. a saved verse's translation shown as a preview.
+  final int? titleMaxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -349,6 +568,7 @@ class QuestionTile extends StatelessWidget {
               width: 34,
               height: 34,
               decoration: BoxDecoration(color: c.track, shape: BoxShape.circle),
+              alignment: Alignment.center,
               child: IconTheme.merge(
                 data: IconThemeData(size: 16, color: c.fg3),
                 child: icon,
@@ -359,7 +579,14 @@ class QuestionTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: t.rowTitle),
+                  Text(
+                    title,
+                    style: t.rowTitle,
+                    maxLines: titleMaxLines,
+                    overflow: titleMaxLines == null
+                        ? null
+                        : TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 4),
                   Text(meta, style: t.meta.copyWith(letterSpacing: .2)),
                 ],

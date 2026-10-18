@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -10,11 +12,15 @@ import 'package:quran_answers/core/db/content_db.dart';
 import 'package:quran_answers/core/db/content_search.dart';
 import 'package:quran_answers/core/db/database_providers.dart';
 import 'package:quran_answers/core/strings.dart';
+import 'package:quran_answers/core/text/normalize.dart';
 import 'package:quran_answers/core/text/numerals.dart';
+import 'package:quran_answers/core/theme/theme.dart';
 import 'package:quran_answers/core/theme/typography.dart';
 import 'package:quran_answers/features/about/about_screen.dart';
 import 'package:quran_answers/features/ayah/ayah_screen.dart';
+import 'package:quran_answers/features/history/history_screen.dart';
 import 'package:quran_answers/features/home/home_screen.dart';
+import 'package:quran_answers/features/questions/all_questions_screen.dart';
 import 'package:quran_answers/features/questions/question_providers.dart';
 import 'package:quran_answers/features/search/search_screen.dart';
 import 'package:quran_answers/features/settings/settings_provider.dart';
@@ -129,7 +135,7 @@ void main() {
     await drain(tester, () async => closed);
   }
 
-  testWidgets('home lists every question and features one from the database', (
+  testWidgets('home features a question and leads to the full list', (
     tester,
   ) async {
     late QuestionIndex index;
@@ -147,9 +153,9 @@ void main() {
 
     expect(find.text('QURAN ANSWERS'), findsOne);
     expect(find.text(bnDayMonth(today)), findsOne);
-    for (final c in index.categories.values) {
-      // Rows also show their category name when they cite no ayah, so look
-      // only inside the chips.
+    // A few topic shortcuts, then the way to all of them.
+    final categories = index.categories.values.toList();
+    for (final c in categories.take(5)) {
       expect(
         find.descendant(
           of: find.byType(TopicChip),
@@ -159,19 +165,122 @@ void main() {
         reason: 'topic chip ${c.id}',
       );
     }
-    for (final q in index.questions) {
+    // A row's meta may name the category, so look only inside the chips.
+    expect(
+      find.descendant(
+        of: find.byType(TopicChip, skipOffstage: false),
+        matching: find.text(categories.last.nameBn, skipOffstage: false),
+      ),
+      findsNothing,
+    );
+    expect(find.text(Strings.allTopics, skipOffstage: false), findsOne);
+    // With no history, home offers a few questions to start with: one per
+    // category, never the featured one. The full list sits behind a link.
+    final featured = questionOfTheDay(index.questions, today)!;
+    final picks = index.dailyPicks(today, exclude: {featured.slug});
+    expect(picks, hasLength(5));
+    expect(picks.map((q) => q.category).toSet(), hasLength(5));
+    expect(find.text(Strings.startReading, skipOffstage: false), findsOne);
+    expect(find.byType(QuestionTile, skipOffstage: false), findsNWidgets(5));
+    for (final q in picks) {
       expect(
-        find.text(q.questionBn, skipOffstage: false),
-        findsAtLeast(1),
-        reason: 'row for ${q.slug}',
+        find.descendant(
+          of: find.byType(QuestionTile, skipOffstage: false),
+          matching: find.text(q.questionBn, skipOffstage: false),
+        ),
+        findsOne,
+        reason: 'pick ${q.slug}',
       );
     }
-    // The featured card shows its first cited ayah as Qur'anic text, laid out
-    // right to left.
-    final arabic = tester.widget<Text>(
-      find.descendant(of: find.byType(ArabicText), matching: find.byType(Text)),
+    // "সব দেখুন" switches to the questions tab, which lists every question.
+    final seeAll = find.text(Strings.seeAll);
+    await tester.ensureVisible(seeAll);
+    await tester.pump();
+    await tester.tap(seeAll);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    final screen = find.byType(AllQuestionsScreen);
+    expect(screen, findsOne);
+    // The list builds lazily, so how many are shown is read from the header
+    // count rather than by counting rows.
+    Finder shown(int n) => find.descendant(
+      of: screen,
+      matching: find.text(Strings.questionCount(bnDigits(n))),
     );
-    expect(arabic.textDirection, TextDirection.rtl);
+    expect(shown(index.questions.length), findsOne);
+
+    // Typing narrows the list, through the same normalizer as the database.
+    const word = 'মুসা';
+    bool matches(Question q) => normalizeForSearch(
+      '${q.questionBn} ${q.answerBn}',
+    ).contains(normalizeForSearch(word));
+    final field = find.descendant(of: screen, matching: find.byType(TextField));
+    await tester.enterText(field, word);
+    await tester.pump(const Duration(milliseconds: 200));
+    final hits = index.questions.where(matches).toList();
+    expect(hits, isNotEmpty);
+    expect(shown(hits.length), findsOne);
+
+    // A category chip and the words combine.
+    final prophets = index.categories['prophets']!;
+    await tester.tap(
+      find.descendant(of: screen, matching: find.text(prophets.nameBn)),
+    );
+    await tester.pump();
+    expect(shown(index.inCategory('prophets').where(matches).length), findsOne);
+
+    // Nothing matching offers the whole-Qur'an search.
+    await tester.enterText(field, 'কখগঘঙ');
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(shown(0), findsOne);
+    expect(
+      find.descendant(of: screen, matching: find.byType(QuestionTile)),
+      findsNothing,
+    );
+    expect(find.text(Strings.noResults), findsOne);
+    expect(find.text(Strings.searchWholeQuran), findsOne);
+  });
+
+  test('daily picks hold for a day and respect exclusions', () async {
+    final index = await container.read(questionIndexProvider.future);
+    final day = DateTime(2026, 10, 18, 9);
+    final picks = index.dailyPicks(day);
+    expect(
+      index.dailyPicks(DateTime(2026, 10, 18, 23)).map((q) => q.slug),
+      picks.map((q) => q.slug),
+    );
+    expect(
+      index.dailyPicks(DateTime(2026, 10, 19)).map((q) => q.slug),
+      isNot(picks.map((q) => q.slug)),
+    );
+    final first = picks.first.slug;
+    expect(
+      index.dailyPicks(day, exclude: {first}).map((q) => q.slug),
+      isNot(contains(first)),
+    );
+  });
+
+  test('related questions and the next one come from the index', () async {
+    final index = await container.read(questionIndexProvider.future);
+    for (final q in index.questions) {
+      final related = index.related(q);
+      expect(related.map((r) => r.slug), isNot(contains(q.slug)));
+      expect(related.length, lessThanOrEqualTo(3));
+      expect(related.map((r) => r.slug).toSet(), hasLength(related.length));
+    }
+    // Not the same first three for every question in a category.
+    final prophets = index.inCategory('prophets');
+    expect({
+      for (final q in prophets) index.related(q).map((r) => r.slug).join(),
+    }, hasLength(greaterThan(1)));
+    // Next walks the category in order and wraps at its end.
+    expect(index.nextInCategory(prophets.first)!.slug, prophets[1].slug);
+    expect(index.nextInCategory(prophets.last)!.slug, prophets.first.slug);
+    final next = index.nextInCategory(prophets.first)!;
+    expect(
+      index.related(prophets.first, exclude: {next.slug}).map((r) => r.slug),
+      isNot(contains(next.slug)),
+    );
   });
 
   testWidgets('a question shows its answer and every cited ayah in full', (
@@ -190,16 +299,7 @@ void main() {
 
     await pumpApp(tester);
     final question = index.bySlug(slug)!;
-    // The list row, not the featured card, which may show the same question.
-    final row = find.descendant(
-      of: find.byType(QuestionTile),
-      matching: find.text(question.questionBn, skipOffstage: false),
-    );
-    await tester.ensureVisible(row.first);
-    await tester.pump();
-    await tester.tap(row.first);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 600));
+    await goTo(tester, '/question/$slug');
 
     expect(find.text(question.answerBn), findsOne);
 
@@ -220,8 +320,10 @@ void main() {
         reason: 'Arabic of 54:${a.ayah}, closed with its ornament',
       );
     }
-    // Six citations in one surah: the position grid marks each of them.
-    expect(find.text(bnDigits(51)), findsAtLeast(1));
+    // Six ayat: a row of citations jumps to each card.
+    expect(find.text(Strings.evidence), findsOne);
+    // And a way on to the next question of the topic.
+    expect(find.text(Strings.nextQuestion, skipOffstage: false), findsOne);
 
     // Opening the question put it at the top of the reading history.
     final userDb = container.read(userDatabaseProvider).value!;
@@ -261,7 +363,56 @@ void main() {
     await unmount(tester);
   });
 
-  testWidgets('the bottom bar switches between the four tabs', (tester) async {
+  for (final scale in [1.0, 1.3]) {
+    testWidgets('five tab labels fit a 360dp phone at text scale $scale', (
+      tester,
+    ) async {
+      // The real Bengali font, not the test font's square glyphs, or the
+      // widths measured here would mean nothing.
+      await tester.runAsync(() async {
+        final loader = FontLoader(Fonts.bengali);
+        for (final w in ['Regular', 'Medium', 'SemiBold']) {
+          loader.addFont(
+            File(
+              'assets/fonts/NotoSansBengali-$w.ttf',
+            ).readAsBytes().then((b) => ByteData.sublistView(b)),
+          );
+        }
+        await loader.load();
+      });
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildTheme(Brightness.dark),
+          home: MediaQuery(
+            data: MediaQueryData(
+              size: const Size(360, 800),
+              textScaler: TextScaler.linear(scale),
+            ),
+            child: Scaffold(
+              bottomNavigationBar: AppBottomNav(current: 0, onTap: (_) {}),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(tester.takeException(), isNull);
+      for (final tab in AppTab.values) {
+        final label = tester.renderObject<RenderParagraph>(
+          find.text(tab.label),
+        );
+        expect(
+          label.didExceedMaxLines,
+          isFalse,
+          reason: '${tab.label} is cut off',
+        );
+      }
+    });
+  }
+
+  testWidgets('the bottom bar switches between the five tabs', (tester) async {
     late QuestionIndex index;
     await tester.runAsync(() async {
       index = await container.read(questionIndexProvider.future);
@@ -293,6 +444,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
     }
 
+    await openTab(AppTab.questions);
+    expect(find.byType(AllQuestionsScreen), findsOne);
+
     await openTab(AppTab.topics);
     for (final c in index.categories.values) {
       expect(find.text(c.nameBn), findsOne, reason: 'topic card ${c.id}');
@@ -304,8 +458,66 @@ void main() {
     expect(find.text(bnDigits(54)), findsOne);
 
     await openTab(AppTab.saved);
-    expect(find.text(Strings.savedEmpty), findsOne);
-    expect(find.text(Strings.historyEmpty), findsOne);
+    // One empty state, and no history: that has its own screen.
+    expect(find.text(Strings.nothingSaved), findsOne);
+    expect(find.text(Strings.readingHistory), findsNothing);
+    expect(find.byTooltip(Strings.readingHistory), findsOne);
+  });
+
+  testWidgets('a one-ayah answer has no citation row to jump from', (
+    tester,
+  ) async {
+    late String slug;
+    await tester.runAsync(() async {
+      final index = await resolveHome();
+      slug = index.questions
+          .firstWhere((q) => index.citationsOf(q).length == 1)
+          .slug;
+      await container.read(questionDetailProvider(slug).future);
+      await container.read(isBookmarkedProvider(slug).future);
+    });
+
+    await pumpApp(tester);
+    await goTo(tester, '/question/$slug');
+
+    expect(find.text(Strings.quranEvidence), findsOne);
+    expect(find.text(Strings.evidence), findsNothing);
+
+    final userDb = container.read(userDatabaseProvider).value!;
+    await drain(
+      tester,
+      () async => (await userDb.recentSlugs()).firstOrNull == slug,
+    );
+    await unmount(tester);
+  });
+
+  testWidgets('reading history has its own screen', (tester) async {
+    late QuestionIndex index;
+    await tester.runAsync(() async {
+      final db = await container.read(userDatabaseProvider.future);
+      await db.recordView('naba-azeem');
+      index = await resolveHome();
+    });
+
+    await pumpApp(tester);
+    // Home shows it as last read, with the way to the whole history. The
+    // first "সব দেখুন" is last read's; the start-reading section has another.
+    final seeAll = find.text(Strings.seeAll).first;
+    await tester.ensureVisible(seeAll);
+    await tester.pump();
+    await tester.tap(seeAll);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.byType(HistoryScreen), findsOne);
+    expect(
+      find.descendant(
+        of: find.byType(HistoryScreen),
+        matching: find.text(index.bySlug('naba-azeem')!.questionBn),
+      ),
+      findsOne,
+    );
+    expect(find.byTooltip(Strings.clearHistory), findsOne);
   });
 
   testWidgets('the home search pill finds a verse by reference', (
@@ -333,9 +545,19 @@ void main() {
     addTearDown(() => results.close());
 
     await pumpApp(tester);
+    // The pill and the field it opens are the same height, the 48dp touch
+    // minimum, so the search bar doesn't jump when search opens.
+    expect(tester.getSize(find.byType(SearchFieldButton)).height, 48);
     await tester.tap(find.byType(SearchFieldButton));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
+    expect(tester.getSize(find.byType(TextField)).height, 48);
+    await tester.enterText(find.byType(TextField), 'x');
+    await tester.pump();
+    // Still 48 once the clear button shows.
+    expect(tester.getSize(find.byType(TextField)).height, 48);
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text(Strings.searchPrompt), findsOne);
     await tester.enterText(find.byType(TextField), query);
@@ -385,15 +607,23 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
 
       final naba = index.bySlug('naba-azeem')!.questionBn;
+      // Saved verses are compact rows leading to the verse, not full cards.
+      final verse = find.text(
+        container
+            .read(savedAyahsProvider)
+            .value![ayahId(54, 15)]!
+            .translationBn,
+      );
       expect(find.text(naba), findsOne);
-      expect(find.byType(AyahCard), findsOne);
+      expect(verse, findsOne);
+      expect(find.byType(AyahCard), findsNothing);
       expect(find.text(Strings.savedQuestions), findsOne);
 
       // Only the verse is in the folder.
       await tester.tap(find.text('ফোল্ডার ক'));
       await tester.pump();
       expect(find.text(naba), findsNothing);
-      expect(find.byType(AyahCard), findsOne);
+      expect(verse, findsOne);
       // A folder holding no questions shows no empty questions section.
       expect(find.text(Strings.savedQuestions), findsNothing);
 

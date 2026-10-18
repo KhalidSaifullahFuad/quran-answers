@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/db/content_queries.dart';
@@ -10,10 +11,10 @@ import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../shared/ayah_card.dart';
+import '../../shared/folder_sheet.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
 import '../../shared/widgets.dart';
-import '../about/methodology_sheet.dart';
 import 'question_providers.dart';
 
 /// A question, its compiled answer, and every ayah it cites in full.
@@ -57,23 +58,41 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final db = await ref.read(userDatabaseProvider.future);
     final on = await db.toggleBookmark(widget.slug);
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            on ? Strings.bookmarked : Strings.unbookmarked,
-            textAlign: TextAlign.center,
-          ),
-          duration: const Duration(milliseconds: 1800),
-        ),
-      );
+    if (!mounted) return;
+    showStatusToast(
+      messenger,
+      icon: on ? IconsaxPlusBold.archive_1 : IconsaxPlusLinear.archive_1,
+      text: on ? Strings.bookmarked : Strings.unbookmarked,
+      actionLabel: on ? Strings.folderAction : Strings.undo,
+      onAction: on
+          ? () async {
+              final choice = await pickFolder(context, current: null);
+              if (choice != null) await db.moveBookmark(widget.slug, choice.id);
+            }
+          : () => db.toggleBookmark(widget.slug),
+    );
+  }
+
+  /// The question, its answer and its citations as plain text.
+  void _share(QuestionWithAyahs detail) {
+    final q = detail.question;
+    final refs = [
+      for (final a in detail.ayahs) refLong(detail.surahOf(a), a.id),
+    ];
+    final text = [
+      q.questionBn,
+      q.answerBn,
+      if (refs.isNotEmpty) '${Strings.quranEvidence}: ${refs.join('; ')}',
+      '— ${Strings.appName}',
+    ].join('\n\n');
+    SharePlus.instance.share(ShareParams(text: text));
   }
 
   @override
   Widget build(BuildContext context) {
     final detail = ref.watch(questionDetailProvider(widget.slug));
     final bookmarked = ref.watch(isBookmarkedProvider(widget.slug)).value;
+    final loaded = detail.value;
 
     return Scaffold(
       body: SafeArea(
@@ -83,6 +102,12 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
               child: ContentFrame(
                 child: ScreenHeader(
                   actions: [
+                    if (loaded != null)
+                      IconButton(
+                        onPressed: () => _share(loaded),
+                        tooltip: Strings.share,
+                        icon: const Icon(IconsaxPlusLinear.send_2),
+                      ),
                     IconButton(
                       onPressed: _toggleBookmark,
                       tooltip: Strings.bookmark,
@@ -120,10 +145,9 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
     final q = detail.question;
     final index = ref.watch(questionIndexProvider).value;
     final category = index?.categories[q.category];
-    final related = [
-      for (final other in index?.inCategory(q.category) ?? const <Question>[])
-        if (other.slug != q.slug) other,
-    ].take(3).toList();
+    final next = index?.nextInCategory(q);
+    final related =
+        index?.related(q, exclude: {?next?.slug}) ?? const <Question>[];
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.gutter, 4, Space.gutter, 36),
@@ -141,20 +165,8 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
           const SizedBox(height: 10),
           Text(q.questionBn, style: t.questionTitle),
           const SizedBox(height: 28),
-          Row(
-            children: [
-              Expanded(child: Text(Strings.compiledAnswer, style: t.label)),
-              IconButton(
-                onPressed: () => showMethodologySheet(context),
-                tooltip: Strings.methodology,
-                visualDensity: VisualDensity.compact,
-                iconSize: 18,
-                color: c.fg3,
-                icon: const Icon(IconsaxPlusLinear.info_circle),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
+          Text(Strings.compiledAnswer, style: t.label),
+          const SizedBox(height: 8),
           Text(q.answerBn, style: t.answer),
           // A "not in the Qur'an" answer has nothing to cite.
           if (detail.ayahs.isNotEmpty) ..._evidence(context, detail),
@@ -171,6 +183,13 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
                 inset: 0,
               ),
           ],
+          if (next != null) ...[
+            const SizedBox(height: 24),
+            _NextQuestion(
+              question: next,
+              onTap: () => context.replaceQuestion(next.slug),
+            ),
+          ],
         ],
       ),
     );
@@ -180,20 +199,20 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
     final c = AppColors.of(context);
     final t = AppText.of(context);
     return [
-      const SizedBox(height: 14),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Text(Strings.evidence, style: t.meta),
-          for (final a in detail.ayahs)
-            RefPill(label: refShort(a.id), onTap: () => _scrollTo(a.id)),
-        ],
-      ),
-      if (_OccurrenceGrid.applies(detail)) ...[
-        const SizedBox(height: 28),
-        _OccurrenceGrid(detail: detail, onOpen: _scrollTo),
+      // With one or two ayat the cards follow right below; the jump row
+      // would only repeat the header.
+      if (detail.ayahs.length >= 3) ...[
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(Strings.evidence, style: t.meta),
+            for (final a in detail.ayahs)
+              RefPill(label: refShort(a.id), onTap: () => _scrollTo(a.id)),
+          ],
+        ),
       ],
       const SizedBox(height: 28),
       Row(
@@ -216,93 +235,47 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
   }
 }
 
-/// Where the cited ayat sit within their surah, one cell per verse.
-///
-/// Derived purely from the citations, so it states nothing the content does not:
-/// the marked cells are the ayat this answer cites.
-class _OccurrenceGrid extends StatelessWidget {
-  const _OccurrenceGrid({required this.detail, required this.onOpen});
+/// The next question in the same topic, for reading straight through.
+class _NextQuestion extends StatelessWidget {
+  const _NextQuestion({required this.question, required this.onTap});
 
-  final QuestionWithAyahs detail;
-  final void Function(int ayahId) onOpen;
-
-  /// Only meaningful for several citations from a single surah.
-  static bool applies(QuestionWithAyahs detail) =>
-      detail.ayahs.length >= 2 &&
-      detail.ayahs.every((a) => a.surah == detail.ayahs.first.surah);
+  final Question question;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = AppColors.of(context);
     final t = AppText.of(context);
-    final surah = detail.surahOf(detail.ayahs.first);
-    final hits = {for (final a in detail.ayahs) a.ayah};
-    // Short surahs get numbered cells; long ones a denser, unlabelled grid.
-    final compact = surah.ayahCount > 60;
-    final columns = compact ? 19 : 11;
-    final cellHeight = compact ? 13.0 : 22.0;
-    final gap = compact ? 3.0 : 4.0;
-    final sorted = hits.toList()..sort();
-
-    Widget cell(int n) {
-      final hit = hits.contains(n);
-      final box = Container(
-        height: cellHeight,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: hit ? c.highlight : c.track,
-          borderRadius: BorderRadius.circular(compact ? 3 : Space.radiusCell),
-        ),
-        child: hit && !compact ? Text(bnDigits(n), style: t.cell) : null,
-      );
-      if (!hit) return box;
-      return Semantics(
-        button: true,
-        label: refShort(ayahId(surah.number, n)),
-        child: GestureDetector(
-          onTap: () => onOpen(ayahId(surah.number, n)),
-          child: box,
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(Space.radiusCard),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            Strings.citedPositions,
-            style: t.rowTitle.copyWith(fontSize: 13.5),
+    return Material(
+      color: c.card,
+      borderRadius: BorderRadius.circular(Space.radiusCard),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 12, 14),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(Strings.nextQuestion, style: t.label),
+                    const SizedBox(height: 6),
+                    Text(
+                      question.questionBn,
+                      style: t.rowTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Icon(IconsaxPlusLinear.arrow_right_3, size: 22, color: c.fg2),
+            ],
           ),
-          const SizedBox(height: 12),
-          for (var row = 0; row * columns < surah.ayahCount; row++) ...[
-            if (row > 0) SizedBox(height: gap),
-            Row(
-              children: [
-                for (var col = 0; col < columns; col++) ...[
-                  if (col > 0) SizedBox(width: gap),
-                  Expanded(
-                    child: row * columns + col < surah.ayahCount
-                        ? cell(row * columns + col + 1)
-                        : const SizedBox.shrink(),
-                  ),
-                ],
-              ],
-            ),
-          ],
-          const SizedBox(height: 12),
-          Text(
-            '${surahLabel(surah)} · '
-            '${Strings.ayatInSurah(bnDigits(surah.ayahCount))} · '
-            '${sorted.map(bnDigits).join(', ')}',
-            style: t.meta.copyWith(height: 1.5),
-          ),
-        ],
+        ),
       ),
     );
   }

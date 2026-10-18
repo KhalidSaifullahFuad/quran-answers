@@ -13,19 +13,29 @@ abstract final class Strings {
   static const lastRead = 'সর্বশেষ পড়া';
   static const topics = 'বিষয়';
   static const allQuestions = 'সব প্রশ্ন';
+  static const seeAll = 'সব দেখুন';
+  static const startReading = 'পড়ে দেখুন';
+  static const allTopics = 'সব বিষয়';
+  static const all = 'সব';
+  static const nextQuestion = 'পরের প্রশ্ন';
+  static const share = 'শেয়ার করুন';
+  static const copyAyah = 'আয়াত কপি করুন';
+  static const copied = 'কপি হয়েছে';
   static const compiledAnswer = 'সংকলিত উত্তর';
   static const evidence = 'প্রমাণ';
   static const quranEvidence = 'কুরআনের প্রমাণ';
-  static const citedPositions = 'উদ্ধৃত আয়াতের অবস্থান';
   static const relatedQuestions = 'সম্পর্কিত প্রশ্ন';
   static const back = 'ফিরে যান';
   static const bookmark = 'সংরক্ষণ';
-  static const bookmarked = 'প্রশ্নটি সংরক্ষিত হয়েছে';
-  static const unbookmarked = 'সংরক্ষিত তালিকা থেকে সরানো হয়েছে';
+  static const bookmarked = 'প্রশ্ন সংরক্ষিত';
+  static const unbookmarked = 'সংরক্ষণ থেকে সরানো হলো';
+  static const undo = 'ফিরিয়ে আনুন';
+  static const folderAction = 'ফোল্ডার';
   static const notFound = 'প্রশ্নটি পাওয়া যায়নি';
   static const loadFailed = 'তথ্য খোলা যায়নি';
 
   static const navHome = 'হোম';
+  static const navQuestions = 'প্রশ্ন';
   static const navTopics = 'বিষয়';
   static const navSurahs = 'সূরা';
   static const navSaved = 'সংরক্ষিত';
@@ -36,6 +46,8 @@ abstract final class Strings {
   static const surahQuestionsNote = 'এই সূরার আয়াত যেসব প্রশ্নের প্রমাণ';
   static const makki = 'মাক্কী';
   static const madani = 'মাদানী';
+  static const sortByNumber = 'সূরার ক্রমে';
+  static const sortByCount = 'বেশি প্রশ্ন আগে';
   static const readingHistory = 'পড়ার ইতিহাস';
   static const savedEmpty =
       'প্রশ্নের পাতায় বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
@@ -46,8 +58,11 @@ abstract final class Strings {
       'আয়াতের কার্ডে বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
   static const folderEmpty = 'এই ফোল্ডারে এখনো কিছু রাখা হয়নি।';
   static const bookmarkAyah = 'আয়াত সংরক্ষণ';
-  static const ayahBookmarked = 'আয়াতটি সংরক্ষিত হয়েছে';
-  static const ayahUnbookmarked = 'আয়াতটি সংরক্ষিত তালিকা থেকে সরানো হয়েছে';
+  static const ayahBookmarked = 'আয়াত সংরক্ষিত';
+  static const nothingSaved =
+      'এখনো কিছু সংরক্ষণ করা হয়নি। প্রশ্নের পাতায় বা আয়াতের কার্ডে '
+      'বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
+  static const manageFolders = 'ফোল্ডার সাজান';
   static const allFolders = 'সব';
   static const newFolder = 'নতুন ফোল্ডার';
   static const folderName = 'ফোল্ডারের নাম';
@@ -65,9 +80,16 @@ abstract final class Strings {
   static const searchPrompt =
       'প্রশ্নের শব্দ, আরবি বা বাংলা শব্দ, অথবা আয়াত নম্বর (৫৪:১৫) লিখুন।';
   static const noResults = 'কিছু পাওয়া যায়নি।';
+  static const filterQuestionsHint = 'প্রশ্ন বা উত্তরের শব্দ';
+  static const searchWholeQuran = 'পুরো কুরআনে খুঁজুন';
   static const clearSearch = 'মুছুন';
   static const searchQuestions = 'প্রশ্ন';
   static const searchAyat = 'আয়াত';
+  static const searchExamplesLabel = 'যেমন';
+
+  /// Tapped into the search field from its empty state. Bengali and a
+  /// reference only: Arabic is never written into the code.
+  static const searchExamples = ['৫৪:১৫', 'নূহ', 'সালাত', 'মারইয়াম'];
   static const citingThisAyah = 'এই আয়াত যেসব প্রশ্নের প্রমাণ';
 
   static const previousAyah = 'আগের আয়াত';
@@ -75,7 +97,7 @@ abstract final class Strings {
   static const notCitedYet = 'এই আয়াত এখনো কোনো প্রশ্নের প্রমাণ হিসেবে আসেনি।';
 
   static const settings = 'সেটিংস';
-  static const appearance = 'রং';
+  static const appearance = 'থিম';
   static const themeSystem = 'ফোনের মতো';
   static const themeLight = 'হালকা';
   static const themeDark = 'গাঢ়';

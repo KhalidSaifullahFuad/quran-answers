@@ -127,8 +127,11 @@ abstract final class Space {
   /// Horizontal page padding.
   static const gutter = 18.0;
   static const radiusCard = 12.0;
-  static const radiusCell = 4.0;
   static const headerHeight = 52.0;
+
+  /// The search pill and field: Material's 48dp touch minimum, which also
+  /// leaves room for Bengali vowel signs above and below the line.
+  static const searchHeight = 48.0;
 
   /// Content stops widening here, so lines stay readable on a tablet.
   static const maxContentWidth = 640.0;

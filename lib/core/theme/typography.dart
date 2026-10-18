@@ -36,7 +36,6 @@ class AppText extends ThemeExtension<AppText> {
     required this.arabic,
     required this.pill,
     required this.link,
-    required this.cell,
   });
 
   /// [arabicScale] multiplies the Qur'anic text; [bengaliScale] the reading
@@ -126,11 +125,6 @@ class AppText extends ThemeExtension<AppText> {
         fontWeight: FontWeight.w500,
         color: c.fg2,
       ),
-      cell: base.copyWith(
-        fontSize: 9.5,
-        fontWeight: FontWeight.w600,
-        color: c.background,
-      ),
     );
   }
 
@@ -166,9 +160,6 @@ class AppText extends ThemeExtension<AppText> {
   final TextStyle pill;
   final TextStyle link;
 
-  /// Ayah number inside a highlighted occurrence cell.
-  final TextStyle cell;
-
   static AppText of(BuildContext context) =>
       Theme.of(context).extension<AppText>()!;
 
@@ -194,7 +185,6 @@ class AppText extends ThemeExtension<AppText> {
       arabic: l(arabic, other.arabic),
       pill: l(pill, other.pill),
       link: l(link, other.link),
-      cell: l(cell, other.cell),
     );
   }
 }

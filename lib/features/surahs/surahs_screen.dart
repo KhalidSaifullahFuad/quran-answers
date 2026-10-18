@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/strings.dart';
@@ -14,11 +15,19 @@ import '../questions/question_providers.dart';
 /// The surahs that some question cites, each with how many questions do.
 ///
 /// Not a full surah index: a surah no question cites has nothing to open here.
-class SurahsScreen extends ConsumerWidget {
+class SurahsScreen extends ConsumerStatefulWidget {
   const SurahsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SurahsScreen> createState() => _SurahsScreenState();
+}
+
+class _SurahsScreenState extends ConsumerState<SurahsScreen> {
+  /// Most-cited surahs first, rather than mushaf order.
+  bool _byCount = false;
+
+  @override
+  Widget build(BuildContext context) {
     final index = ref.watch(questionIndexProvider);
     final surahs = ref.watch(surahsProvider);
     final t = AppText.of(context);
@@ -53,8 +62,35 @@ class SurahsScreen extends ConsumerWidget {
                           style: t.meta.copyWith(fontSize: 13.5, height: 1.6),
                         ),
                       ),
-                      for (final MapEntry(key: n, value: count)
-                          in index.citedSurahs().entries)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          Space.gutter,
+                          4,
+                          Space.gutter,
+                          8,
+                        ),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            TopicChip(
+                              label: Strings.sortByNumber,
+                              icon: const Icon(IconsaxPlusLinear.sort),
+                              selected: !_byCount,
+                              onTap: () => setState(() => _byCount = false),
+                            ),
+                            TopicChip(
+                              label: Strings.sortByCount,
+                              icon: const Icon(IconsaxPlusLinear.chart_2),
+                              selected: _byCount,
+                              onTap: () => setState(() => _byCount = true),
+                            ),
+                          ],
+                        ),
+                      ),
+                      for (final MapEntry(key: n, value: count) in _sorted(
+                        index.citedSurahs(),
+                      ))
                         if (surahs[n] case final surah?)
                           _SurahRow(
                             surah: surah,
@@ -71,6 +107,11 @@ class SurahsScreen extends ConsumerWidget {
       ),
     );
   }
+
+  /// Mushaf order, or most-cited first (ties keep mushaf order).
+  Iterable<MapEntry<int, int>> _sorted(Map<int, int> cited) => _byCount
+      ? (cited.entries.toList()..sort((a, b) => b.value.compareTo(a.value)))
+      : cited.entries;
 }
 
 class _SurahRow extends StatelessWidget {

@@ -6,7 +6,9 @@ import 'core/strings.dart';
 import 'core/theme/theme.dart';
 import 'features/about/about_screen.dart';
 import 'features/ayah/ayah_screen.dart';
+import 'features/history/history_screen.dart';
 import 'features/home/home_screen.dart';
+import 'features/questions/all_questions_screen.dart';
 import 'features/questions/category_screen.dart';
 import 'features/questions/question_screen.dart';
 import 'features/saved/saved_screen.dart';
@@ -43,12 +45,17 @@ List<RouteBase> _detailRoutes() => [
       ayah: int.parse(state.pathParameters['ayah']!),
     ),
   ),
-  GoRoute(path: 'search', builder: (context, state) => const SearchScreen()),
+  GoRoute(
+    path: 'search',
+    builder: (context, state) =>
+        SearchScreen(initialQuery: state.uri.queryParameters['q']),
+  ),
   GoRoute(
     path: 'settings',
     builder: (context, state) => const SettingsScreen(),
   ),
   GoRoute(path: 'about', builder: (context, state) => const AboutScreen()),
+  GoRoute(path: 'history', builder: (context, state) => const HistoryScreen()),
 ];
 
 /// Routes are paths, so a question or category can later be opened from a
@@ -73,6 +80,7 @@ GoRouter buildRouter() => GoRouter(
                 path: tab.path,
                 builder: (context, state) => switch (tab) {
                   AppTab.home => const HomeScreen(),
+                  AppTab.questions => const AllQuestionsScreen(),
                   AppTab.topics => const TopicsScreen(),
                   AppTab.surahs => const SurahsScreen(),
                   AppTab.saved => const SavedScreen(),

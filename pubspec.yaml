@@ -44,6 +44,7 @@ dependencies:
   sqlite3: ^3.5.2
   crypto: ^3.0.7
   iconsax_plus: ^1.0.0
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:

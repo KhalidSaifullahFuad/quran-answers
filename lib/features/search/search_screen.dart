@@ -26,7 +26,10 @@ final searchResultsProvider = FutureProvider.autoDispose
 /// Search across questions and the whole mushaf, or jump to a verse by
 /// reference.
 class SearchScreen extends ConsumerStatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({super.key, this.initialQuery});
+
+  /// Typed in and searched on open, e.g. handed on from the questions tab.
+  final String? initialQuery;
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
@@ -40,6 +43,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   /// The last results that finished loading. Shown while the next query runs,
   /// so the list does not blank out on every keystroke.
   SearchResults? _shown;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initialQuery?.trim() ?? '';
+    if (initial.isNotEmpty) {
+      _controller.text = initial;
+      _query = initial;
+    }
+  }
 
   @override
   void dispose() {
@@ -63,11 +76,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     });
   }
 
+  /// Fills the field with an example and searches it at once.
+  void _pick(String query) {
+    _controller.value = TextEditingValue(
+      text: query,
+      selection: TextSelection.collapsed(offset: query.length),
+    );
+    _setQuery(query);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final c = AppColors.of(context);
-    final t = AppText.of(context);
-
     if (_query.isNotEmpty) {
       final value = ref.watch(searchResultsProvider(_query));
       if (value case AsyncData(:final value)) _shown = value;
@@ -77,10 +96,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ContentFrame(child: ScreenHeader(child: _field(c, t))),
+            ContentFrame(child: ScreenHeader(child: _field())),
             Expanded(
               child: _query.isEmpty
-                  ? _Message(Strings.searchPrompt)
+                  ? _Examples(onPick: _pick)
                   : _shown == null
                   ? AsyncBody(
                       value: ref.watch(searchResultsProvider(_query)),
@@ -94,67 +113,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  Widget _field(AppColors c, AppText t) {
-    return ListenableBuilder(
-      listenable: _controller,
-      builder: (context, _) => TextField(
-        controller: _controller,
-        autofocus: true,
-        onChanged: _onChanged,
-        onSubmitted: _setQuery,
-        textInputAction: TextInputAction.search,
-        // Queries may be Arabic: Noto Sans Bengali has no Arabic glyphs, so
-        // name a fallback rather than trust the platform's.
-        style: t.meta.copyWith(
-          fontSize: 15,
-          color: c.fg1,
-          fontFamilyFallback: [...Fonts.latinFallback, Fonts.arabic],
-        ),
-        cursorColor: c.fg2,
-        decoration: InputDecoration(
-          hintText: Strings.searchHint,
-          hintStyle: t.meta.copyWith(fontSize: 14, color: c.fg3),
-          filled: true,
-          fillColor: c.track,
-          isDense: true,
-          // 41dp tall like the home search pill (15 × 1.4 line + 2 × 10), so
-          // the field doesn't grow when search opens. The icon boxes would
-          // otherwise force Material's 48dp minimum.
-          contentPadding: const EdgeInsets.symmetric(vertical: 10),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(99)),
-            borderSide: BorderSide.none,
-          ),
-          prefixIcon: Icon(
-            IconsaxPlusLinear.search_normal_1,
-            size: 20,
-            color: c.fg2,
-          ),
-          prefixIconConstraints: const BoxConstraints(minWidth: 48),
-          suffixIconConstraints: const BoxConstraints(minWidth: 44),
-          suffixIcon: _controller.text.isEmpty
-              ? null
-              : IconButton(
-                  constraints: const BoxConstraints(minWidth: 44),
-                  padding: EdgeInsets.zero,
-                  style: IconButton.styleFrom(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  tooltip: Strings.clearSearch,
-                  icon: Icon(
-                    IconsaxPlusLinear.close_circle,
-                    size: 18,
-                    color: c.fg2,
-                  ),
-                  onPressed: () {
-                    _controller.clear();
-                    _setQuery('');
-                  },
-                ),
-        ),
-      ),
-    );
-  }
+  Widget _field() => AppSearchField(
+    controller: _controller,
+    hint: Strings.searchHint,
+    autofocus: true,
+    onChanged: _onChanged,
+    onSubmitted: _setQuery,
+    onClear: () {
+      _controller.clear();
+      _setQuery('');
+    },
+  );
 }
 
 class _Message extends StatelessWidget {
@@ -173,6 +142,47 @@ class _Message extends StatelessWidget {
           child: Text(
             text,
             style: AppText.of(context).meta.copyWith(fontSize: 14),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The empty state: what can be searched, and a few queries to try.
+class _Examples extends StatelessWidget {
+  const _Examples({required this.onPick});
+
+  final ValueChanged<String> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppText.of(context);
+    return ContentFrame(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(Space.gutter, 24, Space.gutter, 0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(Strings.searchPrompt, style: t.meta.copyWith(fontSize: 14)),
+              const SizedBox(height: 18),
+              Text(Strings.searchExamplesLabel, style: t.label),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final q in Strings.searchExamples)
+                    TopicChip(
+                      label: q,
+                      icon: const Icon(IconsaxPlusLinear.search_normal_1),
+                      onTap: () => onPick(q),
+                    ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

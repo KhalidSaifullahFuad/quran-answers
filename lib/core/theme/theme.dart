@@ -44,18 +44,13 @@ ThemeData buildTheme(
     ),
     iconTheme: IconThemeData(color: c.fg1),
     progressIndicatorTheme: ProgressIndicatorThemeData(color: c.fg3),
-    snackBarTheme: SnackBarThemeData(
+    // The visible toast is drawn by showStatusToast; the bar itself is only a
+    // transparent carrier, so it never reads as a full-width button.
+    snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
-      backgroundColor: c.fg1,
-      shape: const StadiumBorder(),
+      backgroundColor: Colors.transparent,
       elevation: 0,
-      contentTextStyle: TextStyle(
-        fontFamily: Fonts.bengali,
-        fontFamilyFallback: Fonts.latinFallback,
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: c.background,
-      ),
+      insetPadding: EdgeInsets.fromLTRB(16, 0, 16, 12),
     ),
     sliderTheme: SliderThemeData(
       activeTrackColor: c.fg2,

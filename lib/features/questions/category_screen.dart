@@ -51,9 +51,17 @@ class CategoryScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 8),
-                      for (final q in questions)
+                      // Numbered: every row shares the category, so its
+                      // icon would only repeat down the list.
+                      for (final (i, q) in questions.indexed)
                         QuestionTile(
-                          icon: CategoryIcon(q.category),
+                          icon: Text(
+                            bnDigits(i + 1),
+                            style: AppText.of(context).meta.copyWith(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           title: q.questionBn,
                           meta: refsSummary(index.citationsOf(q)),
                           onTap: () => context.openQuestion(q.slug),

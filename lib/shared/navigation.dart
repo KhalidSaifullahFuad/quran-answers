@@ -6,10 +6,16 @@ import '../core/strings.dart';
 import '../core/theme/colors.dart';
 import '../core/theme/typography.dart';
 
-/// The four tabs, in order. Each is a branch with its own navigation stack,
+/// The five tabs, in order. Each is a branch with its own navigation stack,
 /// so switching tabs keeps where the reader was in each.
 enum AppTab {
   home('/', Strings.navHome, IconsaxPlusLinear.home_2, IconsaxPlusBold.home_2),
+  questions(
+    '/questions',
+    Strings.navQuestions,
+    IconsaxPlusLinear.message_question,
+    IconsaxPlusBold.message_question,
+  ),
   topics(
     '/topics',
     Strings.navTopics,
@@ -57,7 +63,13 @@ extension AppNavigation on BuildContext {
 
   void openSurah(int number) => push('$_tabPrefix/surah/$number');
 
-  void openSearch() => push('$_tabPrefix/search');
+  /// [query], when given, is typed into the field and searched at once.
+  void openSearch({String? query}) => push(
+    Uri(
+      path: '$_tabPrefix/search',
+      queryParameters: query == null ? null : {'q': query},
+    ).toString(),
+  );
 
   void openAyah(int surah, int ayah) => push('$_tabPrefix/ayah/$surah/$ayah');
 
@@ -69,6 +81,16 @@ extension AppNavigation on BuildContext {
   void openSettings() => push('$_tabPrefix/settings');
 
   void openAbout() => push('$_tabPrefix/about');
+
+  void openHistory() => push('$_tabPrefix/history');
+
+  /// Steps to another question without growing the back stack, so back
+  /// returns to the list the reader came from.
+  void replaceQuestion(String slug) =>
+      pushReplacement('$_tabPrefix/question/$slug');
+
+  /// Switches to [tab] at its first screen, as tapping it in the bottom bar does.
+  void goTab(AppTab tab) => go(tab.path);
 }
 
 /// The bottom bar from the design: an icon in a pill that fills when active,
@@ -83,7 +105,6 @@ class AppBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = AppColors.of(context);
-    final t = AppText.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: c.background,
@@ -92,56 +113,155 @@ class AppBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 68,
+          height: 72,
           child: Row(
             children: [
               for (final (i, tab) in AppTab.values.indexed)
                 Expanded(
-                  child: Semantics(
+                  child: _NavItem(
+                    tab: tab,
                     selected: i == current,
-                    button: true,
-                    child: InkResponse(
-                      onTap: () => onTap(i),
-                      radius: 40,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            curve: const Cubic(.2, 0, 0, 1),
-                            width: 54,
-                            height: 27,
-                            decoration: ShapeDecoration(
-                              shape: const StadiumBorder(),
-                              color: i == current
-                                  ? c.selected
-                                  : Colors.transparent,
-                            ),
-                            child: Icon(
-                              i == current ? tab.activeIcon : tab.icon,
-                              size: 21,
-                              color: i == current ? c.fg1 : c.fg4,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            tab.label,
-                            style: t.meta.copyWith(
-                              fontSize: 12,
-                              height: 1.2,
-                              fontWeight: i == current
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: i == current ? c.fg1 : c.fg4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    onTap: () => onTap(i),
                   ),
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One tab of the bottom bar, with its micro-animation: on a tap the icon
+/// dips and settles, and the pill grows out from the icon when the tab
+/// becomes selected. Motion is dropped when the system asks to reduce it.
+class _NavItem extends StatefulWidget {
+  const _NavItem({
+    required this.tab,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final AppTab tab;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  State<_NavItem> createState() => _NavItemState();
+}
+
+class _NavItemState extends State<_NavItem>
+    with SingleTickerProviderStateMixin {
+  /// Material's emphasized easing, as everywhere else in the app.
+  static const _ease = Cubic(.2, 0, 0, 1);
+
+  late final _pop = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 280),
+  );
+
+  /// Press in, overshoot a touch, settle.
+  late final _scale = TweenSequence<double>([
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 1.0,
+        end: .84,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 35,
+    ),
+    TweenSequenceItem(
+      tween: Tween(begin: .84, end: 1.08).chain(CurveTween(curve: _ease)),
+      weight: 40,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 1.08,
+        end: 1.0,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 25,
+    ),
+  ]).animate(_pop);
+
+  @override
+  void dispose() {
+    _pop.dispose();
+    super.dispose();
+  }
+
+  void _tap() {
+    if (!MediaQuery.disableAnimationsOf(context)) _pop.forward(from: 0);
+    widget.onTap();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.of(context);
+    final t = AppText.of(context);
+    final still = MediaQuery.disableAnimationsOf(context);
+    final selected = widget.selected;
+    final ink = selected ? c.fg1 : c.fg3;
+    Duration ms(int n) => still ? Duration.zero : Duration(milliseconds: n);
+
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: InkResponse(
+        onTap: _tap,
+        radius: 40,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 60,
+              height: 30,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Grows from the icon's width to the full pill.
+                  AnimatedContainer(
+                    duration: ms(240),
+                    curve: _ease,
+                    width: selected ? 60 : 30,
+                    height: 30,
+                    decoration: ShapeDecoration(
+                      shape: const StadiumBorder(),
+                      color: selected
+                          ? c.selected
+                          : c.selected.withValues(alpha: 0),
+                    ),
+                  ),
+                  ScaleTransition(
+                    scale: _scale,
+                    child: AnimatedSwitcher(
+                      duration: ms(160),
+                      child: Icon(
+                        selected ? widget.tab.activeIcon : widget.tab.icon,
+                        key: ValueKey(selected),
+                        size: 24,
+                        color: ink,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 4),
+            AnimatedDefaultTextStyle(
+              duration: ms(160),
+              style: t.meta.copyWith(
+                fontSize: 12.5,
+                // Room for Bengali vowel signs above and below the line.
+                height: 1.3,
+                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                color: ink,
+              ),
+              child: Text(
+                widget.tab.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ),
     );

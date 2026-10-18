@@ -11,7 +11,6 @@ import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
 import '../../shared/navigation.dart';
 import '../../shared/widgets.dart';
-import '../about/methodology_sheet.dart';
 import 'settings_provider.dart';
 
 /// The verse the text-size preview shows. Read from the mushaf like every
@@ -22,7 +21,7 @@ final previewAyahProvider = FutureProvider<Ayah?>((ref) async {
 });
 
 /// Theme and reading text sizes, with a live preview, and the way to the
-/// methodology and credits.
+/// credits.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -118,11 +117,6 @@ class SettingsScreen extends ConsumerWidget {
             ContentFrame(
               child: Column(
                 children: [
-                  _LinkRow(
-                    icon: IconsaxPlusLinear.task_square,
-                    label: Strings.methodology,
-                    onTap: () => showMethodologySheet(context),
-                  ),
                   _LinkRow(
                     icon: IconsaxPlusLinear.info_circle,
                     label: Strings.about,

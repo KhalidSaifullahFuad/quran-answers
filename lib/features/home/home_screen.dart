@@ -50,6 +50,9 @@ class HomeScreen extends ConsumerWidget {
 class _Body extends ConsumerWidget {
   const _Body({required this.index});
 
+  /// Topic chips shown before the link to the topics tab.
+  static const _shownTopics = 5;
+
   final QuestionIndex index;
 
   @override
@@ -60,7 +63,12 @@ class _Body extends ConsumerWidget {
       ref.watch(todayProvider),
     );
     final recent = ref.watch(recentSlugsProvider).value ?? const [];
-    final lastRead = recent.map(index.bySlug).nonNulls.firstOrNull;
+    final lastRead = recent.map(index.bySlug).nonNulls.take(3).toList();
+    final categories = index.categories.values.toList();
+    final picks = index.dailyPicks(
+      ref.watch(todayProvider),
+      exclude: {?featured?.slug, for (final q in lastRead) q.slug},
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,19 +91,24 @@ class _Body extends ConsumerWidget {
           const SizedBox(height: 26),
           _FeaturedCard(question: featured),
         ],
-        if (lastRead != null) ...[
+        if (lastRead.isNotEmpty) ...[
           const SizedBox(height: 26),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: Space.gutter),
-            child: SectionTitle(Strings.lastRead),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+            child: SectionTitle(
+              Strings.lastRead,
+              actionLabel: Strings.seeAll,
+              onAction: context.openHistory,
+            ),
           ),
           const SizedBox(height: 4),
-          QuestionTile(
-            icon: const Icon(IconsaxPlusLinear.clock_1),
-            title: lastRead.questionBn,
-            meta: index.rowMeta(lastRead),
-            onTap: () => context.openQuestion(lastRead.slug),
-          ),
+          for (final q in lastRead)
+            QuestionTile(
+              icon: CategoryIcon(q.category),
+              title: q.questionBn,
+              meta: index.rowMeta(q),
+              onTap: () => context.openQuestion(q.slug),
+            ),
         ],
         const SizedBox(height: 26),
         const Padding(
@@ -108,7 +121,8 @@ class _Body extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
           child: Row(
             children: [
-              for (final c in index.categories.values) ...[
+              // A handful of shortcuts; the topics tab holds them all.
+              for (final c in categories.take(_shownTopics)) ...[
                 TopicChip(
                   label: c.nameBn,
                   icon: CategoryIcon(c.id),
@@ -116,33 +130,49 @@ class _Body extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
               ],
+              if (categories.length > _shownTopics)
+                TopicChip(
+                  label: Strings.allTopics,
+                  icon: const Icon(IconsaxPlusLinear.category),
+                  onTap: () => context.goTab(AppTab.topics),
+                ),
             ],
           ),
         ),
-        const SizedBox(height: 26),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
-          child: SectionTitle(
-            Strings.allQuestions,
-            trailing: Strings.questionCount(bnDigits(index.questions.length)),
+        if (picks.isNotEmpty) ...[
+          const SizedBox(height: 26),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+            child: SectionTitle(
+              Strings.startReading,
+              actionLabel: Strings.seeAll,
+              onAction: () => context.goTab(AppTab.questions),
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        for (final q in index.questions)
-          QuestionTile(
-            icon: CategoryIcon(q.category),
-            title: q.questionBn,
-            meta: index.rowMeta(q),
-            onTap: () => context.openQuestion(q.slug),
-          ),
+          const SizedBox(height: 4),
+          for (final q in picks)
+            QuestionTile(
+              icon: CategoryIcon(q.category),
+              title: q.questionBn,
+              meta: index.rowMeta(q),
+              onTap: () => context.openQuestion(q.slug),
+            ),
+        ],
       ],
     );
   }
 }
 
 /// Today's question: its first cited ayah, the question, the citation.
+///
+/// The ayah is shown only when it fits whole in a few lines. A verse is never
+/// cut short, so a long one is left to the question screen and only its
+/// citation shows here.
 class _FeaturedCard extends ConsumerWidget {
   const _FeaturedCard({required this.question});
+
+  /// Longest Uthmani text (in characters) the card shows in full.
+  static const _maxAyahLength = 140;
 
   final Question question;
 
@@ -152,6 +182,8 @@ class _FeaturedCard extends ConsumerWidget {
     final t = AppText.of(context);
     final detail = ref.watch(questionDetailProvider(question.slug)).value;
     final first = detail?.ayahs.firstOrNull;
+    final showAyah =
+        first != null && first.textUthmani.length <= _maxAyahLength;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
@@ -177,7 +209,7 @@ class _FeaturedCard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                if (first != null) ...[
+                if (showAyah) ...[
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.fromLTRB(14, 6, 14, 4),
@@ -189,7 +221,6 @@ class _FeaturedCard extends ConsumerWidget {
                     child: ArabicText(
                       first.textUthmani,
                       ayah: first.ayah,
-                      maxLines: 2,
                       textAlign: TextAlign.center,
                     ),
                   ),

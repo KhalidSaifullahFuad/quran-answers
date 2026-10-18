@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
@@ -8,6 +9,7 @@ import '../core/strings.dart';
 import '../core/theme/colors.dart';
 import '../core/theme/typography.dart';
 import '../features/questions/question_providers.dart';
+import 'folder_sheet.dart';
 import 'navigation.dart';
 import 'references.dart';
 import 'widgets.dart';
@@ -39,17 +41,35 @@ class AyahCard extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final db = await ref.read(userDatabaseProvider.future);
     final on = await db.toggleAyahBookmark(ayah.id);
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            on ? Strings.ayahBookmarked : Strings.ayahUnbookmarked,
-            textAlign: TextAlign.center,
-          ),
-          duration: const Duration(milliseconds: 1800),
-        ),
-      );
+    if (!context.mounted) return;
+    showStatusToast(
+      messenger,
+      icon: on ? IconsaxPlusBold.archive_1 : IconsaxPlusLinear.archive_1,
+      text: on ? Strings.ayahBookmarked : Strings.unbookmarked,
+      actionLabel: on ? Strings.folderAction : Strings.undo,
+      onAction: on
+          ? () async {
+              final choice = await pickFolder(context, current: null);
+              if (choice != null) await db.moveAyahBookmark(ayah.id, choice.id);
+            }
+          : () => db.toggleAyahBookmark(ayah.id),
+    );
+  }
+
+  /// Arabic, translation and citation, ready to paste.
+  Future<void> _copy(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    await Clipboard.setData(
+      ClipboardData(
+        text:
+            '${ayah.textUthmani}\n\n${ayah.translationBn}\n— ${refLong(surah, ayah.id)}',
+      ),
+    );
+    showStatusToast(
+      messenger,
+      icon: IconsaxPlusLinear.copy_success,
+      text: Strings.copied,
+    );
   }
 
   @override
@@ -78,6 +98,14 @@ class AyahCard extends ConsumerWidget {
                         : null,
                   ),
                 ),
+              ),
+              IconButton(
+                onPressed: () => _copy(context),
+                tooltip: Strings.copyAyah,
+                visualDensity: VisualDensity.compact,
+                iconSize: 20,
+                color: c.fg3,
+                icon: const Icon(IconsaxPlusLinear.copy),
               ),
               ...actions,
               IconButton(

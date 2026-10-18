@@ -62,6 +62,70 @@ class QuestionIndex {
     return [?category, if (refs.isNotEmpty) refs].join(' • ');
   }
 
+  /// The question after [q] in its category, wrapping to the first; null when
+  /// [q] is alone in it.
+  Question? nextInCategory(Question q) {
+    final list = inCategory(q.category);
+    final i = list.indexWhere((o) => o.slug == q.slug);
+    if (list.length < 2 || i < 0) return null;
+    return list[(i + 1) % list.length];
+  }
+
+  /// Up to [count] questions to read after [q], closest first: those citing
+  /// the same ayah, then the same surah, then the rest of its category in
+  /// order from just after it. [exclude] keeps out e.g. the "next" question
+  /// already offered.
+  List<Question> related(
+    Question q, {
+    int count = 3,
+    Set<String> exclude = const {},
+  }) {
+    final ayat = citationsOf(q).toSet();
+    final surahs = {for (final id in ayat) surahOfAyahId(id)};
+    final skip = {q.slug, ...exclude};
+    final picked = <Question>[];
+    void take(Iterable<Question> from) {
+      for (final o in from) {
+        if (picked.length == count) return;
+        if (skip.add(o.slug)) picked.add(o);
+      }
+    }
+
+    take(questions.where((o) => citationsOf(o).any(ayat.contains)));
+    take(
+      questions.where(
+        (o) => citationsOf(o).any((id) => surahs.contains(surahOfAyahId(id))),
+      ),
+    );
+    final category = inCategory(q.category);
+    final at = category.indexWhere((o) => o.slug == q.slug);
+    take([...category.skip(at + 1), ...category.take(at)]);
+    return picked;
+  }
+
+  /// A few questions to start reading on [today], one per category.
+  ///
+  /// Like the featured question, derived from the date alone: the same all
+  /// day, different the next. The day picks which categories lead and which
+  /// question each offers; [exclude] keeps out ones already on screen.
+  List<Question> dailyPicks(
+    DateTime today, {
+    Set<String> exclude = const {},
+    int count = 5,
+  }) {
+    final day = dayNumber(today);
+    final ids = categories.keys.toList();
+    final picks = <Question>[];
+    for (var k = 0; k < ids.length && picks.length < count; k++) {
+      final pool = [
+        for (final q in inCategory(ids[(day + k) % ids.length]))
+          if (!exclude.contains(q.slug)) q,
+      ];
+      if (pool.isNotEmpty) picks.add(pool[(day + k * 7) % pool.length]);
+    }
+    return picks;
+  }
+
   /// Questions citing at least one ayah of [surah], in authored order.
   List<Question> citingSurah(int surah) => [
     for (final q in questions)
@@ -168,7 +232,10 @@ final todayProvider = Provider<DateTime>((ref) => DateTime.now());
 /// launch on the same day agrees.
 Question? questionOfTheDay(List<Question> questions, DateTime today) {
   if (questions.isEmpty) return null;
-  final day = DateTime.utc(today.year, today.month, today.day);
-  final index = day.millisecondsSinceEpoch ~/ Duration.millisecondsPerDay;
-  return questions[index % questions.length];
+  return questions[dayNumber(today) % questions.length];
 }
+
+/// Days since the epoch for [today]'s calendar date, ignoring the time.
+int dayNumber(DateTime today) =>
+    DateTime.utc(today.year, today.month, today.day).millisecondsSinceEpoch ~/
+    Duration.millisecondsPerDay;

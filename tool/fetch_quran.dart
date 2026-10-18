@@ -64,7 +64,10 @@ String _cleanTranslation(String raw) {
       .replaceAll('&gt;', '>')
       .replaceAll('&quot;', '"')
       .replaceAll('&#39;', "'")
-      .replaceAll('&nbsp;', ' ');
+      .replaceAll('&nbsp;', ' ')
+      // হ্র renders as হ + র-ফলা; the loanword ইহরাম keeps a visible hasanta
+      // (ZWNJ after it), as the author writes it. হ্রাস is correct as is.
+      .replaceAll('ইহ্রাম', 'ইহ্\u200Cরাম');
   return text.replaceAll(RegExp(r'\s+'), ' ').trim();
 }
 

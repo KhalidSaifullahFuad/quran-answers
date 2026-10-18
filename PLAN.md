@@ -4,7 +4,7 @@
 >
 > Design: claude.ai/design project `2e3fb7db-7db7-43c6-b11c-0965d3087574` → `Quran Answers App.dc.html` (built on `quran-majeed-design-system`). Session-to-session gotchas live in `HANDOFF.md`.
 
-**Status:** steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Store screenshots deferred until the app is feature-complete (see Later).
+**Status:** steps 18–19 (brand colours) landed 2026-10-19, awaiting device check; steps 1–10 and 12 done (12 awaits a device check); step 11 (content migration) in progress — 200 questions entered (all 200 published); review done 2026-10-10 and 2026-10-17. Store screenshots deferred until the app is feature-complete (see Later).
 
 
 ## Context
@@ -52,7 +52,8 @@ user.db     bookmarks (question_slug, folder_id?), ayah_bookmarks (ayah_id, fold
 
 ## Design language
 - Near-monochrome: hierarchy from four foreground greys; flat cards, no borders, no shadows. Dark is the default; light "paper" palette from the `.dc.html`.
-- Qur'anic text sits on a **neutral** block (`evidence`). Green (`highlight`) is used only small: cited positions and the evidence icon. No green fills.
+- Qur'anic text sits on a **neutral** block (`evidence`). Green (`highlight`, brand hue: dark `#5FC2AE`, light `#004D42`) is used only small: cited positions and the evidence icon. No green fills on content.
+- Brand (logo): green `#004D42` + gold `#F5C466`. Gold `accent` = brand/action/selection: wordmark, active tab, selected chip, text links, the featured-card label (light theme uses darkened `#8A5F0A`). `brand` green is never a UI fill (rejected on the featured card, tab pill and chips: mud on the dark canvas). It only seeds Material, tints `highlight` (also cursor/selection) and colours the Android splash. Never gold body text, never brand colour on evidence blocks, no gradients.
 - Fonts: Noto Sans Bengali (UI + translation), Amiri Quran (Arabic, line height ≥ 2.0, RTL), Cinzel (wordmark only), Roboto as Latin fallback. All OFL, licenses registered.
 - Bottom nav: হোম / প্রশ্ন / বিষয় / সূরা / সংরক্ষিত. Always navigate with `context.openQuestion()` etc. so the screen stays in its tab.
 
@@ -162,7 +163,49 @@ Audit of every screen; author decisions: the all-questions list leaves home for 
 - [x] **17.4** Content: ku-007 question word “আহম্মদ” → “আহমাদ” (author). Source snapshot under `content/source/` left as received.
 - [x] **17.5** Translation: ইহ্রাম/ইহ্রামের (5:95, 5:96) → ZWNJ after the hasanta, patched in `content/quran.json` and in `fetch_quran.dart`'s cleanup so a re-fetch keeps it. হ্রাস (5×) is standard Bengali and stays.
 
+### Step 18: Brand colours (2026-10-19)
+Brand from the draft logo: deep green `#004D42`, gold `#F5C466`. Rule: **gold = brand/action, green = Qur'an**. The UI stays mostly monochrome.
+Contrast (WCAG): gold on dark bg 11.5:1 ✓; gold on paper 1.4:1 ✗ (never gold text in light); `#004D42` on dark bg 1.9:1 ✗ (never green text in dark); `#004D42` on paper 8.7:1 ✓; gold on `#004D42` 6.1:1 ✓; paper on `#004D42` 8.7:1 ✓.
+- [x] **18.1** Tokens: static `AppColors.brand` (`#004D42`); per-theme `accent` (dark `#F5C466`; light `#8A5F0A`, a darkened gold at 5.0:1 on paper). Add them to `lerp`. `seedColor` → `brand`.
+- [x] **18.2** `highlight` (Qur'an only) shifts to the brand hue so there is one green family instead of two: dark `#20C08D` → `#5FC2AE` (8.7:1), light `#0F7A57` → `#004D42` (8.7:1). The usage rule is unchanged: small, never a fill.
+- [x] **18.3** ~~Home featured card on a `brand` fill~~: tried, author rejected it (2026-10-19). The card stays the neutral `card`; only the "আজকের প্রশ্ন" label and the "উত্তর ও প্রমাণ" link and arrow are `accent`. `onBrand`/`onBrandMuted` and `RefPill(onBrand:)` removed.
+- [x] **18.4** Home wordmark (Cinzel) in `accent`.
+- [x] **18.5** Bottom nav, selected tab: icon and label in `accent`, pill stays neutral `selected`. Inactive tabs unchanged.
+- [x] **18.6** Text-link actions in `accent` (`AppText.link` now gold): toast action (folder/undo), "সব দেখুন" links, the "পরের প্রশ্ন" label. Not body text, not chips, not category icons.
+- [x] **18.7** Selected filter chip (questions tab, saved folders): unchanged neutral. Gold here would compete with the nav.
+- [x] **18.8** Android splash `#004D42` (`splash_background`: pre-12 launch drawable and 12+ `windowSplashScreenBackground`), so launch matches the logo tile. `NormalTheme` keeps the canvas colour, so no green shows behind Flutter. The launcher icon waits for the final logo.
+- [x] **18.9** Design-language section updated; `dart format`, `flutter analyze` (clean), `flutter test` (118 pass). Device check in both themes at the checkpoint.
+Don't: gold or green on evidence blocks, gradients, gold body text, brand fills on list rows or cards other than the featured card.
+🛑 **Checkpoint:** author checks both themes on device.
+
+### Step 19: Brand green for active/selected (2026-10-19), 19.1–19.2 reverted
+Green = active/selected, gold = action. Green only as a small fill with gold or paper on top (gold on `#004D42` 6.1:1, paper 8.7:1).
+- [x] **19.1** ~~Reverted (author: ugly; green pill is mud on the dark canvas).~~ Bottom nav, selected tab: pill `brand` fill, icon logo gold `#F5C466` in both themes; label stays `accent`.
+- [x] **19.2** ~~Reverted with 19.1; chips back to neutral `selected`.~~ Selected `TopicChip` (questions tab, saved folders, folder sheet, settings theme, surahs sort): `brand` fill, icon and label paper `#F4F1EA`. Unselected unchanged.
+- [x] **19.5** Selected `TopicChip`: neutral `selected` pill, icon and label in `accent` (gold), matching the active tab.
+- [x] **19.6** Category icons (`DuoIcon`): the filled under-layer is `accent` gold at the same 28% opacity; the outline keeps its ink. Shows on topic tiles, topic chips and question rows. Author's pick over my advice to keep them neutral.
+- [x] **19.3** Search cursor, text selection and handles in `highlight` (the readable green per theme), via `TextSelectionThemeData`.
+- [x] **19.4** `dart format`, `flutter analyze`, `flutter test` (118 pass); design-language note.
+🛑 **Checkpoint:** author checks both themes on device.
+
+### Step 20: Home header (2026-10-19)
+- [x] **20.1** Wordmark 16 → 18sp, `accent` gold (Latin Cinzel kept: matches logo and store name).
+- [x] **20.2** Tagline demoted from a 23sp two-line headline to a one-line 14sp `fg3` subtitle under the wordmark (`AppText.tagline`, was `display`); original text kept (a shortened version was reverted at the author's request); wraps rather than truncates on narrow phones or large text. Search moves up; the featured card is the hero.
+- [x] **20.3** (author) Tagline 14 → 16sp; pulled 10dp closer to the wordmark; 28dp above the search, 20dp below it (author: 32 too loose).
+- [x] **20.4** (author) Wordmark 18 → 22sp; 12dp above the home header so it clears the status bar.
+🛑 **Checkpoint:** author checks home on device.
+
+### Step 21: Home header art (2026-10-19)
+- [x] **21.1** Author's AI-generated night scene (lantern, rehal, arch, moon) cropped to its right corner (792×600 from 1672×941) → `assets/images/home_hero.webp`, q80, 30KB (was a 1.5MB PNG). No credit needed.
+- [x] **21.2** Home: `_HeaderArt` top-right behind the header, 62% of the width (max 360dp), runs up behind the status bar (home's `SafeArea` drops `top`, content inset by hand). Left 30% and bottom 40% fade out (the art's `#05080A` ground is darker than the canvas), opacity .85, no hit-testing, no semantics. Dark theme only. Scrolls with the page.
+- [x] **21.3** (author) 40% black overlay dims the art; width 62% → 58% (max 340dp); bottom fade 40% → 50%.
+- [x] **21.4** (author: stand hidden behind the search) Art now fits the strip above the search: height = status bar + 112dp, width 50% (max 210dp), `BoxFit.cover` aligned to keep lantern and stand; left fade 15%, bottom fade 20%.
+- [x] **21.5** (author: should melt into the background like the reference) Asset regraded offline: blacks lifted to the canvas `#131313`, lights scaled ×0.62 (`out = canvas + (in − #05080A)·0.62`), 22KB. Runtime black overlay and opacity removed (they made the ground darker than the canvas).
+- [x] **21.6** (author) Dimmer: lights ×0.62 → ×0.38.
+🛑 **Checkpoint:** author checks the header on device.
+
 ### Later (not scheduled)
+- [ ] Final logo: a ~24dp mark before the home wordmark, launcher icon, splash icon.
 - [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
 - [ ] Right before Play Store submission (app feature-complete): rerun `flutter test tool/render_assets_test.dart` to regenerate `store/screenshots/` (last made 2026-09-26 from 5 questions).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.

@@ -17,7 +17,7 @@ ThemeData buildTheme(
   final c = brightness == Brightness.dark ? AppColors.dark : AppColors.light;
   final scheme =
       ColorScheme.fromSeed(
-        seedColor: c.highlight,
+        seedColor: AppColors.brand,
         brightness: brightness,
       ).copyWith(
         surface: c.background,
@@ -43,6 +43,11 @@ ThemeData buildTheme(
           : SystemUiOverlayStyle.dark,
     ),
     iconTheme: IconThemeData(color: c.fg1),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: c.highlight,
+      selectionColor: c.highlight.withValues(alpha: .3),
+      selectionHandleColor: c.highlight,
+    ),
     progressIndicatorTheme: ProgressIndicatorThemeData(color: c.fg3),
     // The visible toast is drawn by showStatusToast; the bar itself is only a
     // transparent carrier, so it never reads as a full-width button.

@@ -69,22 +69,32 @@ class ScreenHeader extends StatelessWidget {
                 tooltip: Strings.back,
                 icon: const Icon(IconsaxPlusLinear.arrow_left_1),
               ),
-            if (wordmark) Text(Strings.wordmark, style: text.wordmark),
-            Expanded(
-              child:
-                  child ??
-                  (title == null
-                      ? const SizedBox.shrink()
-                      : Padding(
-                          padding: EdgeInsets.only(left: showBack ? 4 : 0),
-                          child: Text(
-                            title!,
-                            style: text.screenTitle,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )),
-            ),
+            // The wordmark takes the title's place and scales down rather
+            // than overflow on a narrow phone or at large text sizes.
+            if (wordmark)
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(Strings.wordmark, style: text.wordmark),
+                ),
+              )
+            else
+              Expanded(
+                child:
+                    child ??
+                    (title == null
+                        ? const SizedBox.shrink()
+                        : Padding(
+                            padding: EdgeInsets.only(left: showBack ? 4 : 0),
+                            child: Text(
+                              title!,
+                              style: text.screenTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )),
+              ),
             ...actions,
           ],
         ),
@@ -230,7 +240,6 @@ class AppSearchField extends StatelessWidget {
           color: c.fg1,
           fontFamilyFallback: [...Fonts.latinFallback, Fonts.arabic],
         ),
-        cursorColor: c.fg2,
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: t.meta.copyWith(fontSize: 14, color: c.fg3),
@@ -295,13 +304,15 @@ class DuoIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = IconTheme.of(context);
     final ink = color ?? theme.color!;
+    // The fill is a soft brand-gold glow; the outline keeps the ink.
+    final glow = AppColors.of(context).accent;
     return Stack(
       alignment: Alignment.center,
       children: [
         Icon(
           icon.fill,
           size: size,
-          color: ink.withValues(alpha: ink.a * fillOpacity),
+          color: glow.withValues(alpha: ink.a * fillOpacity),
         ),
         Icon(icon.line, size: size, color: ink),
       ],
@@ -350,7 +361,7 @@ class TopicChip extends StatelessWidget {
                 IconTheme.merge(
                   data: IconThemeData(
                     size: 18,
-                    color: selected ? c.fg1 : c.fg2,
+                    color: selected ? c.accent : c.fg2,
                   ),
                   child: icon,
                 ),
@@ -363,6 +374,7 @@ class TopicChip extends StatelessWidget {
                     style: AppText.of(context).pill.copyWith(
                       fontSize: 14,
                       fontWeight: selected ? FontWeight.w600 : null,
+                      color: selected ? c.accent : null,
                     ),
                   ),
                 ),
@@ -511,10 +523,7 @@ class _StatusToast extends StatelessWidget {
                 ),
                 child: Text(
                   actionLabel!,
-                  style: t.link.copyWith(
-                    color: c.fg1,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: t.link.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
             ),

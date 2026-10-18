@@ -260,7 +260,10 @@ class _NextQuestion extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(Strings.nextQuestion, style: t.label),
+                    Text(
+                      Strings.nextQuestion,
+                      style: t.label.copyWith(color: c.accent),
+                    ),
                     const SizedBox(height: 6),
                     Text(
                       question.questionBn,

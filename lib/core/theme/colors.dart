@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 /// the quran-majeed design system).
 ///
 /// The design is near-monochrome: hierarchy comes from four foreground grays.
-/// Qur'anic text sits on a flat neutral block ([evidence]) and the only color,
-/// green [highlight], marks cited positions and the evidence icon. Keep the
-/// green for Qur'an only, and small, so do not reuse it for ordinary accents.
+/// Qur'anic text sits on a flat neutral block ([evidence]); green [highlight]
+/// marks cited positions and the evidence icon. Keep the green for Qur'an
+/// only, and small, so do not reuse it for ordinary accents.
+///
+/// Brand colors come from the logo: deep green [brand] with gold. Gold
+/// [accent] marks brand, action and selection (wordmark, active tab, selected
+/// chip, text links, the featured-card label). The green tints [highlight] and seeds Material.
+///
+/// Never use [brand] as a UI fill: at 1.9:1 on the dark canvas it reads as
+/// mud. Tried on the featured card, the tab pill and chips; all rejected.
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
   const AppColors({
@@ -24,6 +31,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.evidence,
     required this.highlight,
     required this.scrim,
+    required this.accent,
   });
 
   /// Page canvas.
@@ -54,9 +62,16 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Background of any block that shows Qur'anic text.
   final Color evidence;
 
-  /// Cited positions and the evidence icon.
+  /// Cited positions and the evidence icon; also the text cursor and
+  /// selection.
   final Color highlight;
   final Color scrim;
+
+  /// Brand gold for wordmark, active tab and text links. Never body text.
+  final Color accent;
+
+  /// Logo green. Not a UI color; it seeds Material and the Android splash.
+  static const brand = Color(0xFF004D42);
 
   static const dark = AppColors(
     background: Color(0xFF131313),
@@ -71,8 +86,9 @@ class AppColors extends ThemeExtension<AppColors> {
     fg4: Color(0xFF6E6E6E),
     divider: Color(0xFF262626),
     evidence: Color(0xFF1C1C1C),
-    highlight: Color(0xFF20C08D),
+    highlight: Color(0xFF5FC2AE),
     scrim: Color(0x9E000000),
+    accent: Color(0xFFF5C466),
   );
 
   /// The design's "paper" theme.
@@ -89,8 +105,10 @@ class AppColors extends ThemeExtension<AppColors> {
     fg4: Color(0xFF767B76),
     divider: Color(0xFFE0DAD0),
     evidence: Color(0xFFEBE7DF),
-    highlight: Color(0xFF0F7A57),
+    highlight: Color(0xFF004D42),
     scrim: Color(0x6B14140F),
+    // Logo gold is 1.4:1 on paper; darkened to 5.0:1.
+    accent: Color(0xFF8A5F0A),
   );
 
   static AppColors of(BuildContext context) =>
@@ -118,6 +136,7 @@ class AppColors extends ThemeExtension<AppColors> {
       evidence: l(evidence, other.evidence),
       highlight: l(highlight, other.highlight),
       scrim: l(scrim, other.scrim),
+      accent: l(accent, other.accent),
     );
   }
 }

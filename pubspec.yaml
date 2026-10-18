@@ -84,6 +84,9 @@ flutter:
     - assets/fonts/OFL-NotoSansBengali.txt
     - assets/fonts/OFL-AmiriQuran.txt
     - assets/fonts/OFL-Cinzel.txt
+    # Home header art (AI-generated, ours to ship; no credit needed). Cropped
+    # from a 1672x941 PNG to the lantern-and-rehal corner, WebP q80.
+    - assets/images/home_hero.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

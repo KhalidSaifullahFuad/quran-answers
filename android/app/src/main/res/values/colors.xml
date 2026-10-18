@@ -5,4 +5,6 @@
     <!-- Window colour while Flutter starts: the app's own canvas, so launch
          does not flash white. Light is the "paper" theme. -->
     <color name="launch_background">#F4F1EA</color>
+    <!-- Splash: the logo's green tile, in both themes. -->
+    <color name="splash_background">#004D42</color>
 </resources>

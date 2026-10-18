@@ -199,7 +199,7 @@ class _NavItemState extends State<_NavItem>
     final t = AppText.of(context);
     final still = MediaQuery.disableAnimationsOf(context);
     final selected = widget.selected;
-    final ink = selected ? c.fg1 : c.fg3;
+    final ink = selected ? c.accent : c.fg3;
     Duration ms(int n) => still ? Duration.zero : Duration(milliseconds: n);
 
     return Semantics(

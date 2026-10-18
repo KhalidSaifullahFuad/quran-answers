@@ -23,7 +23,7 @@ abstract final class Fonts {
 class AppText extends ThemeExtension<AppText> {
   const AppText._({
     required this.wordmark,
-    required this.display,
+    required this.tagline,
     required this.questionTitle,
     required this.cardTitle,
     required this.screenTitle,
@@ -52,17 +52,12 @@ class AppText extends ThemeExtension<AppText> {
     return AppText._(
       wordmark: TextStyle(
         fontFamily: Fonts.wordmark,
-        fontSize: 16,
+        fontSize: 22,
         fontVariations: const [FontVariation('wght', 600)],
         letterSpacing: .6,
-        color: c.fg1,
+        color: c.accent,
       ),
-      display: base.copyWith(
-        fontSize: 23,
-        fontWeight: FontWeight.w600,
-        height: 1.45,
-        color: c.fg1,
-      ),
+      tagline: base.copyWith(fontSize: 16, height: 1.45, color: c.fg3),
       questionTitle: base.copyWith(
         fontSize: 22 * bengaliScale,
         fontWeight: FontWeight.w600,
@@ -123,7 +118,7 @@ class AppText extends ThemeExtension<AppText> {
       link: base.copyWith(
         fontSize: 13.5,
         fontWeight: FontWeight.w500,
-        color: c.fg2,
+        color: c.accent,
       ),
     );
   }
@@ -131,8 +126,8 @@ class AppText extends ThemeExtension<AppText> {
   /// "QURAN ANSWERS" on the home header.
   final TextStyle wordmark;
 
-  /// The home tagline.
-  final TextStyle display;
+  /// The one-line subtitle under the home wordmark.
+  final TextStyle tagline;
 
   /// Question heading on the detail screen.
   final TextStyle questionTitle;
@@ -172,7 +167,7 @@ class AppText extends ThemeExtension<AppText> {
     TextStyle l(TextStyle a, TextStyle b) => TextStyle.lerp(a, b, t)!;
     return AppText._(
       wordmark: l(wordmark, other.wordmark),
-      display: l(display, other.display),
+      tagline: l(tagline, other.tagline),
       questionTitle: l(questionTitle, other.questionTitle),
       cardTitle: l(cardTitle, other.cardTitle),
       screenTitle: l(screenTitle, other.screenTitle),

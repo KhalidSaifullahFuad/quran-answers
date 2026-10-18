@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -18,28 +20,113 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final index = ref.watch(questionIndexProvider);
+    // No top safe area: the header art runs up behind the status bar, and
+    // the content is inset by hand instead.
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: AsyncBody(
           value: index,
           data: (index) => ListView(
             padding: const EdgeInsets.only(bottom: 32),
             children: [
-              ContentFrame(
-                child: ScreenHeader(
-                  wordmark: true,
-                  showBack: false,
-                  actions: [
-                    IconButton(
-                      onPressed: context.openSettings,
-                      tooltip: Strings.settings,
-                      icon: const Icon(IconsaxPlusLinear.setting_2),
-                    ),
-                  ],
-                ),
+              Stack(
+                children: [
+                  const _HeaderArt(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Home has no back button or title bar above it, so the
+                      // wordmark gets room from the status bar.
+                      SizedBox(height: MediaQuery.paddingOf(context).top + 12),
+                      ContentFrame(
+                        child: ScreenHeader(
+                          wordmark: true,
+                          showBack: false,
+                          actions: [
+                            IconButton(
+                              onPressed: context.openSettings,
+                              tooltip: Strings.settings,
+                              icon: const Icon(IconsaxPlusLinear.setting_2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ContentFrame(child: _Body(index: index)),
+                    ],
+                  ),
+                ],
               ),
-              ContentFrame(child: _Body(index: index)),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Lantern and Qur'an stand behind the top-right of the header, dark theme
+/// only (a night scene reads as a smudge on the paper theme).
+///
+/// The asset is graded to the dark canvas: its blacks are lifted to exactly
+/// #131313 and its lights scaled to 38%, so it has no box edge and the gold
+/// wordmark stays the brightest thing. Do not dim it at runtime with black
+/// or opacity; that pushes the ground below the canvas again. The short
+/// fades only soften the crop edges.
+class _HeaderArt extends StatelessWidget {
+  const _HeaderArt();
+
+  /// From the top of the content (below the status bar) to the top of the
+  /// search pill: 12 + header 52 + tagline ~23 + gap 18, plus a little that
+  /// the opaque pill covers. The scene fits here, so the lantern and the
+  /// Qur'an stand both show above the search.
+  static const _height = 112.0;
+
+  /// Wide enough that lantern-to-stand (two thirds of the art's height) still
+  /// fits in [_height] once the box crops.
+  static const _maxWidth = 210.0;
+
+  @override
+  Widget build(BuildContext context) {
+    if (Theme.of(context).brightness != Brightness.dark) {
+      return const SizedBox.shrink();
+    }
+    final width = math.min(MediaQuery.sizeOf(context).width * .5, _maxWidth);
+    final height = MediaQuery.paddingOf(context).top + _height;
+    Shader fade(Rect r, Alignment from, Alignment to, double solidFrom) =>
+        LinearGradient(
+          begin: from,
+          end: to,
+          colors: const [Colors.transparent, Colors.white],
+          stops: [0, solidFrom],
+        ).createShader(r);
+
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: IgnorePointer(
+        child: ShaderMask(
+          blendMode: BlendMode.dstIn,
+          shaderCallback: (r) =>
+              fade(r, Alignment.centerLeft, Alignment.centerRight, .15),
+          child: ShaderMask(
+            blendMode: BlendMode.dstIn,
+            shaderCallback: (r) =>
+                fade(r, Alignment.bottomCenter, Alignment.topCenter, .2),
+            child: Image.asset(
+              'assets/images/home_hero.webp',
+              width: width,
+              height: height,
+              fit: BoxFit.cover,
+              // Crops mostly the empty top (chain, dark wall), keeping the
+              // lantern and the stand.
+              alignment: const Alignment(0, .4),
+              excludeFromSemantics: true,
+              // Decoration: if it cannot load, show nothing, not an error.
+              errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              cacheWidth: (width * MediaQuery.devicePixelRatioOf(context))
+                  .round(),
+            ),
           ),
         ),
       ),
@@ -78,8 +165,16 @@ class _Body extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(Strings.tagline, style: t.display),
-              const SizedBox(height: 16),
+              // A subtitle to the wordmark, not a headline: the featured
+              // question below is the hero. Pulled up into the header's
+              // bottom padding so it reads as one unit with the wordmark;
+              // the translate leaves its layout slot, so the gap below grows
+              // by the same 10dp (18 + 10 = 28dp above the search).
+              Transform.translate(
+                offset: const Offset(0, -10),
+                child: Text(Strings.tagline, style: t.tagline),
+              ),
+              const SizedBox(height: 18),
               SearchFieldButton(
                 hint: Strings.searchHint,
                 onTap: context.openSearch,
@@ -88,7 +183,7 @@ class _Body extends ConsumerWidget {
           ),
         ),
         if (featured != null) ...[
-          const SizedBox(height: 26),
+          const SizedBox(height: 20),
           _FeaturedCard(question: featured),
         ],
         if (lastRead.isNotEmpty) ...[
@@ -201,7 +296,10 @@ class _FeaturedCard extends ConsumerWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(Strings.questionOfTheDay, style: t.label),
+                      child: Text(
+                        Strings.questionOfTheDay,
+                        style: t.label.copyWith(color: c.accent),
+                      ),
                     ),
                     Text(
                       bnDayMonth(ref.watch(todayProvider)),
@@ -251,7 +349,7 @@ class _FeaturedCard extends ConsumerWidget {
                     Icon(
                       IconsaxPlusLinear.arrow_right_3,
                       size: 18,
-                      color: c.fg2,
+                      color: c.accent,
                     ),
                   ],
                 ),

@@ -278,7 +278,12 @@ void main() {
                       const SizedBox(height: 22),
                       Text(
                         Strings.tagline,
-                        style: t.display.copyWith(fontSize: 30, height: 1.5),
+                        style: t.tagline.copyWith(
+                          fontSize: 30,
+                          height: 1.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.dark.fg1,
+                        ),
                       ),
                     ],
                   ),

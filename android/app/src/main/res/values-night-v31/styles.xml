@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Android 12+ always shows a system splash: the adaptive launcher icon
-         centred on this colour, the logo's green. NormalTheme keeps the app
-         canvas, so nothing green shows behind Flutter once it draws. -->
+    <!-- Android 12+ dark splash: the gold mark alone, centred on the canvas
+         (splash_background is #131313 in values-night). NormalTheme keeps
+         the canvas behind Flutter once it draws. -->
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_mark</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@color/launch_background</item>

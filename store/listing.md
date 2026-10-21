@@ -33,16 +33,47 @@ Quran Answers — প্রতিটি প্রশ্নের উত্তর
 • পড়ার ইতিহাস
 • হালকা ও গাঢ় রং, আরবি ও বাংলা লেখার আকার বদলানোর সুবিধা
 
-যেভাবে তৈরি
-• আয়াতের আরবি পাঠ (উসমানী লিপি) ও বাংলা অনুবাদ হাতে টাইপ করা নয়; আয়াত নম্বর ধরে সরাসরি মুসহাফ থেকে নেওয়া।
-• বাংলা অনুবাদ: শেখ মুজিবুর রহমান (দারুসসালাম)।
-• কোনো কৃত্রিম বুদ্ধিমত্তা (AI) উত্তর তৈরি করে না।
-• সংকলিত উত্তর মানুষের লেখা সারসংক্ষেপ, কুরআনের পাঠ নয় — তাই প্রতিটি উত্তরের সাথে আয়াত দেওয়া থাকে।
-
 গোপনীয়তা
 • ইন্টারনেট ছাড়াই পুরোপুরি চলে; অ্যাপ কোনো নেটওয়ার্ক অনুমতিই চায় না।
 • কোনো অ্যাকাউন্ট, বিজ্ঞাপন বা ট্র্যাকিং নেই।
 • আপনার সংরক্ষণ ও ইতিহাস শুধু আপনার ফোনেই থাকে।
+```
+
+## English (en-US) translation
+
+Add under Main store listing → Manage translations → English (United
+States). The app itself stays Bengali-only, so the description says so up
+front.
+
+### Short description (≤ 80)
+
+```
+Bengali Q&A on Islam, answered only from Quran verses. Offline, no ads.
+```
+
+### Full description (≤ 4000)
+
+```
+Quran Answers — every answer, from the verses of the Quran.
+
+Questions and answers about Islam in Bengali, where every answer rests only on verses of the Quran. Below each answer, the cited verses are given in full — Arabic text with Bengali translation — so you can check them yourself.
+
+Note: the app's content is in Bengali.
+
+What you get
+• Questions and answers organised by topic
+• The cited verses with every answer, never trimmed
+• Surrounding verses on each verse page, so the context is clear
+• Browse by surah: see which questions each surah's verses support
+• Search the whole Quran by Bengali or Arabic word, or by verse number (e.g. 54:15)
+• Save questions and verses, organised into your own folders
+• Reading history
+• Light and dark themes, adjustable Arabic and Bengali text size
+
+Privacy
+• Works fully offline; the app requests no network permission at all.
+• No accounts, ads or tracking.
+• Your saves and history stay on your phone only.
 ```
 
 ## Other listing fields
@@ -50,8 +81,8 @@ Quran Answers — প্রতিটি প্রশ্নের উত্তর
 | Field | Value |
 |---|---|
 | Category | Books & Reference |
-| Tags | Religion, Reference |
-| Contact email | *(author to fill — required, shown publicly)* |
+| Tags | Books & reference, Education, Religious text, Study guide |
+| Contact email | khalidsaifullahfuad@gmail.com |
 | Website | *(optional)* |
 | Privacy policy URL | *(host `privacy-policy.md`, paste its URL — see README)* |
 

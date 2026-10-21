@@ -28,7 +28,7 @@ Outcome: a Flutter app that ships a prebuilt SQLite database holding the full mu
 | Icons | Iconsax (`iconsax_plus`): Linear by default, Bold for on/selected states |
 | Settings | SharedPreferences |
 | Mushaf | All 6,236 ayat; Arabic Uthmani + Bengali translation 163, Sheikh Mujibur Rahman (Darussalaam) |
-| Package id | `com.fuad.quran_answers` (iOS `com.fuad.quranAnswers`); name "Quran Answers" |
+| Package id | `com.khalidfuad.quran_answers` (iOS `com.khalidfuad.quranAnswers`); name "Quran Answers" |
 
 Pinned on purpose: `drift >=2.34.0 <2.35.0` (2.35+ needs a `meta` newer than the Flutter SDK pins).
 
@@ -204,10 +204,30 @@ Green = active/selected, gold = action. Green only as a small fill with gold or 
 - [x] **21.6** (author) Dimmer: lights ×0.62 → ×0.38.
 🛑 **Checkpoint:** author checks the header on device.
 
+### Step 22: Play Store submission (2026-10-19)
+- [x] **22.1** Regenerate store graphics on the full 200-question database; screenshot set now home, topics, question, ayah, questions tab, surahs (topics and questions tabs added; settings dropped). Generator now loads the Iconsax fonts (icons were boxes) and precaches the home header art.
+- [x] **22.5** Listing graphics pass (app-store-screenshots checklist): screenshots get a two-line Bengali benefit caption above the real screen in a phone frame; order puts the differentiators first (home, question + proof, ayah in context, topics, questions, surahs); feature graphic shows the real home screen in a phone; store PNGs written without alpha at exact 1080×1920.
+- [x] **22.6** (author: frame looked fat) App now rendered as a 20:9 phone (1080×2400, 411dp) with a drawn status bar (24dp) and gesture handle (16dp), then framed at 690px wide in the 1080×1920 store image.
+- [x] **22.7** (author) Package id `com.fuad.quran_answers` → `com.khalidfuad.quran_answers` (iOS `com.khalidfuad.quranAnswers`): gradle namespace + applicationId, MainActivity package + dir, privacy policy.
+- [x] **22.8** (author) Static homepage + privacy policy site in sibling folder `../quran-answers-site/` (`index.html`, `privacy.html`, `styles.css`): app tokens (dark default, paper light via `prefers-color-scheme`), self-hosted app fonts, gold mark + Cinzel wordmark, real sample question (ku-011, 25:33) drawn like the question screen, store screenshots. "যেভাবে তৈরি" section removed (author). Contact email filled (site, `store/privacy-policy.md`, `store/listing.md`); dated "Last updated: 19 October 2026".
+- [ ] **22.2** (author) Upload key + `android/key.properties`; contact email and hosted privacy-policy URL.
+- [ ] **22.3** (author) Device pass on steps 12, 18–21 checkpoints; airplane-mode cold install.
+- [ ] **22.4** `flutter build appbundle --release`, closed test (12 testers × 14 days), then production.
+
+### Step 23: Final logo (2026-10-19)
+Source: author's `store/Logo — vector.svg` (2048², gold #F5C466 open book + question mark + rays on brand green #004D42); `.png` is the same art rasterised. Rename to `assets/logo/logo.svg` (no spaces or dash in the path). The green ground is part of the logo, not a UI fill, so it may stay on the icon.
+- [x] **23.1** `lib/shared/logo_mark.dart`: the SVG's 16 gold paths copied in, parsed by a small M/L/C/Z reader (no new dependency); `LogoMarkPainter` + `LogoMark`. Generator's `_StarPainter` → `_IconPainter`. Files moved to `assets/logo/logo.svg` / `logo.png` (source only, not bundled).
+- [x] **23.2** Launcher icons: legacy and round = logo as supplied (green ground, mark scaled to fit); adaptive = green background layer + gold mark foreground scaled into the 66dp safe circle (mark spans ~65% of the art, so ~.8×); monochrome = mark silhouette.
+- [x] **23.3** `store/icon-512.png`: logo full-bleed (Play masks it).
+- [x] **23.4** Feature graphic: mark beside the wordmark on the left; phone stays on the right.
+- [x] **23.5** Home: 22dp gold (`accent`) mark before the wordmark, no green tile; below 48dp the rays are dropped and the book + question mark fill the box.
+- [x] **23.6** Splash: already the adaptive icon on `splash_background` green (Android 12+); now shows the logo mark. `ic_launcher_background` #131313 → #004D42.
+- [x] **23.7** Regenerated. Rays kept on launcher icons (fine at xxhdpi, what phones use). Fixed generator bug: `shouldRepaint => false` made the monochrome layer reuse the foreground paint; it is now white (the old star one was green).
+- [x] **23.8** (author) Dark-mode splash: canvas `#131313` with the gold mark centred, no green tile. Generator writes `drawable-*dpi/splash_mark.png` (288dp, the Android 12 no-background icon size; mark inside its 192dp circle). `values-night/colors.xml` overrides `splash_background`; `values-night-v31` sets `windowSplashScreenAnimatedIcon`; `drawable-night/launch_background.xml` centres the mark for pre-12. Light splash unchanged.
+🛑 **Checkpoint:** author checks icon on the launcher and home header on device.
+
 ### Later (not scheduled)
-- [ ] Final logo: a ~24dp mark before the home wordmark, launcher icon, splash icon.
 - [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
-- [ ] Right before Play Store submission (app feature-complete): rerun `flutter test tool/render_assets_test.dart` to regenerate `store/screenshots/` (last made 2026-09-26 from 5 questions).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.
 - [ ] Design features waiting on content fields: question kind + segmented filter, lead/detail answer split, highlighted phrase in the Arabic, interpretive-note block, curated collections, Bengali transliterated surah names.
 - [ ] "Same phrase in this surah" on the ayah screen (needs phrase data).

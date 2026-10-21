@@ -11,9 +11,11 @@ flutter test tool/render_assets_test.dart
 
 Writes the launcher icons (`android/app/src/main/res/mipmap-*`), `icon-512.png`,
 `feature-graphic.png` and `screenshots/`. The screenshots are the real app on
-the shipped content database, so **rerun after the content migration (step 11)**
-— today they show the 5-question pilot set. The home screenshot shows the day
-it was generated.
+the shipped content database (last made 2026-10-19 from all 200 questions);
+rerun after any content or design change. The home screenshot shows the day it
+was generated. Each screenshot is framed for the listing: a two-line Bengali
+caption above the screen in a phone; the captions and their order live in the
+test. Store PNGs are written without alpha, as Play asks.
 
 ## One-time setup (author only — involves secrets)
 

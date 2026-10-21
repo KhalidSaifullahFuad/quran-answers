@@ -1,4 +1,4 @@
-package com.fuad.quran_answers
+package com.khalidfuad.quran_answers
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -6,6 +6,7 @@ import '../core/strings.dart';
 import '../core/text/numerals.dart';
 import '../core/theme/colors.dart';
 import '../core/theme/typography.dart';
+import 'logo_mark.dart';
 
 /// Primitives from the imported design system, rebuilt in Flutter.
 ///
@@ -69,14 +70,22 @@ class ScreenHeader extends StatelessWidget {
                 tooltip: Strings.back,
                 icon: const Icon(IconsaxPlusLinear.arrow_left_1),
               ),
-            // The wordmark takes the title's place and scales down rather
+            // The logo mark and wordmark take the title's place and scale
+            // down together rather
             // than overflow on a narrow phone or at large text sizes.
             if (wordmark)
               Expanded(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
-                  child: Text(Strings.wordmark, style: text.wordmark),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LogoMark(size: 22, color: AppColors.of(context).accent),
+                      const SizedBox(width: 10),
+                      Text(Strings.wordmark, style: text.wordmark),
+                    ],
+                  ),
                 ),
               )
             else

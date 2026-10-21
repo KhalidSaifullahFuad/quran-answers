@@ -1,8 +1,8 @@
 # Privacy Policy — Quran Answers
 
-*Effective: [date of first release]*
+*Last updated: 19 October 2026*
 
-Quran Answers (`com.fuad.quran_answers`) does not collect, store on any
+Quran Answers (`com.khalidfuad.quran_answers`) does not collect, store on any
 server, share or sell any personal or usage data.
 
 - **No network access.** The app does not request the Android internet
@@ -19,7 +19,7 @@ server, share or sell any personal or usage data.
 If this policy changes, the new version will be published at this address
 before the change takes effect.
 
-Contact: [author's email]
+Contact: khalidsaifullahfuad@gmail.com
 
 ---
 
@@ -37,4 +37,4 @@ Quran Answers কোনো ব্যক্তিগত বা ব্যবহা
   অ্যাপ মুছে ফেললে বা অ্যান্ড্রয়েড সেটিংস থেকে অ্যাপের ডেটা মুছলে এগুলোও মুছে
   যায়। পড়ার ইতিহাস অ্যাপের "সংরক্ষিত" পাতা থেকেও মোছা যায়।
 
-যোগাযোগ: [author's email]
+যোগাযোগ: khalidsaifullahfuad@gmail.com

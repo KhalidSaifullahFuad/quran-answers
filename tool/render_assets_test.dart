@@ -9,7 +9,7 @@
 /// this and commit the output. Each one is framed for the listing: a two-line
 /// benefit caption above the screen in a phone.
 ///
-/// Writes into `android/app/src/main/res/mipmap-*` and `store/`.
+/// Writes into `android/app/src/main/res/mipmap-*` and `store_assets/output/`.
 library;
 
 import 'dart:io';
@@ -108,8 +108,9 @@ class _IconPainter extends CustomPainter {
 
 enum _Shape { none, circle, squircle }
 
-/// A phone around [screen]: a dark bezel with rounded corners. [width] is the
-/// outside width; the height follows the screen's aspect.
+/// A phone around [screen]: a thick dark bezel with large rounded corners and
+/// a punch-hole camera in the status bar. [width] is the outside width; the
+/// height follows the screen's aspect.
 class _Phone extends StatelessWidget {
   const _Phone({required this.screen, required this.width});
 
@@ -118,20 +119,41 @@ class _Phone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bezel = width * .016;
+    final bezel = width * .028;
     final inner = width - 2 * bezel;
+    final radius = width * .13;
+    // Centred in the status bar, as laid out in the capture.
+    final statusBar = _statusBar * inner / 411;
+    final camera = statusBar * .5;
     return Container(
       width: width,
       height: inner * screen.height / screen.width + 2 * bezel,
       padding: EdgeInsets.all(bezel),
       decoration: BoxDecoration(
-        color: const Color(0xFF050505),
-        borderRadius: BorderRadius.circular(width * .085),
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: const Color(0xFF3A3A3A), width: width * .003),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(width * .085 - bezel),
-        child: RawImage(image: screen, fit: BoxFit.fill),
+        borderRadius: BorderRadius.circular(radius - bezel),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            RawImage(image: screen, fit: BoxFit.fill),
+            Positioned(
+              top: (statusBar - camera) / 2,
+              left: (inner - camera) / 2,
+              width: camera,
+              height: camera,
+              child: const DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Color(0xFF0A0A0A),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -139,7 +161,7 @@ class _Phone extends StatelessWidget {
 
 /// Status bar height and gesture-bar height in dp, as on a current Android
 /// phone; the app is laid out inside them.
-const _statusBar = 24.0;
+const _statusBar = 32.0;
 const _gestureBar = 16.0;
 
 /// The system bars drawn over the app: clock and status icons on top, the
@@ -164,8 +186,8 @@ class _SystemBars extends StatelessWidget {
               app!,
               Positioned(
                 top: 0,
-                left: 20,
-                right: 20,
+                left: 30,
+                right: 30,
                 height: _statusBar,
                 child: Row(
                   children: [
@@ -173,7 +195,7 @@ class _SystemBars extends StatelessWidget {
                       '9:41',
                       style: TextStyle(
                         fontFamily: 'Roboto',
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: fg,
                       ),
@@ -184,7 +206,7 @@ class _SystemBars extends StatelessWidget {
                       Icons.wifi,
                       Icons.battery_full,
                     ])
-                      Icon(icon, size: 15, color: fg),
+                      Icon(icon, size: 16, color: fg),
                   ],
                 ),
               ),
@@ -212,46 +234,75 @@ class _SystemBars extends StatelessWidget {
   }
 }
 
-/// A faint gold glow on the canvas, so the frame is not a flat black.
-const _glow = RadialGradient(
-  center: Alignment(0, -.35),
-  radius: .9,
-  colors: [Color(0x1FF5C466), Color(0x00F5C466)],
+/// The screenshot backdrop: warm paper at the top deepening to soft gold.
+const _warm = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [Color(0xFFFBF4E6), Color(0xFFF6D597)],
 );
 
-/// A store screenshot: [caption]'s two lines (the second in gold) over the
-/// real [screen] in a phone. 1080×1920 at a pixel ratio of 1.
+/// Caption ink on [_warm]: brown body, amber emphasis, muted eyebrow.
+const _ink = Color(0xFF2E2216);
+const _amber = Color(0xFFB0700A);
+const _eyebrowInk = Color(0xFF7D6A52);
+
+/// A store screenshot: [caption]'s small eyebrow line, then a two-line serif
+/// headline (the second in amber), over the real [screen] in a phone that
+/// runs off the bottom edge. 1080×1920 at a pixel ratio of 1.
 class _Shot extends StatelessWidget {
   const _Shot({required this.screen, required this.caption});
 
   final ui.Image screen;
-  final (String, String) caption;
+  final (String, String, String) caption;
 
   @override
   Widget build(BuildContext context) {
-    const c = AppColors.dark;
-    final style = AppText.from(
-      c,
-    ).tagline.copyWith(fontSize: 62, height: 1.4, fontWeight: FontWeight.w600);
+    final eyebrow = AppText.from(AppColors.light).tagline.copyWith(
+      fontSize: 30,
+      height: 1.3,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1,
+      color: _eyebrowInk,
+    );
+    const headline = TextStyle(
+      fontFamily: 'NotoSerifBengali',
+      fontSize: 80,
+      height: 1.3,
+      fontWeight: FontWeight.w700,
+      fontVariations: [FontVariation('wght', 700)],
+    );
+    Widget line(String text, TextStyle style) => SizedBox(
+      width: 1080 - 2 * 64,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(text, style: style),
+      ),
+    );
     return Directionality(
       textDirection: TextDirection.ltr,
       child: DecoratedBox(
-        decoration: const BoxDecoration(color: _canvas, gradient: _glow),
-        child: Column(
+        decoration: const BoxDecoration(gradient: _warm),
+        child: Stack(
+          clipBehavior: Clip.hardEdge,
           children: [
-            Container(
-              height: 380,
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 52),
+            Positioned(
+              top: 96,
+              left: 0,
+              right: 0,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(caption.$1, style: style.copyWith(color: c.fg1)),
-                  Text(caption.$2, style: style.copyWith(color: c.accent)),
+                  line(caption.$1, eyebrow),
+                  const SizedBox(height: 20),
+                  line(caption.$2, headline.copyWith(color: _ink)),
+                  line(caption.$3, headline.copyWith(color: _amber)),
                 ],
               ),
             ),
-            _Phone(screen: screen, width: 690),
+            Positioned(
+              top: 430,
+              left: (1080 - 920) / 2,
+              child: _Phone(screen: screen, width: 920),
+            ),
           ],
         ),
       ),
@@ -322,6 +373,8 @@ void main() {
       'assets/fonts/NotoSansBengali-Medium.ttf',
       'assets/fonts/NotoSansBengali-SemiBold.ttf',
     ]);
+    // Store captions only; not shipped in the app.
+    await _font('NotoSerifBengali', ['tool/fonts/NotoSerifBengali.ttf']);
     await _font('AmiriQuran', ['assets/fonts/AmiriQuran-Regular.ttf']);
     await _font('Cinzel', ['assets/fonts/Cinzel-Variable.ttf']);
     await _font('Roboto', [
@@ -379,8 +432,9 @@ void main() {
     WidgetTester tester,
     String path,
     int px,
-    _IconPainter painter,
-  ) async {
+    _IconPainter painter, {
+    bool opaque = false,
+  }) async {
     tester.view.physicalSize = Size.square(px.toDouble());
     tester.view.devicePixelRatio = 1;
     await tester.pumpWidget(
@@ -389,7 +443,7 @@ void main() {
         child: CustomPaint(painter: painter, size: Size.infinite),
       ),
     );
-    await capture(tester, path);
+    await capture(tester, path, opaque: opaque);
   }
 
   testWidgets('launcher icons', (tester) async {
@@ -459,13 +513,67 @@ void main() {
     }
   });
 
+  testWidgets('ios app icons', (tester) async {
+    addTearDown(tester.view.reset);
+    // Every slot in Contents.json. iOS masks the square itself and rejects
+    // icons with alpha, so these are the store icon at each size, opaque.
+    const dir = 'ios/Runner/Assets.xcassets/AppIcon.appiconset';
+    for (final (pt, scales) in const [
+      (20.0, [1, 2, 3]),
+      (29.0, [1, 2, 3]),
+      (40.0, [1, 2, 3]),
+      (60.0, [2, 3]),
+      (76.0, [1, 2]),
+      (83.5, [2]),
+      (1024.0, [1]),
+    ]) {
+      final name = pt == pt.roundToDouble() ? '${pt.round()}' : '$pt';
+      for (final scale in scales) {
+        await paintTo(
+          tester,
+          '$dir/Icon-App-${name}x$name@${scale}x.png',
+          (pt * scale).round(),
+          const _IconPainter(color: _gold, reach: .38, background: _green),
+          opaque: true,
+        );
+      }
+    }
+  });
+
+  testWidgets('web icons', (tester) async {
+    addTearDown(tester.view.reset);
+    // Tabs and bookmarks show the favicon tiny: a larger mark reads better.
+    await paintTo(
+      tester,
+      'web/favicon.png',
+      32,
+      const _IconPainter(color: _gold, reach: .44, background: _green),
+    );
+    for (final px in [192, 512]) {
+      await paintTo(
+        tester,
+        'web/icons/Icon-$px.png',
+        px,
+        const _IconPainter(color: _gold, reach: .38, background: _green),
+      );
+      // Maskable: the platform may crop to the middle 80% circle; the mark
+      // stays inside it as on the Android adaptive foreground.
+      await paintTo(
+        tester,
+        'web/icons/Icon-maskable-$px.png',
+        px,
+        const _IconPainter(color: _gold, reach: .29, background: _green),
+      );
+    }
+  });
+
   testWidgets('store icon', (tester) async {
     addTearDown(tester.view.reset);
     // Play applies its own mask to a full-bleed square, so this is the logo
     // full-bleed: the mark at the author's scale on the green.
     await paintTo(
       tester,
-      'store/icon-512.png',
+      'store_assets/output/icon_512.png',
       512,
       const _IconPainter(color: _gold, reach: .38, background: _green),
     );
@@ -545,29 +653,42 @@ void main() {
     // Store order: the first three show without scrolling, so they carry
     // what sets the app apart: answers from the Quran, the proof in full,
     // and the ayah in its context.
-    final shots = <(String, (String, String), ui.Image)>[];
+    final shots = <(String, (String, String, String), ui.Image)>[];
     for (final (name, caption, mode, path) in [
       (
         'home',
-        ('ইসলামের প্রশ্ন,', 'উত্তর কুরআনের আয়াতে'),
+        (
+          '${bnDigits(index.questions.length)}টি প্রশ্ন · সম্পূর্ণ অফলাইন',
+          'ইসলামের প্রশ্ন,',
+          'উত্তর কুরআনের আয়াতে',
+        ),
         ThemeMode.dark,
         '/',
       ),
       (
         'question',
-        ('প্রতিটি উত্তরের প্রমাণ', 'আরবি আয়াত ও অনুবাদসহ'),
+        (
+          'উত্তর ও প্রমাণ এক পাতায়',
+          'প্রতিটি উত্তরের প্রমাণ',
+          'আরবি আয়াত ও অনুবাদসহ',
+        ),
         ThemeMode.dark,
         '/question/$slug',
       ),
       (
         'ayah',
-        ('আগে-পরের আয়াতসহ', 'প্রসঙ্গ বুঝে পড়ুন'),
+        (
+          'প্রমাণের আয়াত পূর্ণ প্রসঙ্গে',
+          'আগে-পরের আয়াতসহ',
+          'প্রসঙ্গ বুঝে পড়ুন',
+        ),
         ThemeMode.light,
         '/ayah/54/17',
       ),
       (
         'topics',
         (
+          'বিষয়ভিত্তিক সূচি',
           '${bnDigits(index.categories.length)}টি বিষয়ে সাজানো',
           '${bnDigits(index.questions.length)}টি প্রশ্ন ও উত্তর',
         ),
@@ -576,13 +697,13 @@ void main() {
       ),
       (
         'questions',
-        ('যেকোনো শব্দে খুঁজুন', 'প্রশ্নে বা উত্তরে'),
+        ('দ্রুত অনুসন্ধান', 'যেকোনো শব্দে খুঁজুন', 'প্রশ্নে বা উত্তরে'),
         ThemeMode.light,
         '/questions',
       ),
       (
         'surahs',
-        ('সূরা ধরে দেখুন', 'কোন আয়াত কোন প্রশ্নের প্রমাণ'),
+        ('সূরাভিত্তিক সূচি', 'সূরা ধরে দেখুন', 'কোন আয়াত কোন প্রশ্নের প্রমাণ'),
         ThemeMode.light,
         '/surahs',
       ),
@@ -617,8 +738,11 @@ void main() {
       ..devicePixelRatio = 1
       ..resetPadding()
       ..resetViewPadding();
-    for (final old in Directory('store/screenshots').listSync()) {
-      old.deleteSync();
+    // Only the numbered screenshots: the icon shares the folder.
+    // Gitignored, so absent on a fresh clone.
+    final out = Directory('store_assets/output')..createSync(recursive: true);
+    for (final old in out.listSync()) {
+      if (RegExp(r'[1-9]_\w+\.png$').hasMatch(old.path)) old.deleteSync();
     }
     for (final (i, (name, caption, screen)) in shots.indexed) {
       await tester.pumpWidget(
@@ -629,7 +753,7 @@ void main() {
       );
       await capture(
         tester,
-        'store/screenshots/phone-${i + 1}-$name.png',
+        'store_assets/output/${i + 1}_$name.png',
         opaque: true,
       );
     }
@@ -709,7 +833,7 @@ void main() {
         ),
       ),
     );
-    await capture(tester, 'store/feature-graphic.png', opaque: true);
+    await capture(tester, 'store_assets/output/0_feature.png', opaque: true);
     for (final (_, _, screen) in shots) {
       screen.dispose();
     }

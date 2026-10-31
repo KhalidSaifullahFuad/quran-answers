@@ -210,6 +210,7 @@ Green = active/selected, gold = action. Green only as a small fill with gold or 
 - [x] **22.6** (author: frame looked fat) App now rendered as a 20:9 phone (1080×2400, 411dp) with a drawn status bar (24dp) and gesture handle (16dp), then framed at 690px wide in the 1080×1920 store image.
 - [x] **22.7** (author) Package id `com.fuad.quran_answers` → `com.khalidfuad.quran_answers` (iOS `com.khalidfuad.quranAnswers`): gradle namespace + applicationId, MainActivity package + dir, privacy policy.
 - [x] **22.8** (author) Static homepage + privacy policy site in sibling folder `../quran-answers-site/` (`index.html`, `privacy.html`, `styles.css`): app tokens (dark default, paper light via `prefers-color-scheme`), self-hosted app fonts, gold mark + Cinzel wordmark, real sample question (ku-011, 25:33) drawn like the question screen, store screenshots. "যেভাবে তৈরি" section removed (author). Contact email filled (site, `store/privacy-policy.md`, `store/listing.md`); dated "Last updated: 19 October 2026".
+- [x] **22.9** (author, from a reference listing) Screenshot restyle: warm cream→gold gradient, small eyebrow line, large serif Bengali headline (Noto Serif Bengali, tool-only font in `tool/fonts/`) with the second line in amber, thick dark bezel phone with large corners and a punch-hole camera, phone bigger and running off the bottom edge. Drawn status bar 24→32dp with wider insets so the clock clears the larger corners. Regenerated 2026-10-21.
 - [ ] **22.2** (author) Upload key + `android/key.properties`; contact email and hosted privacy-policy URL.
 - [ ] **22.3** (author) Device pass on steps 12, 18–21 checkpoints; airplane-mode cold install.
 - [ ] **22.4** `flutter build appbundle --release`, closed test (12 testers × 14 days), then production.
@@ -226,13 +227,26 @@ Source: author's `store/Logo — vector.svg` (2048², gold #F5C466 open book + q
 - [x] **23.8** (author) Dark-mode splash: canvas `#131313` with the gold mark centred, no green tile. Generator writes `drawable-*dpi/splash_mark.png` (288dp, the Android 12 no-background icon size; mark inside its 192dp circle). `values-night/colors.xml` overrides `splash_background`; `values-night-v31` sets `windowSplashScreenAnimatedIcon`; `drawable-night/launch_background.xml` centres the mark for pre-12. Light splash unchanged.
 🛑 **Checkpoint:** author checks icon on the launcher and home header on device.
 
+### Step 24: Store folder layout (2026-10-31)
+Match `quranic_ramadan_calendar/store_assets/`: `store/` → `store_assets/`; final Play graphics in `store_assets/output/` named `0_feature.png`, `1_home.png` … `6_surahs.png` (+ `icon_512.png`); captions documented in `store_assets/screenshot_copy.md`. Docs (`README.md`, `listing.md`, `privacy-policy.md`) stay at the folder root. No HTML template/render.ps1: graphics still come from `tool/render_assets_test.dart` (Bengali shaping).
+- [x] **24.1** `git mv` files to the new layout.
+- [x] **24.2** Generator writes the new paths; README, HANDOFF, PLAN references updated.
+- [x] **24.3** `screenshot_copy.md` with the approved captions.
+- [x] **24.4** (author) `store_assets/output/` gitignored (generated; rerun the generator before upload). Docs stay tracked.
+
+### Step 25: iOS and web icons (2026-10-31)
+Both still had Flutter's default logo and template metadata.
+- [x] **25.1** iOS `AppIcon.appiconset`: every size in `Contents.json`, logo full-bleed on green, opaque (Apple rejects alpha; iOS applies its own mask).
+- [x] **25.2** Web: `favicon.png` (32), `Icon-192/512` full-bleed, `Icon-maskable-192/512` with the mark inside the 80% safe circle.
+- [x] **25.3** `web/manifest.json` + `index.html`: name Quran Answers, Bengali tagline, colours `#131313`.
+
 ### Later (not scheduled)
 - [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.
 - [ ] Design features waiting on content fields: question kind + segmented filter, lead/detail answer split, highlighted phrase in the Arabic, interpretive-note block, curated collections, Bengali transliterated surah names.
 - [ ] "Same phrase in this surah" on the ayah screen (needs phrase data).
 - [ ] Compare search, saved, ayah, settings and about screens against the `.dc.html`.
-- [ ] iOS: icons and a device pass.
+- [ ] iOS: device pass (icons done in step 25).
 - [ ] Remote content updates via a static JSON manifest (out of scope for V1).
 
 ## Verification
@@ -244,5 +258,5 @@ Source: author's `store/Logo — vector.svg` (2048², gold #F5C466 open book + q
 
 ## Open items
 - Methodology wording: author review.
-- Keystore, contact email, privacy-policy hosting URL (`store/README.md`).
+- Keystore, contact email, privacy-policy hosting URL (`store_assets/README.md`).
 - Git remote: none yet. Author will create a (private) repo and share the URL; then `git remote add origin <url>` + push.

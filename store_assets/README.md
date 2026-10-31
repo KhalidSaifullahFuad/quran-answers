@@ -9,13 +9,17 @@ text is in `listing.md`; the privacy policy is `privacy-policy.md`.
 flutter test tool/render_assets_test.dart
 ```
 
-Writes the launcher icons (`android/app/src/main/res/mipmap-*`), `icon-512.png`,
-`feature-graphic.png` and `screenshots/`. The screenshots are the real app on
+Writes the launcher icons (`android/app/src/main/res/mipmap-*`) and, into
+`output/`, `icon_512.png`, `0_feature.png` and the numbered screenshots
+`1_home.png` … `6_surahs.png` (upload in that order). The screenshots are the real app on
 the shipped content database (last made 2026-10-19 from all 200 questions);
 rerun after any content or design change. The home screenshot shows the day it
-was generated. Each screenshot is framed for the listing: a two-line Bengali
-caption above the screen in a phone; the captions and their order live in the
-test. Store PNGs are written without alpha, as Play asks.
+was generated. Each screenshot is framed for the listing: on a warm paper-to-gold
+gradient, a small eyebrow line and a two-line serif Bengali headline (Noto
+Serif Bengali from `tool/fonts/`, not shipped in the app) above the screen in a
+phone that runs off the bottom edge; the captions and their order live in the
+test and are mirrored in `screenshot_copy.md`. `output/` is gitignored: run the generator
+before every upload. Store PNGs are written without alpha, as Play asks.
 
 ## One-time setup (author only — involves secrets)
 

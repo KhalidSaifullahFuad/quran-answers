@@ -1,11 +1,11 @@
 {
-    "name": "quran_answers",
-    "short_name": "quran_answers",
+    "name": "Quran Answers",
+    "short_name": "Quran Answers",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#131313",
+    "theme_color": "#131313",
+    "description": "প্রতিটি প্রশ্নের উত্তর, কুরআনের আয়াত থেকে",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

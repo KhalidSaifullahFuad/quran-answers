@@ -240,6 +240,9 @@ Both still had Flutter's default logo and template metadata.
 - [x] **25.2** Web: `favicon.png` (32), `Icon-192/512` full-bleed, `Icon-maskable-192/512` with the mark inside the 80% safe circle.
 - [x] **25.3** `web/manifest.json` + `index.html`: name Quran Answers, Bengali tagline, colours `#131313`.
 
+### Step 26: README (2026-11-01)
+- [x] **26.1** Replace the Flutter template README: logo, tagline, badges, features, 4 screenshots (tracked copies in `docs/screenshots/`, since `store_assets/output/` is ignored), download table, build steps, content pipeline, stack, credits.
+
 ### Later (not scheduled)
 - [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.

@@ -5,6 +5,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
 import '../../shared/widgets.dart';
@@ -17,71 +18,62 @@ class TopicsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final index = ref.watch(questionIndexProvider);
-    return Scaffold(
-      body: SafeArea(
-        child: AsyncBody(
-          value: index,
-          data: (index) => ListView(
-            padding: const EdgeInsets.only(bottom: 32),
-            children: [
-              const ContentFrame(
-                child: ScreenHeader(title: Strings.navTopics, showBack: false),
-              ),
-              ContentFrame(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.gutter,
-                    8,
-                    Space.gutter,
-                    0,
-                  ),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      const gap = 10.0;
-                      final width = (constraints.maxWidth - gap) / 2;
-                      final cats = index.categories.values.toList();
-                      Widget tile(int i) {
-                        final c = cats[i];
-                        return _TopicCard(
-                          minHeight: width * 0.66,
-                          title: c.nameBn,
-                          count: index.inCategory(c.id).length,
-                          icon: CategoryIcon(c.id),
-                          onTap: () => context.openCategory(c.id),
-                        );
-                      }
+    return AppPage(
+      header: const AppHeader(title: Strings.navTopics, showBack: false),
+      body: AsyncBody(
+        value: index,
+        data: (index) => ListView(
+          padding: const EdgeInsets.only(bottom: 32),
+          children: [
+            const SizedBox(height: Space.belowHeader),
+            ContentFrame(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    const gap = 10.0;
+                    final width = (constraints.maxWidth - gap) / 2;
+                    final cats = index.categories.values.toList();
+                    Widget tile(int i) {
+                      final c = cats[i];
+                      return _TopicCard(
+                        minHeight: width * 0.66,
+                        title: c.nameBn,
+                        count: index.inCategory(c.id).length,
+                        icon: CategoryIcon(c.id),
+                        onTap: () => context.openCategory(c.id),
+                      );
+                    }
 
-                      // Rows rather than a Wrap, so a two-line title
-                      // stretches its neighbour to the same height.
-                      return Column(
-                        children: [
-                          for (var i = 0; i < cats.length; i += 2)
-                            Padding(
-                              padding: EdgeInsets.only(top: i == 0 ? 0 : gap),
-                              child: IntrinsicHeight(
-                                child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Expanded(child: tile(i)),
-                                    const SizedBox(width: gap),
-                                    Expanded(
-                                      child: i + 1 < cats.length
-                                          ? tile(i + 1)
-                                          : const SizedBox(),
-                                    ),
-                                  ],
-                                ),
+                    // Rows rather than a Wrap, so a two-line title
+                    // stretches its neighbour to the same height.
+                    return Column(
+                      children: [
+                        for (var i = 0; i < cats.length; i += 2)
+                          Padding(
+                            padding: EdgeInsets.only(top: i == 0 ? 0 : gap),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(child: tile(i)),
+                                  const SizedBox(width: gap),
+                                  Expanded(
+                                    child: i + 1 < cats.length
+                                        ? tile(i + 1)
+                                        : const SizedBox(),
+                                  ),
+                                ],
                               ),
                             ),
-                        ],
-                      );
-                    },
-                  ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

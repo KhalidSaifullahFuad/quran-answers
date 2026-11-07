@@ -10,6 +10,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
 import '../../shared/ayah_card.dart';
 import '../../shared/folder_sheet.dart';
 import '../../shared/navigation.dart';
@@ -94,47 +95,41 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
     final bookmarked = ref.watch(isBookmarkedProvider(widget.slug)).value;
     final loaded = detail.value;
 
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: ContentFrame(
-                child: ScreenHeader(
-                  actions: [
-                    if (loaded != null)
-                      IconButton(
-                        onPressed: () => _share(loaded),
-                        tooltip: Strings.share,
-                        icon: const Icon(IconsaxPlusLinear.send_2),
+    return AppPage(
+      header: AppHeader(
+        actions: [
+          if (loaded != null)
+            IconButton(
+              onPressed: () => _share(loaded),
+              tooltip: Strings.share,
+              icon: const Icon(IconsaxPlusLinear.send_2),
+            ),
+          IconButton(
+            onPressed: _toggleBookmark,
+            tooltip: Strings.bookmark,
+            isSelected: bookmarked ?? false,
+            icon: const Icon(IconsaxPlusLinear.archive_1),
+            selectedIcon: const Icon(IconsaxPlusBold.archive_1),
+          ),
+        ],
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: AsyncBody(
+              value: detail,
+              data: (detail) => detail == null
+                  ? Padding(
+                      padding: const EdgeInsets.all(Space.gutter),
+                      child: Text(
+                        Strings.notFound,
+                        style: AppText.of(context).section,
                       ),
-                    IconButton(
-                      onPressed: _toggleBookmark,
-                      tooltip: Strings.bookmark,
-                      isSelected: bookmarked ?? false,
-                      icon: const Icon(IconsaxPlusLinear.archive_1),
-                      selectedIcon: const Icon(IconsaxPlusBold.archive_1),
-                    ),
-                  ],
-                ),
-              ),
+                    )
+                  : ContentFrame(child: _content(context, detail)),
             ),
-            SliverToBoxAdapter(
-              child: AsyncBody(
-                value: detail,
-                data: (detail) => detail == null
-                    ? Padding(
-                        padding: const EdgeInsets.all(Space.gutter),
-                        child: Text(
-                          Strings.notFound,
-                          style: AppText.of(context).section,
-                        ),
-                      )
-                    : ContentFrame(child: _content(context, detail)),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -150,7 +145,12 @@ class _QuestionScreenState extends ConsumerState<QuestionScreen> {
         index?.related(q, exclude: {?next?.slug}) ?? const <Question>[];
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.gutter, 4, Space.gutter, 36),
+      padding: const EdgeInsets.fromLTRB(
+        Space.gutter,
+        Space.belowHeader,
+        Space.gutter,
+        36,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

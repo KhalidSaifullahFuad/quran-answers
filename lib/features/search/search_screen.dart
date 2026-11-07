@@ -10,6 +10,8 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
+import '../../shared/empty_state.dart';
 import '../../shared/ayah_card.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
@@ -92,24 +94,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       if (value case AsyncData(:final value)) _shown = value;
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            ContentFrame(child: ScreenHeader(child: _field())),
-            Expanded(
-              child: _query.isEmpty
-                  ? _Examples(onPick: _pick)
-                  : _shown == null
-                  ? AsyncBody(
-                      value: ref.watch(searchResultsProvider(_query)),
-                      data: (_) => const SizedBox.shrink(),
-                    )
-                  : _Results(results: _shown!),
-            ),
-          ],
-        ),
-      ),
+    return AppPage(
+      header: AppHeader(child: _field()),
+      body: _query.isEmpty
+          ? _Examples(onPick: _pick)
+          : _shown == null
+          ? AsyncBody(
+              value: ref.watch(searchResultsProvider(_query)),
+              data: (_) => const SizedBox.shrink(),
+            )
+          : _Results(results: _shown!),
     );
   }
 
@@ -135,7 +129,12 @@ class _Message extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentFrame(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(Space.gutter, 24, Space.gutter, 0),
+        padding: const EdgeInsets.fromLTRB(
+          Space.gutter,
+          Space.belowHeader,
+          Space.gutter,
+          0,
+        ),
         // Full width, or ContentFrame's centering would center a short line.
         child: SizedBox(
           width: double.infinity,
@@ -160,7 +159,12 @@ class _Examples extends StatelessWidget {
     final t = AppText.of(context);
     return ContentFrame(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(Space.gutter, 24, Space.gutter, 0),
+        padding: const EdgeInsets.fromLTRB(
+          Space.gutter,
+          Space.belowHeader,
+          Space.gutter,
+          0,
+        ),
         child: SizedBox(
           width: double.infinity,
           child: Column(
@@ -203,14 +207,25 @@ class _Results extends ConsumerWidget {
         Strings.noSuchAyah(bnDigits(address.surah), bnDigits(address.ayah)),
       );
     }
-    if (r.isEmpty) return const _Message(Strings.noResults);
+    if (r.isEmpty) {
+      return const EmptyState(
+        icon: IconsaxPlusBold.search_normal_1,
+        title: Strings.noResults,
+        message: Strings.noResultsHint,
+      );
+    }
 
     final index = ref.watch(questionIndexProvider).value;
     final questions = r.refAyah == null ? r.questions : r.citingRef;
 
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: const EdgeInsets.fromLTRB(Space.gutter, 8, Space.gutter, 36),
+      padding: const EdgeInsets.fromLTRB(
+        Space.gutter,
+        Space.belowHeader,
+        Space.gutter,
+        36,
+      ),
       children: [
         for (final child in [
           if (r.refAyah case final ayah?)

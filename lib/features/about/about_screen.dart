@@ -9,6 +9,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
 import '../../shared/widgets.dart';
 import 'methodology_sheet.dart';
 
@@ -59,73 +60,70 @@ class AboutScreen extends ConsumerWidget {
       ),
     );
 
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 36),
-          children: [
-            const ContentFrame(child: ScreenHeader(title: Strings.about)),
-            ContentFrame(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
-                child: AsyncBody(
-                  value: meta,
-                  data: (meta) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 8),
-                      Text(Strings.wordmark, style: t.wordmark),
-                      const SizedBox(height: 8),
-                      Text(Strings.tagline, style: t.section),
-                      const SizedBox(height: 28),
-                      block(Strings.quranTextTitle, const [
-                        Strings.quranTextSource,
-                      ]),
-                      block(Strings.translationTitle, [
-                        [
-                          ?meta['translationName'],
-                          ?meta['translationAuthor'],
-                        ].join(' · '),
-                      ]),
-                      block(Strings.fontsTitle, [
-                        for (final font in _fontLicenses.keys)
-                          '$font — SIL Open Font License 1.1',
-                      ]),
-                      block(Strings.privacyTitle, const [Strings.privacyNote]),
-                      block(Strings.contentTitle, [
-                        Strings.contentSummary(
-                          bnDigits(meta['contentVersion'] ?? '-'),
-                          bnDigits(meta['questionCount'] ?? '-'),
-                          bnDigits(meta['ayahCount'] ?? '-'),
-                        ),
-                      ]),
-                      const SizedBox(height: 4),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          TopicChip(
-                            label: Strings.methodology,
-                            icon: const Icon(IconsaxPlusLinear.task_square),
-                            onTap: () => showMethodologySheet(context),
-                          ),
-                          TopicChip(
-                            label: Strings.licenses,
-                            icon: const Icon(IconsaxPlusLinear.document_text),
-                            onTap: () => showLicensePage(
-                              context: context,
-                              applicationName: Strings.appName,
-                            ),
-                          ),
-                        ],
+    return AppPage(
+      header: const AppHeader(title: Strings.about),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(0, Space.belowHeader, 0, 36),
+        children: [
+          ContentFrame(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+              child: AsyncBody(
+                value: meta,
+                data: (meta) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(Strings.wordmark, style: t.wordmark),
+                    const SizedBox(height: 8),
+                    Text(Strings.tagline, style: t.section),
+                    const SizedBox(height: 28),
+                    block(Strings.quranTextTitle, const [
+                      Strings.quranTextSource,
+                    ]),
+                    block(Strings.translationTitle, [
+                      [
+                        ?meta['translationName'],
+                        ?meta['translationAuthor'],
+                      ].join(' · '),
+                    ]),
+                    block(Strings.fontsTitle, [
+                      for (final font in _fontLicenses.keys)
+                        '$font — SIL Open Font License 1.1',
+                    ]),
+                    block(Strings.privacyTitle, const [Strings.privacyNote]),
+                    block(Strings.contentTitle, [
+                      Strings.contentSummary(
+                        bnDigits(meta['contentVersion'] ?? '-'),
+                        bnDigits(meta['questionCount'] ?? '-'),
+                        bnDigits(meta['ayahCount'] ?? '-'),
                       ),
-                    ],
-                  ),
+                    ]),
+                    const SizedBox(height: 4),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        TopicChip(
+                          label: Strings.methodology,
+                          icon: const Icon(IconsaxPlusLinear.task_square),
+                          onTap: () => showMethodologySheet(context),
+                        ),
+                        TopicChip(
+                          label: Strings.licenses,
+                          icon: const Icon(IconsaxPlusLinear.document_text),
+                          onTap: () => showLicensePage(
+                            context: context,
+                            applicationName: Strings.appName,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

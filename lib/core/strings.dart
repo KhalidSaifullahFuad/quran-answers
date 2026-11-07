@@ -51,7 +51,13 @@ abstract final class Strings {
   static const readingHistory = 'পড়ার ইতিহাস';
   static const savedEmpty =
       'প্রশ্নের পাতায় বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
-  static const historyEmpty = 'এখনো কোনো প্রশ্ন পড়া হয়নি।';
+  static const historyEmpty = 'এখনো কোনো প্রশ্ন পড়া হয়নি';
+  static const historyEmptyHint = 'যে প্রশ্ন পড়বেন, তা এখানে দেখা যাবে।';
+  static const nothingSavedTitle = 'এখনো কিছু সংরক্ষণ করা হয়নি';
+  static const nothingSavedHint =
+      'প্রশ্ন বা আয়াতের বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
+  static const folderEmptyTitle = 'ফোল্ডারটি খালি';
+  static const noResultsHint = 'অন্য শব্দে খুঁজে দেখুন।';
   static const savedQuestions = 'সংরক্ষিত প্রশ্ন';
   static const savedAyat = 'সংরক্ষিত আয়াত';
   static const savedAyatEmpty =
@@ -59,9 +65,6 @@ abstract final class Strings {
   static const folderEmpty = 'এই ফোল্ডারে এখনো কিছু রাখা হয়নি।';
   static const bookmarkAyah = 'আয়াত সংরক্ষণ';
   static const ayahBookmarked = 'আয়াত সংরক্ষিত';
-  static const nothingSaved =
-      'এখনো কিছু সংরক্ষণ করা হয়নি। প্রশ্নের পাতায় বা আয়াতের কার্ডে '
-      'বুকমার্ক চিহ্নে চাপ দিলে এখানে জমা হবে।';
   static const manageFolders = 'ফোল্ডার সাজান';
   static const allFolders = 'সব';
   static const newFolder = 'নতুন ফোল্ডার';
@@ -79,7 +82,7 @@ abstract final class Strings {
 
   static const searchPrompt =
       'প্রশ্নের শব্দ, আরবি বা বাংলা শব্দ, অথবা আয়াত নম্বর (৫৪:১৫) লিখুন।';
-  static const noResults = 'কিছু পাওয়া যায়নি।';
+  static const noResults = 'কিছু পাওয়া যায়নি';
   static const filterQuestionsHint = 'প্রশ্ন বা উত্তরের শব্দ';
   static const searchWholeQuran = 'পুরো কুরআনে খুঁজুন';
   static const clearSearch = 'মুছুন';

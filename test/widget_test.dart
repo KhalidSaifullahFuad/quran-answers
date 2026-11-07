@@ -459,7 +459,7 @@ void main() {
 
     await openTab(AppTab.saved);
     // One empty state, and no history: that has its own screen.
-    expect(find.text(Strings.nothingSaved), findsOne);
+    expect(find.text(Strings.nothingSavedTitle), findsOne);
     expect(find.text(Strings.readingHistory), findsNothing);
     expect(find.byTooltip(Strings.readingHistory), findsOne);
   });

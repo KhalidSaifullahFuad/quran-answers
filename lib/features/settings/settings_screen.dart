@@ -9,6 +9,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
 import '../../shared/navigation.dart';
 import '../../shared/widgets.dart';
 import 'settings_provider.dart';
@@ -33,100 +34,97 @@ class SettingsScreen extends ConsumerWidget {
     final c = AppColors.of(context);
     final t = AppText.of(context);
 
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 36),
-          children: [
-            const ContentFrame(child: ScreenHeader(title: Strings.settings)),
-            ContentFrame(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 8),
-                    const SectionTitle(Strings.appearance),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final (mode, label, icon) in const [
-                          (
-                            ThemeMode.system,
-                            Strings.themeSystem,
-                            IconsaxPlusLinear.autobrightness,
-                          ),
-                          (
-                            ThemeMode.light,
-                            Strings.themeLight,
-                            IconsaxPlusLinear.sun_1,
-                          ),
-                          (
-                            ThemeMode.dark,
-                            Strings.themeDark,
-                            IconsaxPlusLinear.moon,
-                          ),
-                        ])
-                          TopicChip(
-                            label: label,
-                            icon: Icon(icon),
-                            selected: settings.themeMode == mode,
-                            onTap: () => notifier.setThemeMode(mode),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                    _ScaleSlider(
-                      label: Strings.arabicSize,
-                      value: settings.arabicScale,
-                      range: Settings.arabicRange,
-                      onChanged: notifier.setArabicScale,
-                    ),
-                    const SizedBox(height: 12),
-                    _ScaleSlider(
-                      label: Strings.bengaliSize,
-                      value: settings.bengaliScale,
-                      range: Settings.bengaliRange,
-                      onChanged: notifier.setBengaliScale,
-                    ),
-                    if (preview != null) ...[
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-                        decoration: BoxDecoration(
-                          color: c.evidence,
-                          borderRadius: BorderRadius.circular(Space.radiusCard),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ArabicText(preview.textUthmani, ayah: preview.ayah),
-                            const SizedBox(height: 10),
-                            Text(preview.translationBn, style: t.translation),
-                          ],
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 28),
-                  ],
-                ),
-              ),
-            ),
-            ContentFrame(
+    return AppPage(
+      header: const AppHeader(title: Strings.settings),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(0, Space.belowHeader, 0, 36),
+        children: [
+          ContentFrame(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _LinkRow(
-                    icon: IconsaxPlusLinear.info_circle,
-                    label: Strings.about,
-                    onTap: context.openAbout,
+                  const SectionTitle(Strings.appearance),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final (mode, label, icon) in const [
+                        (
+                          ThemeMode.system,
+                          Strings.themeSystem,
+                          IconsaxPlusLinear.autobrightness,
+                        ),
+                        (
+                          ThemeMode.light,
+                          Strings.themeLight,
+                          IconsaxPlusLinear.sun_1,
+                        ),
+                        (
+                          ThemeMode.dark,
+                          Strings.themeDark,
+                          IconsaxPlusLinear.moon,
+                        ),
+                      ])
+                        TopicChip(
+                          label: label,
+                          icon: Icon(icon),
+                          selected: settings.themeMode == mode,
+                          onTap: () => notifier.setThemeMode(mode),
+                        ),
+                    ],
                   ),
+                  const SizedBox(height: 28),
+                  _ScaleSlider(
+                    label: Strings.arabicSize,
+                    value: settings.arabicScale,
+                    range: Settings.arabicRange,
+                    onChanged: notifier.setArabicScale,
+                  ),
+                  const SizedBox(height: 12),
+                  _ScaleSlider(
+                    label: Strings.bengaliSize,
+                    value: settings.bengaliScale,
+                    range: Settings.bengaliRange,
+                    onChanged: notifier.setBengaliScale,
+                  ),
+                  if (preview != null) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+                      decoration: BoxDecoration(
+                        color: c.evidence,
+                        borderRadius: BorderRadius.circular(Space.radiusCard),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ArabicText(preview.textUthmani, ayah: preview.ayah),
+                          const SizedBox(height: 10),
+                          Text(preview.translationBn, style: t.translation),
+                        ],
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 28),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          ContentFrame(
+            child: Column(
+              children: [
+                _LinkRow(
+                  icon: IconsaxPlusLinear.info_circle,
+                  label: Strings.about,
+                  onTap: context.openAbout,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

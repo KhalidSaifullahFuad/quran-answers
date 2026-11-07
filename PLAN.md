@@ -243,6 +243,24 @@ Both still had Flutter's default logo and template metadata.
 ### Step 26: README (2026-11-01)
 - [x] **26.1** Replace the Flutter template README: logo, tagline, badges, features, 4 screenshots (tracked copies in `docs/screenshots/`, since `store_assets/output/` is ignored), download table, build steps, content pipeline, stack, credits.
 
+### Step 27: Hedging words in ayah translations (2026-11-02)
+Author: "সম্ভবতঃ / আশা করা যায় / হয়তো" weaken Allah's promises. 34 hits in `content/quran.json`. Review list: `content/source/hedge-review-2026-11-02.md`.
+- [x] **27.1** List every hit with Arabic particle, speaker, proposed Bengali.
+- [ ] **27.2** (author) Rule each row.
+- [ ] **27.3** Apply approved rows to `quran.json`; re-grep.
+
+### Step 28: Illustrated empty states (2026-11-07)
+Author: empty screens get a centered graphic, bold title and muted subtitle, inspired by a reference screenshot.
+- [x] **28.1** `shared/empty_state.dart`: large muted Iconsax icon per context (clock, bookmark, folder, search), title + subtitle. (Author rejected the hand-drawn cube: use the existing icon library.)
+- [x] **28.2** Use it in history, saved (all + folder), search no-results, all-questions no-results.
+
+### Step 29: Top bar rework (2026-11-07)
+Author: bar looked cramped (low height, no padding, small title). Analysis: 52dp bar, no space under status bar, 17sp title, title scrolled away with content, uneven gaps.
+- [x] **29.1** `shared/app_header.dart`: `AppPage` + `AppHeader` — fixed 64dp bar, 4dp under status bar, 20sp title, 4dp between actions, card tint + hairline once content scrolls under, optional `bottom` slot.
+- [x] **29.2** Tab screens use the plain bar title (author rejected large collapsing titles on Topics/Surahs/Saved). All questions pins field + chips in the bar.
+- [x] **29.3** All inner screens migrated (category, surah, question, ayah, search, settings, about, history); one 12dp gap below the bar (`Space.belowHeader`).
+- [x] **29.4** `ContentFrame` gives its child the full column width (short rows no longer drift to the center). Home keeps its own wordmark header.
+
 ### Later (not scheduled)
 - [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.

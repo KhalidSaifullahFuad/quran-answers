@@ -27,6 +27,7 @@ class AppText extends ThemeExtension<AppText> {
     required this.questionTitle,
     required this.cardTitle,
     required this.screenTitle,
+    required this.barTitle,
     required this.section,
     required this.rowTitle,
     required this.meta,
@@ -73,6 +74,12 @@ class AppText extends ThemeExtension<AppText> {
       screenTitle: base.copyWith(
         fontSize: 17,
         fontWeight: FontWeight.w600,
+        color: c.fg1,
+      ),
+      barTitle: base.copyWith(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
         color: c.fg1,
       ),
       section: base.copyWith(
@@ -135,6 +142,9 @@ class AppText extends ThemeExtension<AppText> {
   /// Question text inside the featured card.
   final TextStyle cardTitle;
   final TextStyle screenTitle;
+
+  /// Title inside the top bar. Line height leaves room for Bengali vowel signs.
+  final TextStyle barTitle;
   final TextStyle section;
 
   /// Question text in a list row.
@@ -171,6 +181,7 @@ class AppText extends ThemeExtension<AppText> {
       questionTitle: l(questionTitle, other.questionTitle),
       cardTitle: l(cardTitle, other.cardTitle),
       screenTitle: l(screenTitle, other.screenTitle),
+      barTitle: l(barTitle, other.barTitle),
       section: l(section, other.section),
       rowTitle: l(rowTitle, other.rowTitle),
       meta: l(meta, other.meta),

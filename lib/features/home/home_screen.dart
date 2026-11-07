@@ -41,8 +41,6 @@ class HomeScreen extends ConsumerWidget {
                       SizedBox(height: MediaQuery.paddingOf(context).top + 12),
                       ContentFrame(
                         child: ScreenHeader(
-                          wordmark: true,
-                          showBack: false,
                           actions: [
                             IconButton(
                               onPressed: context.openSettings,

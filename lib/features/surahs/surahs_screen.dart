@@ -7,6 +7,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
 import '../../shared/widgets.dart';
@@ -31,77 +32,71 @@ class _SurahsScreenState extends ConsumerState<SurahsScreen> {
     final index = ref.watch(questionIndexProvider);
     final surahs = ref.watch(surahsProvider);
     final t = AppText.of(context);
-    return Scaffold(
-      body: SafeArea(
-        child: AsyncBody(
-          value: index,
-          data: (index) => AsyncBody(
-            value: surahs,
-            data: (surahs) => ListView(
-              padding: const EdgeInsets.only(bottom: 32),
-              children: [
-                const ContentFrame(
-                  child: ScreenHeader(
-                    title: Strings.surahsTitle,
-                    showBack: false,
-                  ),
-                ),
-                ContentFrame(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          Space.gutter,
-                          8,
-                          Space.gutter,
-                          8,
-                        ),
-                        child: Text(
-                          Strings.surahsIntro,
-                          style: t.meta.copyWith(fontSize: 13.5, height: 1.6),
-                        ),
+    return AppPage(
+      header: const AppHeader(title: Strings.surahsTitle, showBack: false),
+      body: AsyncBody(
+        value: index,
+        data: (index) => AsyncBody(
+          value: surahs,
+          data: (surahs) => ListView(
+            padding: const EdgeInsets.only(bottom: 32),
+            children: [
+              const SizedBox(height: Space.belowHeader),
+              ContentFrame(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        Space.gutter,
+                        0,
+                        Space.gutter,
+                        8,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          Space.gutter,
-                          4,
-                          Space.gutter,
-                          8,
-                        ),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            TopicChip(
-                              label: Strings.sortByNumber,
-                              icon: const Icon(IconsaxPlusLinear.sort),
-                              selected: !_byCount,
-                              onTap: () => setState(() => _byCount = false),
-                            ),
-                            TopicChip(
-                              label: Strings.sortByCount,
-                              icon: const Icon(IconsaxPlusLinear.chart_2),
-                              selected: _byCount,
-                              onTap: () => setState(() => _byCount = true),
-                            ),
-                          ],
-                        ),
+                      child: Text(
+                        Strings.surahsIntro,
+                        style: t.meta.copyWith(fontSize: 13.5, height: 1.6),
                       ),
-                      for (final MapEntry(key: n, value: count) in _sorted(
-                        index.citedSurahs(),
-                      ))
-                        if (surahs[n] case final surah?)
-                          _SurahRow(
-                            surah: surah,
-                            questionCount: count,
-                            onTap: () => context.openSurah(n),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        Space.gutter,
+                        4,
+                        Space.gutter,
+                        8,
+                      ),
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          TopicChip(
+                            label: Strings.sortByNumber,
+                            icon: const Icon(IconsaxPlusLinear.sort),
+                            selected: !_byCount,
+                            onTap: () => setState(() => _byCount = false),
                           ),
-                    ],
-                  ),
+                          TopicChip(
+                            label: Strings.sortByCount,
+                            icon: const Icon(IconsaxPlusLinear.chart_2),
+                            selected: _byCount,
+                            onTap: () => setState(() => _byCount = true),
+                          ),
+                        ],
+                      ),
+                    ),
+                    for (final MapEntry(key: n, value: count) in _sorted(
+                      index.citedSurahs(),
+                    ))
+                      if (surahs[n] case final surah?)
+                        _SurahRow(
+                          surah: surah,
+                          questionCount: count,
+                          onTap: () => context.openSurah(n),
+                        ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -195,47 +190,41 @@ class SurahQuestionsScreen extends ConsumerWidget {
     final index = ref.watch(questionIndexProvider);
     final surah = ref.watch(surahsProvider).value?[number];
     final t = AppText.of(context);
-    return Scaffold(
-      body: SafeArea(
-        child: AsyncBody(
-          value: index,
-          data: (index) => ListView(
-            padding: const EdgeInsets.only(bottom: 32),
-            children: [
-              ContentFrame(
-                child: ScreenHeader(
-                  title: surah == null ? null : surahLabel(surah),
-                ),
-              ),
-              ContentFrame(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (surah != null)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          Space.gutter,
-                          8,
-                          Space.gutter,
-                          10,
-                        ),
-                        child: Text(
-                          '${surahMeta(surah)} · ${Strings.surahQuestionsNote}',
-                          style: t.meta.copyWith(fontSize: 13.5, height: 1.6),
-                        ),
+    return AppPage(
+      header: AppHeader(title: surah == null ? null : surahLabel(surah)),
+      body: AsyncBody(
+        value: index,
+        data: (index) => ListView(
+          padding: const EdgeInsets.only(bottom: 32),
+          children: [
+            ContentFrame(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (surah != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        Space.gutter,
+                        Space.belowHeader,
+                        Space.gutter,
+                        10,
                       ),
-                    for (final q in index.citingSurah(number))
-                      QuestionTile(
-                        icon: CategoryIcon(q.category),
-                        title: q.questionBn,
-                        meta: refsSummary(index.citationsOf(q)),
-                        onTap: () => context.openQuestion(q.slug),
+                      child: Text(
+                        '${surahMeta(surah)} · ${Strings.surahQuestionsNote}',
+                        style: t.meta.copyWith(fontSize: 13.5, height: 1.6),
                       ),
-                  ],
-                ),
+                    ),
+                  for (final q in index.citingSurah(number))
+                    QuestionTile(
+                      icon: CategoryIcon(q.category),
+                      title: q.questionBn,
+                      meta: refsSummary(index.citationsOf(q)),
+                      onTap: () => context.openQuestion(q.slug),
+                    ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -7,7 +7,8 @@ import '../../core/db/user_db.dart';
 import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
-import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
+import '../../shared/empty_state.dart';
 import '../../shared/folder_sheet.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
@@ -37,49 +38,53 @@ class _SavedScreenState extends ConsumerState<SavedScreen> {
     // A folder deleted while selected falls back to showing everything.
     final folder = folders.any((f) => f.id == _folder) ? _folder : null;
 
-    return Scaffold(
-      body: SafeArea(
-        child: AsyncBody(
-          value: index,
-          data: (index) => ListView(
-            padding: const EdgeInsets.only(bottom: 32),
-            children: [
-              ContentFrame(
-                child: ScreenHeader(
-                  title: Strings.navSaved,
-                  showBack: false,
-                  actions: [
-                    IconButton(
-                      onPressed: context.openHistory,
-                      tooltip: Strings.readingHistory,
-                      icon: const Icon(IconsaxPlusLinear.clock_1),
-                    ),
-                    IconButton(
-                      onPressed: () => _manageFolders(context, ref, folders),
-                      tooltip: Strings.manageFolders,
-                      icon: const Icon(IconsaxPlusLinear.folder_2),
-                    ),
-                  ],
+    return AppPage(
+      header: AppHeader(
+        title: Strings.navSaved,
+        showBack: false,
+        actions: [
+          IconButton(
+            onPressed: context.openHistory,
+            tooltip: Strings.readingHistory,
+            icon: const Icon(IconsaxPlusLinear.clock_1),
+          ),
+          IconButton(
+            onPressed: () => _manageFolders(context, ref, folders),
+            tooltip: Strings.manageFolders,
+            icon: const Icon(IconsaxPlusLinear.folder_2),
+          ),
+        ],
+      ),
+      body: AsyncBody(
+        value: index,
+        data: (index) => CustomScrollView(
+          slivers: [
+            SliverList.list(
+              children: [
+                const SizedBox(height: Space.belowHeader),
+                ContentFrame(
+                  child: _FolderBar(
+                    folders: folders,
+                    selected: folder,
+                    onSelect: (id) => setState(() => _folder = id),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              ContentFrame(
-                child: _FolderBar(
-                  folders: folders,
-                  selected: folder,
-                  onSelect: (id) => setState(() => _folder = id),
-                ),
-              ),
-              const SizedBox(height: 18),
-              ContentFrame(
+                const SizedBox(height: 18),
+              ],
+            ),
+            // Fills the rest of the screen so the empty state can center.
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 32),
                 child: _SavedLists(
                   index: index,
                   folders: folders,
                   folder: folder,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -277,7 +282,6 @@ class _SavedLists extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final t = AppText.of(context);
     final marks = ref.watch(bookmarksProvider).value ?? const [];
     final ayahMarks = ref.watch(ayahBookmarksProvider).value ?? const [];
     final ayahs = ref.watch(savedAyahsProvider).value ?? const {};
@@ -295,68 +299,72 @@ class _SavedLists extends ConsumerWidget {
             if (surahs[a.surah] case final s?) (a, s, b.folderId),
     ];
 
-    Widget note(String text) => Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Space.gutter,
-        vertical: 10,
-      ),
-      child: Text(text, style: t.meta.copyWith(fontSize: 14, height: 1.6)),
-    );
-
     if (questions.isEmpty && verses.isEmpty) {
-      return note(folder == null ? Strings.nothingSaved : Strings.folderEmpty);
+      return folder == null
+          ? const EmptyState(
+              icon: IconsaxPlusBold.archive_tick,
+              title: Strings.nothingSavedTitle,
+              message: Strings.nothingSavedHint,
+            )
+          : const EmptyState(
+              icon: IconsaxPlusBold.folder_2,
+              title: Strings.folderEmptyTitle,
+              message: Strings.folderEmpty,
+            );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (questions.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
-            child: SectionTitle(
-              Strings.savedQuestions,
-              trailing: Strings.questionCount(bnDigits(questions.length)),
-            ),
-          ),
-          const SizedBox(height: 4),
-          for (final (q, inFolder) in questions)
-            QuestionTile(
-              icon: CategoryIcon(q.category),
-              title: q.questionBn,
-              meta: _meta(refsSummary(index.citationsOf(q)), inFolder),
-              onTap: () => context.openQuestion(q.slug),
-              trailing: _FileButton(
-                current: inFolder,
-                move: (db, to) => db.moveBookmark(q.slug, to),
+    return ContentFrame(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (questions.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+              child: SectionTitle(
+                Strings.savedQuestions,
+                trailing: Strings.questionCount(bnDigits(questions.length)),
               ),
             ),
-          const SizedBox(height: 22),
-        ],
-        if (verses.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
-            child: SectionTitle(
-              Strings.savedAyat,
-              trailing: Strings.ayahCount(bnDigits(verses.length)),
-            ),
-          ),
-          const SizedBox(height: 4),
-          // A row that leads to the verse, not evidence: the whole ayah is
-          // one tap away on its own screen.
-          for (final (a, s, inFolder) in verses)
-            QuestionTile(
-              icon: const Icon(IconsaxPlusLinear.book_1),
-              title: a.translationBn,
-              titleMaxLines: 2,
-              meta: _meta(refLong(s, a.id), inFolder),
-              onTap: () => context.openAyah(a.surah, a.ayah),
-              trailing: _FileButton(
-                current: inFolder,
-                move: (db, to) => db.moveAyahBookmark(a.id, to),
+            const SizedBox(height: 4),
+            for (final (q, inFolder) in questions)
+              QuestionTile(
+                icon: CategoryIcon(q.category),
+                title: q.questionBn,
+                meta: _meta(refsSummary(index.citationsOf(q)), inFolder),
+                onTap: () => context.openQuestion(q.slug),
+                trailing: _FileButton(
+                  current: inFolder,
+                  move: (db, to) => db.moveBookmark(q.slug, to),
+                ),
+              ),
+            const SizedBox(height: 22),
+          ],
+          if (verses.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Space.gutter),
+              child: SectionTitle(
+                Strings.savedAyat,
+                trailing: Strings.ayahCount(bnDigits(verses.length)),
               ),
             ),
+            const SizedBox(height: 4),
+            // A row that leads to the verse, not evidence: the whole ayah is
+            // one tap away on its own screen.
+            for (final (a, s, inFolder) in verses)
+              QuestionTile(
+                icon: const Icon(IconsaxPlusLinear.book_1),
+                title: a.translationBn,
+                titleMaxLines: 2,
+                meta: _meta(refLong(s, a.id), inFolder),
+                onTap: () => context.openAyah(a.surah, a.ayah),
+                trailing: _FileButton(
+                  current: inFolder,
+                  move: (db, to) => db.moveAyahBookmark(a.id, to),
+                ),
+              ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

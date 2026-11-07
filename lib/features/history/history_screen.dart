@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
+import '../../core/db/content_db.dart';
 import '../../core/db/database_providers.dart';
 import '../../core/strings.dart';
 import '../../core/theme/colors.dart';
-import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
+import '../../shared/empty_state.dart';
 import '../../shared/folder_sheet.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
@@ -31,59 +33,44 @@ class HistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final index = ref.watch(questionIndexProvider);
     final history = ref.watch(recentSlugsProvider).value ?? const [];
-    final t = AppText.of(context);
-    return Scaffold(
-      body: SafeArea(
-        child: AsyncBody(
-          value: index,
-          data: (index) {
-            final questions = history.map(index.bySlug).nonNulls.toList();
-            return ListView(
-              padding: const EdgeInsets.only(bottom: 32),
-              children: [
-                ContentFrame(
-                  child: ScreenHeader(
-                    title: Strings.readingHistory,
-                    actions: [
-                      if (questions.isNotEmpty)
-                        IconButton(
-                          onPressed: () => _clear(context, ref),
-                          tooltip: Strings.clearHistory,
-                          icon: const Icon(IconsaxPlusLinear.trash),
-                        ),
-                    ],
-                  ),
-                ),
-                ContentFrame(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 8),
-                      if (questions.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Space.gutter,
-                            vertical: 10,
-                          ),
-                          child: Text(
-                            Strings.historyEmpty,
-                            style: t.meta.copyWith(fontSize: 14),
-                          ),
-                        ),
-                      for (final q in questions)
-                        QuestionTile(
-                          icon: CategoryIcon(q.category),
-                          title: q.questionBn,
-                          meta: index.rowMeta(q),
-                          onTap: () => context.openQuestion(q.slug),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+    final questions = switch (index.value) {
+      final index? => history.map(index.bySlug).nonNulls.toList(),
+      null => const <Question>[],
+    };
+    return AppPage(
+      header: AppHeader(
+        title: Strings.readingHistory,
+        actions: [
+          if (questions.isNotEmpty)
+            IconButton(
+              onPressed: () => _clear(context, ref),
+              tooltip: Strings.clearHistory,
+              icon: const Icon(IconsaxPlusLinear.trash),
+            ),
+        ],
+      ),
+      body: AsyncBody(
+        value: index,
+        data: (index) => questions.isEmpty
+            ? const EmptyState(
+                icon: IconsaxPlusBold.clock,
+                title: Strings.historyEmpty,
+                message: Strings.historyEmptyHint,
+              )
+            : ListView(
+                padding: const EdgeInsets.fromLTRB(0, Space.belowHeader, 0, 32),
+                children: [
+                  for (final q in questions)
+                    ContentFrame(
+                      child: QuestionTile(
+                        icon: CategoryIcon(q.category),
+                        title: q.questionBn,
+                        meta: index.rowMeta(q),
+                        onTap: () => context.openQuestion(q.slug),
+                      ),
+                    ),
+                ],
+              ),
       ),
     );
   }

@@ -146,7 +146,17 @@ abstract final class Space {
   /// Horizontal page padding.
   static const gutter = 18.0;
   static const radiusCard = 12.0;
+
+  /// Home's wordmark header.
   static const headerHeight = 52.0;
+
+  /// The top bar on every other screen (Material's 64dp small top app bar),
+  /// with a little air between it and the status bar.
+  static const barHeight = 64.0;
+  static const barTopInset = 4.0;
+
+  /// One gap between the bar (or a large page title) and the first content.
+  static const belowHeader = 12.0;
 
   /// The search pill and field: Material's 48dp touch minimum, which also
   /// leaves room for Bengali vowel signs above and below the line.

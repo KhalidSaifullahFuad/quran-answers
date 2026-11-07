@@ -13,7 +13,10 @@ import 'logo_mark.dart';
 /// Flat throughout: fills a step off the canvas, pill shapes, no borders or
 /// shadows. Press feedback is the Material ripple and nothing more.
 
-/// Centers content and caps its width, so lines stay readable on a tablet.
+/// A centered column, full width up to [Space.maxContentWidth], so lines
+/// stay readable on a tablet. The child always gets the column's whole width:
+/// a short row (a few chips, a one-word title) starts on the gutter instead
+/// of drifting to the middle.
 class ContentFrame extends StatelessWidget {
   const ContentFrame({super.key, required this.child});
 
@@ -25,31 +28,20 @@ class ContentFrame extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: Space.maxContentWidth),
-        child: child,
+        child: SizedBox(width: double.infinity, child: child),
       ),
     );
   }
 }
 
-/// The 52dp bar at the top of every screen: back button or wordmark, an
-/// optional title (or any [child], such as the search field), then actions.
+/// Home's 52dp header: logo mark and wordmark, then actions. Every other
+/// screen uses [AppHeader] from `app_header.dart`.
 ///
-/// Edges line up with the page gutter: a title with no back button starts on
-/// it, and the last action's glyph ends on it (6dp pad + 12dp button inset).
+/// The wordmark starts on the page gutter and the last action's glyph ends on
+/// it (6dp pad + 12dp button inset).
 class ScreenHeader extends StatelessWidget {
-  const ScreenHeader({
-    super.key,
-    this.title,
-    this.child,
-    this.wordmark = false,
-    this.showBack = true,
-    this.actions = const [],
-  }) : assert(title == null || child == null);
+  const ScreenHeader({super.key, this.actions = const []});
 
-  final String? title;
-  final Widget? child;
-  final bool wordmark;
-  final bool showBack;
   final List<Widget> actions;
 
   @override
@@ -59,51 +51,27 @@ class ScreenHeader extends StatelessWidget {
       height: Space.headerHeight,
       child: Padding(
         padding: EdgeInsets.only(
-          left: showBack ? 4 : Space.gutter,
+          left: Space.gutter,
           right: actions.isEmpty ? Space.gutter : 6,
         ),
         child: Row(
           children: [
-            if (showBack)
-              IconButton(
-                onPressed: () => Navigator.of(context).maybePop(),
-                tooltip: Strings.back,
-                icon: const Icon(IconsaxPlusLinear.arrow_left_1),
-              ),
-            // The logo mark and wordmark take the title's place and scale
-            // down together rather
-            // than overflow on a narrow phone or at large text sizes.
-            if (wordmark)
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      LogoMark(size: 22, color: AppColors.of(context).accent),
-                      const SizedBox(width: 10),
-                      Text(Strings.wordmark, style: text.wordmark),
-                    ],
-                  ),
+            // The logo mark and wordmark scale down together rather than
+            // overflow on a narrow phone or at large text sizes.
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerStart,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LogoMark(size: 22, color: AppColors.of(context).accent),
+                    const SizedBox(width: 10),
+                    Text(Strings.wordmark, style: text.wordmark),
+                  ],
                 ),
-              )
-            else
-              Expanded(
-                child:
-                    child ??
-                    (title == null
-                        ? const SizedBox.shrink()
-                        : Padding(
-                            padding: EdgeInsets.only(left: showBack ? 4 : 0),
-                            child: Text(
-                              title!,
-                              style: text.screenTitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )),
               ),
+            ),
             ...actions,
           ],
         ),

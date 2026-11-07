@@ -9,6 +9,7 @@ import '../../core/strings.dart';
 import '../../core/text/numerals.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
+import '../../shared/app_header.dart';
 import '../../shared/ayah_card.dart';
 import '../../shared/navigation.dart';
 import '../../shared/references.dart';
@@ -107,35 +108,29 @@ class AyahScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final page = ref.watch(ayahPageProvider((surah: surah, ayah: ayah)));
     final t = AppText.of(context);
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: ContentFrame(
-                child: ScreenHeader(
-                  title: page.value == null
-                      ? null
-                      : refLong(page.value!.surah, page.value!.ayah.id),
-                ),
-              ),
+    return AppPage(
+      header: AppHeader(
+        title: page.value == null
+            ? null
+            : refLong(page.value!.surah, page.value!.ayah.id),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: AsyncBody(
+              value: page,
+              data: (page) => page == null
+                  ? Padding(
+                      padding: const EdgeInsets.all(Space.gutter),
+                      child: Text(
+                        Strings.noSuchAyah(bnDigits(surah), bnDigits(ayah)),
+                        style: t.section,
+                      ),
+                    )
+                  : ContentFrame(child: _Body(page: page)),
             ),
-            SliverToBoxAdapter(
-              child: AsyncBody(
-                value: page,
-                data: (page) => page == null
-                    ? Padding(
-                        padding: const EdgeInsets.all(Space.gutter),
-                        child: Text(
-                          Strings.noSuchAyah(bnDigits(surah), bnDigits(ayah)),
-                          style: t.section,
-                        ),
-                      )
-                    : ContentFrame(child: _Body(page: page)),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -153,7 +148,12 @@ class _Body extends ConsumerWidget {
     void go(AyahAddress a) => context.replaceAyah(a.surah, a.ayah);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.gutter, 0, Space.gutter, 36),
+      padding: const EdgeInsets.fromLTRB(
+        Space.gutter,
+        Space.belowHeader,
+        Space.gutter,
+        36,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

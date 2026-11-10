@@ -522,12 +522,20 @@ class QuestionTile extends StatelessWidget {
     this.inset = Space.gutter,
     this.trailing,
     this.titleMaxLines,
+    this.titleSpan,
+    this.snippet,
   });
 
   /// Usually an [Icon] or [DuoIcon]; sized and coloured by the tile.
   final Widget icon;
   final String title;
   final String meta;
+
+  /// [title] with styled runs, e.g. search matches marked. Same text.
+  final InlineSpan? titleSpan;
+
+  /// A short excerpt under the title, e.g. where a search matched the answer.
+  final InlineSpan? snippet;
   final VoidCallback? onTap;
 
   /// Shown at the end of the row, e.g. a button to file it into a folder.
@@ -565,14 +573,23 @@ class QuestionTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
+                  Text.rich(
+                    titleSpan ?? TextSpan(text: title),
                     style: t.rowTitle,
                     maxLines: titleMaxLines,
                     overflow: titleMaxLines == null
                         ? null
                         : TextOverflow.ellipsis,
                   ),
+                  if (snippet case final snippet?) ...[
+                    const SizedBox(height: 4),
+                    Text.rich(
+                      snippet,
+                      style: t.meta.copyWith(fontSize: 13, color: c.fg2),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                   const SizedBox(height: 4),
                   Text(meta, style: t.meta.copyWith(letterSpacing: .2)),
                 ],

@@ -524,6 +524,7 @@ void main() {
     tester,
   ) async {
     const query = '৫৪:১৫';
+    const request = (query: query, ayahLimit: searchAyahPage);
     late QuestionIndex index;
     await tester.runAsync(() async {
       index = await container.read(questionIndexProvider.future);
@@ -534,15 +535,19 @@ void main() {
     // Auto-disposed: held open by a listener so the screen finds it resolved.
     // Subscribed inside runAsync, or the query starts on the fake clock.
     late ProviderSubscription<AsyncValue<SearchResults>> results;
+    late ProviderSubscription<AsyncValue<List<String>>> recent;
     await tester.runAsync(() async {
-      results = container.listen(searchResultsProvider(query), (_, _) {});
-      await container.read(searchResultsProvider(query).future);
+      results = container.listen(searchResultsProvider(request), (_, _) {});
+      await container.read(searchResultsProvider(request).future);
       final ayah = (await container.read(
-        searchResultsProvider(query).future,
+        searchResultsProvider(request).future,
       )).refAyah!;
       await container.read(isAyahBookmarkedProvider(ayah.id).future);
+      recent = container.listen(recentSearchesProvider, (_, _) {});
+      await container.read(recentSearchesProvider.future);
     });
     addTearDown(() => results.close());
+    addTearDown(() => recent.close());
 
     await pumpApp(tester);
     // The pill and the field it opens are the same height, the 48dp touch
@@ -559,7 +564,7 @@ void main() {
     await tester.enterText(find.byType(TextField), '');
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text(Strings.searchPrompt), findsOne);
+    expect(find.text(Strings.searchGuideTitle), findsOne);
     await tester.enterText(find.byType(TextField), query);
     await tester.pump(const Duration(milliseconds: 300));
     await tester.pump();
@@ -569,6 +574,12 @@ void main() {
     expect(find.text(r.refAyah!.translationBn), findsOne);
     expect(find.text(Strings.citingThisAyah), findsOne);
     expect(find.text(index.bySlug('muddakkir-al-qamar')!.questionBn), findsOne);
+
+    // Leaving search with results saves the query to recent searches. That
+    // write cannot finish on the fake clock and would hold the database open
+    // past teardown, so the field is cleared first.
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pump(const Duration(milliseconds: 300));
   });
 
   testWidgets(

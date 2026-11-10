@@ -19,6 +19,21 @@ import 'content_source.dart';
 
 const outputPath = 'assets/db/content.db';
 
+/// The Arabic search column: the Uthmani text, plus every word the plain
+/// (imla'i) spelling writes differently.
+///
+/// Uthmani rasm leaves out alefs that ordinary spelling has, so a user typing
+/// الكتاب would never reach ٱلْكِتَـٰبُ (indexed as الكتب). Each spelling's words
+/// are kept once, so a verse whose two spellings agree is indexed as before.
+String arabicSearchText(String uthmani, String plain) {
+  final words = normalizeForSearch(uthmani).split(' ');
+  final seen = words.toSet();
+  for (final w in normalizeForSearch(plain).split(' ')) {
+    if (w.isNotEmpty && seen.add(w)) words.add(w);
+  }
+  return words.join(' ');
+}
+
 Future<void> main() async {
   final questions = Questions.load();
   final mushaf = Mushaf.load();
@@ -69,7 +84,7 @@ Future<void> main() async {
         textUthmani: uthmani,
         textPlain: entry['textPlain'] as String,
         translationBn: translation,
-        searchAr: normalizeForSearch(uthmani),
+        searchAr: arabicSearchText(uthmani, entry['textPlain'] as String),
         searchBn: normalizeForSearch(translation),
       ),
     );
@@ -136,14 +151,26 @@ Future<void> main() async {
   for (final statement in createFtsStatements) {
     await db.customStatement(statement);
   }
-  await db.customStatement(
-    'INSERT INTO ${Fts.ayahs}(rowid, search_ar, search_bn) '
-    'SELECT id, search_ar, search_bn FROM ayahs',
-  );
-  await db.customStatement(
-    'INSERT INTO ${Fts.questions}(slug, search_bn) '
-    'SELECT slug, search_bn FROM questions',
-  );
+  // Filled from Dart rather than INSERT ... SELECT, because the loose columns
+  // come from looseFold, which SQLite cannot run.
+  await db.batch((b) {
+    for (final a in ayahRows) {
+      b.customStatement(
+        'INSERT INTO ${Fts.ayahs}(rowid, search_ar, search_bn, loose_bn) '
+        'VALUES (?, ?, ?, ?)',
+        [a.id, a.searchAr, a.searchBn, looseFold(a.searchBn)],
+      );
+    }
+    for (final q in published) {
+      final question = normalizeForSearch(q['questionBn'] as String);
+      final answer = normalizeForSearch(q['answerBn'] as String);
+      b.customStatement(
+        'INSERT INTO ${Fts.questions}(slug, question_bn, answer_bn, '
+        'loose_question_bn, loose_answer_bn) VALUES (?, ?, ?, ?, ?)',
+        [q['slug'], question, answer, looseFold(question), looseFold(answer)],
+      );
+    }
+  });
 
   // Compacts the file and rebuilds the b-trees; the asset is written once and
   // only ever read, so the tradeoff is entirely in the app's favour.

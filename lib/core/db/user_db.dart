@@ -6,13 +6,16 @@ part 'user_db.g.dart';
 
 /// Bookmarks, folders and reading history. Created on the device, never
 /// shipped.
-@DriftDatabase(tables: [Bookmarks, AyahBookmarks, Folders, ReadingHistory])
+@DriftDatabase(
+  tables: [Bookmarks, AyahBookmarks, Folders, ReadingHistory, RecentSearches],
+)
 class UserDatabase extends _$UserDatabase {
   UserDatabase(super.e);
 
   /// 1: question bookmarks and history. 2: verse bookmarks and folders.
+  /// 3: recent searches.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -23,6 +26,7 @@ class UserDatabase extends _$UserDatabase {
         await m.createTable(folders);
         await m.addColumn(bookmarks, bookmarks.folderId);
       }
+      if (from < 3) await m.createTable(recentSearches);
     },
   );
 
@@ -159,4 +163,33 @@ class UserDatabase extends _$UserDatabase {
       (update(ayahBookmarks)..where((b) => b.ayahId.equals(ayahId))).write(
         AyahBookmarksCompanion(folderId: Value(folderId)),
       );
+
+  /// How many recent searches are kept.
+  static const recentSearchLimit = 10;
+
+  /// Remembers [query] as the newest search, keeping only the last few.
+  Future<void> addRecentSearch(String query) => transaction(() async {
+    await into(recentSearches).insertOnConflictUpdate(
+      RecentSearch(query: query, searchedAt: DateTime.now()),
+    );
+    final keep = selectOnly(recentSearches)
+      ..addColumns([recentSearches.query])
+      ..orderBy([OrderingTerm.desc(recentSearches.searchedAt)])
+      ..limit(recentSearchLimit);
+    await (delete(
+      recentSearches,
+    )..where((r) => r.query.isNotInQuery(keep))).go();
+  });
+
+  /// Newest first.
+  Stream<List<String>> watchRecentSearches() {
+    final query = select(recentSearches)
+      ..orderBy([(r) => OrderingTerm.desc(r.searchedAt)]);
+    return query.watch().map((rows) => [for (final r in rows) r.query]);
+  }
+
+  Future<void> removeRecentSearch(String query) =>
+      (delete(recentSearches)..where((r) => r.query.equals(query))).go();
+
+  Future<void> clearRecentSearches() => delete(recentSearches).go();
 }

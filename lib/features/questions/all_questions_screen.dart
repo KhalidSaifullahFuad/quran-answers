@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../../core/db/content_db.dart';
+import '../../core/db/content_search.dart';
 import '../../core/strings.dart';
 import '../../core/text/normalize.dart';
 import '../../core/text/numerals.dart';
@@ -20,9 +21,9 @@ import 'question_providers.dart';
 /// The questions tab: every question in authored order, narrowed by a
 /// category chip and by words typed into the field.
 ///
-/// The filter runs in memory over question and answer text. It goes through
-/// [normalizeForSearch], the same normalizer as the database search, so the
-/// two never disagree about what matches.
+/// The filter runs in memory over question and answer text, by the same
+/// rules as the database search ([SearchTerms]: per-word prefixes, loose
+/// spelling, synonyms), so the two never disagree about what matches.
 class AllQuestionsScreen extends ConsumerStatefulWidget {
   const AllQuestionsScreen({super.key});
 
@@ -37,11 +38,11 @@ class _AllQuestionsScreenState extends ConsumerState<AllQuestionsScreen> {
   /// The category shown, or null for all.
   String? _category;
 
-  /// The normalized filter; empty shows everything.
+  /// The typed filter, trimmed; empty shows everything.
   String _query = '';
 
-  /// Normalized question + answer per slug, built once per question set.
-  Map<String, String> _haystacks = const {};
+  /// Loose tokens of question + answer per slug, built once per question set.
+  Map<String, List<String>> _haystacks = const {};
   List<Question>? _indexed;
 
   @override
@@ -55,7 +56,7 @@ class _AllQuestionsScreenState extends ConsumerState<AllQuestionsScreen> {
     _debounce?.cancel();
     _debounce = Timer(
       const Duration(milliseconds: 150),
-      () => setState(() => _query = normalizeForSearch(text.trim())),
+      () => setState(() => _query = text.trim()),
     );
   }
 
@@ -66,12 +67,12 @@ class _AllQuestionsScreenState extends ConsumerState<AllQuestionsScreen> {
   }
 
   /// Normalized text per slug, rebuilt only when the question set changes.
-  Map<String, String> _haystacksFor(List<Question> questions) {
+  Map<String, List<String>> _haystacksFor(List<Question> questions) {
     if (!identical(_indexed, questions)) {
       _indexed = questions;
       _haystacks = {
         for (final q in questions)
-          q.slug: normalizeForSearch('${q.questionBn} ${q.answerBn}'),
+          q.slug: SearchTerms.looseTokens('${q.questionBn} ${q.answerBn}'),
       };
     }
     return _haystacks;
@@ -189,10 +190,20 @@ class _AllQuestionsScreenState extends ConsumerState<AllQuestionsScreen> {
   List<Question> _filter(QuestionIndex index) {
     final haystacks = _haystacksFor(index.questions);
     final category = _category;
+    final terms = SearchTerms.parse(_query);
+    // Only one-letter words typed: match them as plain text instead.
+    final letters = looseFold(normalizeForSearch(_query));
+    bool keep(Question q) {
+      if (_query.isEmpty) return true;
+      final tokens = haystacks[q.slug]!;
+      if (terms != null) return terms.matchesAll(tokens);
+      return letters.isEmpty || tokens.any((t) => t.contains(letters));
+    }
+
     return [
       for (final q
           in category == null ? index.questions : index.inCategory(category))
-        if (_query.isEmpty || haystacks[q.slug]!.contains(_query)) q,
+        if (keep(q)) q,
     ];
   }
 }

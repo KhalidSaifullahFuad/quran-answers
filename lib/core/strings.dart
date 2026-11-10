@@ -7,7 +7,7 @@ abstract final class Strings {
   static const appName = 'Quran Answers';
   static const wordmark = 'QURAN ANSWERS';
   static const tagline = 'প্রতিটি প্রশ্নের উত্তর, কুরআনের আয়াত থেকে';
-  static const searchHint = 'প্রশ্ন, শব্দ বা আয়াত (৯:৩৬)';
+  static const searchHint = 'প্রশ্ন, শব্দ বা আয়াত খুঁজুন';
   static const questionOfTheDay = 'আজকের প্রশ্ন';
   static const answerAndEvidence = 'উত্তর ও প্রমাণ';
   static const lastRead = 'সর্বশেষ পড়া';
@@ -80,20 +80,34 @@ abstract final class Strings {
   static const save = 'রাখুন';
   static const delete = 'মুছুন';
 
-  static const searchPrompt =
-      'প্রশ্নের শব্দ, আরবি বা বাংলা শব্দ, অথবা আয়াত নম্বর (৫৪:১৫) লিখুন।';
   static const noResults = 'কিছু পাওয়া যায়নি';
   static const filterQuestionsHint = 'প্রশ্ন বা উত্তরের শব্দ';
   static const searchWholeQuran = 'পুরো কুরআনে খুঁজুন';
   static const clearSearch = 'মুছুন';
   static const searchQuestions = 'প্রশ্ন';
   static const searchAyat = 'আয়াত';
-  static const searchExamplesLabel = 'যেমন';
-
-  /// Tapped into the search field from its empty state. Bengali and a
-  /// reference only: Arabic is never written into the code.
-  static const searchExamples = ['৫৪:১৫', 'নূহ', 'সালাত', 'মারইয়াম'];
   static const citingThisAyah = 'এই আয়াত যেসব প্রশ্নের প্রমাণ';
+  static const searchSurahs = 'সূরা';
+  static const recentSearches = 'সাম্প্রতিক';
+  static const editRecentSearch = 'খোঁজ বাক্সে বসান';
+  static const searchGuideTitle = 'যেভাবে খুঁজতে পারেন';
+  static const searchTabAll = 'সব';
+  static const searchAyatInTranslation = 'অনুবাদে মিল';
+
+  /// The guide cards: title, hint, and a tappable example. Arabic examples
+  /// are \u escapes (muddakir, al-qamar).
+  static const searchGuide = [
+    (title: 'বাংলায় প্রশ্ন', hint: 'যেমন: বার মাস', example: 'বার মাস'),
+    (title: 'আরবি শব্দ', hint: 'হরকত ছাড়াও চলবে', example: 'مدكر'),
+    (title: 'সূরার নাম', hint: 'বাংলা বা আরবি', example: 'القمر'),
+    (title: 'আয়াত নম্বর', hint: 'সরাসরি আয়াতে যান', example: '৫৪:১৭'),
+  ];
+  static const clearRecentSearches = 'সাম্প্রতিক খোঁজ মুছুন';
+  static const searchTypeMore = 'অন্তত দুই অক্ষরের শব্দ লিখুন।';
+  static const searchRelaxed =
+      'সব শব্দ একসাথে কোথাও মেলেনি; যেকোনো একটি শব্দ আছে এমন ফল দেখানো হলো।';
+  static String showAllQuestions(String n) => 'সব $nটি প্রশ্ন দেখুন';
+  static String showMoreAyat(String n) => 'আরও $nটি আয়াত দেখুন';
 
   static const previousAyah = 'আগের আয়াত';
   static const nextAyah = 'পরের আয়াত';
@@ -147,6 +161,4 @@ abstract final class Strings {
       'সূরা $surah-এ $ayah নম্বর আয়াত নেই।';
   static String contentSummary(String version, String questions, String ayat) =>
       'সংস্করণ $version · $questionsটি প্রশ্ন · $ayatটি আয়াত';
-  static String firstOfTotal(String shown, String total) =>
-      'মোট $totalটি আয়াতের প্রথম $shownটি দেখানো হলো। আরও নির্দিষ্ট করে লিখুন।';
 }

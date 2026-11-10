@@ -28,9 +28,63 @@ void main() {
     });
   });
 
+  group('parseSurahNumber', () {
+    test('a lone number in range is a surah', () {
+      expect(parseSurahNumber('৩৬'), 36);
+      expect(parseSurahNumber(' 114 '), 114);
+      expect(parseSurahNumber('115'), isNull);
+      expect(parseSurahNumber('0'), isNull);
+      expect(parseSurahNumber('2:255'), isNull);
+    });
+  });
+
+  group('SearchTerms.hits', () {
+    test('marks prefixed, loosely spelled and synonym words', () {
+      final t = SearchTerms.parse('নুহ নামাজ')!;
+      expect(t.hits('নূহের'), isTrue, reason: 'loose ূ / ু, suffix');
+      expect(t.hits('সালাত,'), isTrue, reason: 'synonym, punctuation');
+      expect(t.hits('মালাইকা/নূহ'), isTrue, reason: 'split at the slash');
+      expect(t.hits('পথ'), isFalse);
+    });
+
+    test('a short word takes suffixes but is not a prefix', () {
+      final t = SearchTerms.parse('বার মাস')!;
+      expect(t.hits('মাস'), isTrue);
+      expect(t.hits('বারটি।'), isTrue, reason: 'classifier suffix');
+      expect(t.hits('মাসের'), isTrue);
+      expect(t.hits('মাসজিদুল'), isFalse);
+      expect(t.hits('বারাকাতময়'), isFalse);
+      expect(t.hits('বাড়ী'), isFalse, reason: 'loose ড় as র is not a prefix');
+    });
+  });
+
   group('ftsMatchExpression', () {
     test('quotes every word as a prefix and ANDs them', () {
-      expect(ftsMatchExpression('  নিদর্শন   সহজ '), '"নিদর্শন"* "সহজ"*');
+      // নিদর্শন also goes in loose form: hasanta dropped, শ as স.
+      expect(
+        ftsMatchExpression('  নিদর্শন   উপদেশ '),
+        '("নিদর্শন"* OR "নিদরসন"*) AND ("উপদেশ"* OR "উপদেস"*)',
+      );
+    });
+
+    test('ORs the words when asked to', () {
+      expect(
+        ftsMatchExpression('কিতাব উম্মাত', any: true),
+        '"কিতাব"* OR ("উম্মাত"* OR "উমমাত"*)',
+      );
+    });
+
+    test('one-letter words are dropped', () {
+      expect(ftsMatchExpression('ক কিতাব'), '"কিতাব"*');
+      expect(ftsMatchExpression('ক'), isNull);
+      expect(SearchTerms.tooShort('ক'), isTrue);
+      expect(SearchTerms.tooShort(' ?! '), isFalse);
+    });
+
+    test('a word brings its synonyms', () {
+      final e = ftsMatchExpression('নামাজ')!;
+      expect(e, contains('"সালাত"*'));
+      expect(e, contains('"নামায"*'));
     });
 
     test('nothing left after normalization gives null', () {
@@ -39,7 +93,7 @@ void main() {
     });
 
     test('FTS operators typed by the user stay literal', () {
-      expect(ftsMatchExpression('NEAR OR *'), '"near"* "or"* "*"*');
+      expect(ftsMatchExpression('NEAR OR "x*"'), '"near"* AND "or"* AND "x*"*');
     });
 
     test('a bare Arabic word also tries the article', () {
@@ -85,7 +139,8 @@ void main() {
     });
 
     test('a Bengali stem reaches the suffixed form in 54:15', () async {
-      final r = await db.search('নিদর্শন');
+      // Past the first page: whole-word hits rank above suffixed ones.
+      final r = await db.search('নিদর্শন', ayahLimit: 1000);
       expect(r.ayahs.map((a) => a.id), contains(ayahId(54, 15)));
       expect(r.ayahTotal, greaterThanOrEqualTo(r.ayahs.length));
     });
@@ -109,6 +164,74 @@ void main() {
       final r = await db.search('الله', ayahLimit: 10);
       expect(r.ayahs, hasLength(10));
       expect(r.ayahTotal, greaterThan(10));
+    });
+
+    test('the plain Arabic spelling reaches the Uthmani verse', () async {
+      // 2:2 — ذلك الكتاب, written ٱلْكِتَـٰبُ in Uthmani rasm.
+      final r = await db.search('الكتاب');
+      expect(r.ayahs.map((a) => a.id), contains(ayahId(2, 2)));
+    });
+
+    test('a loose Bengali spelling finds the standard one', () async {
+      final strict = await db.search('নূহ');
+      final loose = await db.search('নুহ');
+      expect(strict.ayahTotal, greaterThan(0));
+      expect(loose.ayahTotal, greaterThanOrEqualTo(strict.ayahTotal));
+    });
+
+    test("an everyday word finds the translation's term", () async {
+      final r = await db.search('নামাজ');
+      expect(r.ayahTotal, greaterThan(50), reason: 'সালাত is used 87 times');
+    });
+
+    test('a loose spelling also reaches the common one', () async {
+      // The translation writes মূসা 176 times and মুসা 5 times.
+      final r = await db.search('মুসা');
+      expect(r.ayahTotal, greaterThan(100));
+    });
+
+    test('short words match whole, and whole matches rank first', () async {
+      final r = await db.search('বার মাস');
+      expect(r.questions.first.slug, 'ku-040');
+      expect(r.ayahs.first.id, ayahId(9, 36));
+      final ids = r.ayahs.map((a) => a.id);
+      expect(ids, isNot(contains(ayahId(17, 1))), reason: 'মাসজিদুল');
+      expect(ids, isNot(contains(ayahId(22, 40))), reason: 'বাড়ী');
+    });
+
+    test('a title hit ranks above an answer hit', () async {
+      final r = await db.search('মুদ্দাক্কির');
+      expect(r.questions.first.slug, 'muddakkir-al-qamar');
+    });
+
+    test('a surah number opens the surah', () async {
+      final r = await db.search('৩৬');
+      expect(r.matchedSurahs.map((s) => s.number), [36]);
+      expect(r.ayahs, isEmpty);
+    });
+
+    test('a surah name is matched, with or without the article', () async {
+      for (final q in ['Al-Qamar', 'qamar', 'সূরা চাঁদ']) {
+        final r = await db.search(q);
+        expect(r.matchedSurahs.map((s) => s.number), contains(54), reason: q);
+      }
+    });
+
+    test('a surah name and a number go to the verse', () async {
+      final r = await db.search('baqarah ২৫৫');
+      expect(r.refAyah?.id, ayahId(2, 255));
+    });
+
+    test('no verse has every word, so any word is enough', () async {
+      final r = await db.search('নূহ zzzzqqq');
+      expect(r.relaxed, isTrue);
+      expect(r.ayahs, isNotEmpty);
+    });
+
+    test('a one-letter query is not searched', () async {
+      final r = await db.search('ক');
+      expect(r.tooShort, isTrue);
+      expect(r.isEmpty, isTrue);
     });
 
     test('text matching nothing is empty rather than an error', () async {

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../core/db/content_db.dart';
+import '../core/db/content_search.dart';
 import '../core/db/database_providers.dart';
 import '../core/strings.dart';
 import '../core/theme/colors.dart';
@@ -12,6 +13,7 @@ import '../features/questions/question_providers.dart';
 import 'folder_sheet.dart';
 import 'navigation.dart';
 import 'references.dart';
+import 'search_highlight.dart';
 import 'widgets.dart';
 
 /// One ayah, whole: citation, Arabic, Bengali translation, and a bookmark.
@@ -25,7 +27,11 @@ class AyahCard extends ConsumerWidget {
     required this.surah,
     this.actions = const [],
     this.linkToAyah = true,
+    this.highlight,
   });
+
+  /// Marks the translation's words this search matched.
+  final SearchTerms? highlight;
 
   final Ayah ayah;
   final Surah surah;
@@ -130,7 +136,14 @@ class AyahCard extends ConsumerWidget {
                 const SizedBox(height: 8),
                 ArabicText(ayah.textUthmani, ayah: ayah.ayah),
                 const SizedBox(height: 14),
-                Text(ayah.translationBn, style: t.translation),
+                Text.rich(
+                  highlightSpan(
+                    ayah.translationBn,
+                    highlight,
+                    TextStyle(color: c.highlight, fontWeight: FontWeight.w600),
+                  ),
+                  style: t.translation,
+                ),
               ],
             ),
           ),

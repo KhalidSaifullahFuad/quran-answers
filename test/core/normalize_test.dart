@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_answers/core/text/normalize.dart';
+import 'package:quran_answers/core/text/synonyms.dart';
 
 /// Inputs and expectations are written as explicit codepoint escapes.
 /// Arabic and Bengali are easy to mistype and impossible to eyeball in a diff,
@@ -161,5 +162,46 @@ void main() {
         expect(normalizeForSearch('\u064E\u0650 ... '), '');
       },
     );
+  });
+
+  group('looseFold', () {
+    String loose(String s) => looseFold(normalizeForSearch(s));
+
+    test('merges the spellings Islamic terms are written in', () {
+      expect(loose('নূহ'), loose('নুহ'));
+      expect(loose('ঈসা'), loose('ইসা'));
+      expect(loose('কুরআন'), loose('কোরআন'));
+      expect(loose('যাকাত'), loose('জাকাত'));
+      expect(loose('ইব্রাহীম'), loose('ইবরাহিম'));
+      expect(loose('শিরক'), loose('শির্ক'));
+    });
+
+    test('keeps ya with nukta apart from ya', () {
+      expect(loose('য়'), isNot(loose('য')));
+    });
+
+    test('leaves Arabic and Latin alone', () {
+      const arabic = 'الكتاب';
+      expect(loose(arabic), normalizeForSearch(arabic));
+      expect(loose('Al-Qamar'), 'al qamar');
+    });
+
+    test('is idempotent', () {
+      final once = loose('ইব্রাহীমের কোরআন');
+      expect(looseFold(once), once);
+    });
+  });
+
+  group('synonymsOf', () {
+    test('an everyday word reaches the translation term, and back', () {
+      expect(synonymsOf(normalizeForSearch('নামাজ')), contains('সালাত'));
+      expect(synonymsOf(normalizeForSearch('সালাতের')), contains('নামাজ'));
+    });
+
+    test('short or unrelated words bring nothing', () {
+      expect(synonymsOf(normalizeForSearch('হজ')), isEmpty);
+      expect(synonymsOf(normalizeForSearch('হজরত')), isEmpty);
+      expect(synonymsOf(normalizeForSearch('পথ')), isEmpty);
+    });
   });
 }

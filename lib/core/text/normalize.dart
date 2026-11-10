@@ -146,3 +146,47 @@ String normalizeForSearch(String input) {
 
   return result.toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
 }
+
+/// Bengali letters that are spelled interchangeably, folded to one form.
+///
+/// Bengali spelling of Islamic terms and names is not settled: the same word
+/// shows up as নূহ and নুহ, মূসা and মুসা, ঈসা and ইসা, কুরআন and কোরআন, even
+/// within one source. The loose index column holds text with these merged, so
+/// a query in either spelling meets the other. Distinct words can collide
+/// here, which is why loose matches rank below exact ones and this fold never
+/// touches displayed text.
+const Map<int, int?> _bengaliLooseFolds = {
+  0x09C0: 0x09BF, // ী -> ি
+  0x09C2: 0x09C1, // ূ -> ু
+  0x0988: 0x0987, // ঈ -> ই
+  0x098A: 0x0989, // ঊ -> উ
+  0x09CB: 0x09C1, // ো -> ু (কোরআন / কুরআন, মোহাম্মদ / মুহাম্মদ)
+  0x09AF: 0x099C, // য -> জ (যাকাত / জাকাত); য় (U+09DF) stays
+  0x09A3: 0x09A8, // ণ -> ন
+  0x09B6: 0x09B8, // শ -> স
+  0x09B7: 0x09B8, // ষ -> স
+  0x09CE: 0x09A4, // ৎ -> ত
+  0x09DC: 0x09B0, // ড় -> র
+  0x09DD: 0x09B0, // ঢ় -> র
+  0x0982: 0x0999, // ং -> ঙ
+  0x09CD: null, // hasanta: dropped (ইব্রাহীম / ইবরাহীম)
+  0x0981: null, // candrabindu: dropped
+};
+
+/// Folds text already passed through [normalizeForSearch] to its loose form.
+///
+/// Only Bengali codepoints change, so Arabic and Latin pass through untouched.
+/// Used for the loose index columns at build time and for every query word at
+/// runtime; like [normalizeForSearch], the two must never diverge.
+String looseFold(String normalized) {
+  final out = StringBuffer();
+  for (final cp in normalized.runes) {
+    if (_bengaliLooseFolds.containsKey(cp)) {
+      final to = _bengaliLooseFolds[cp];
+      if (to != null) out.writeCharCode(to);
+    } else {
+      out.writeCharCode(cp);
+    }
+  }
+  return out.toString();
+}

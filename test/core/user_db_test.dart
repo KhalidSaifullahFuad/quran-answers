@@ -163,6 +163,36 @@ void main() {
     );
   });
 
+  group('recent searches', () {
+    test('newest first, a repeat moves to the top', () async {
+      await db.addRecentSearch('a');
+      await Future<void>.delayed(const Duration(milliseconds: 2));
+      await db.addRecentSearch('b');
+      await Future<void>.delayed(const Duration(milliseconds: 2));
+      await db.addRecentSearch('a');
+      expect(await db.watchRecentSearches().first, ['a', 'b']);
+    });
+
+    test('only the last few are kept', () async {
+      for (var i = 0; i < UserDatabase.recentSearchLimit + 3; i++) {
+        await db.addRecentSearch('q$i');
+        await Future<void>.delayed(const Duration(milliseconds: 2));
+      }
+      final kept = await db.watchRecentSearches().first;
+      expect(kept, hasLength(UserDatabase.recentSearchLimit));
+      expect(kept.first, 'q${UserDatabase.recentSearchLimit + 2}');
+    });
+
+    test('one can be removed, or all cleared', () async {
+      await db.addRecentSearch('a');
+      await db.addRecentSearch('b');
+      await db.removeRecentSearch('a');
+      expect(await db.watchRecentSearches().first, ['b']);
+      await db.clearRecentSearches();
+      expect(await db.watchRecentSearches().first, isEmpty);
+    });
+  });
+
   test(
     'a schema 1 file upgrades and keeps its bookmarks and history',
     () async {
@@ -205,7 +235,9 @@ void main() {
       expect((await old.watchBookmarks().first).single.folderId, folder);
       expect(await old.toggleAyahBookmark(54015), isTrue);
       final version = await old.customSelect('PRAGMA user_version').getSingle();
-      expect(version.data.values.single, 2);
+      expect(version.data.values.single, 3);
+      await old.addRecentSearch('নূহ');
+      expect(await old.watchRecentSearches().first, ['নূহ']);
     },
   );
 }

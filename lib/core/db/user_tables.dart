@@ -59,3 +59,14 @@ class ReadingHistory extends Table {
   @override
   Set<Column> get primaryKey => {questionSlug};
 }
+
+/// Queries the user searched, one row per distinct text, newest kept on top.
+/// Added in schema 3.
+@DataClassName('RecentSearch')
+class RecentSearches extends Table {
+  TextColumn get query => text()();
+  DateTimeColumn get searchedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {query};
+}

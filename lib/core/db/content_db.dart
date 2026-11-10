@@ -52,11 +52,16 @@ const _tokenizer = "unicode61 remove_diacritics 0 tokenchars '$_bengaliMarks'";
 /// table can only return rowids, questions are keyed by slug rather than by an
 /// integer, and there are only hundreds of them, so the duplication is
 /// negligible and it avoids inventing a second id purely for FTS plumbing.
+///
+/// Every Bengali column has a `loose_*` twin holding the same text through
+/// `looseFold`, so spelling variants meet. The column order is what
+/// [FtsRank] weights by.
 const createFtsStatements = <String>[
   '''
   CREATE VIRTUAL TABLE ${Fts.ayahs} USING fts5(
     search_ar,
     search_bn,
+    loose_bn,
     content='',
     tokenize="$_tokenizer"
   )
@@ -64,11 +69,23 @@ const createFtsStatements = <String>[
   '''
   CREATE VIRTUAL TABLE ${Fts.questions} USING fts5(
     slug UNINDEXED,
-    search_bn,
+    question_bn,
+    answer_bn,
+    loose_question_bn,
+    loose_answer_bn,
     tokenize="$_tokenizer"
   )
   ''',
 ];
+
+/// bm25 orderings, one weight per column in [createFtsStatements] order.
+///
+/// A word in a question's title counts ten times one in its answer, and a
+/// match that needed the loose spelling counts well under an exact one.
+abstract final class FtsRank {
+  static const ayahs = 'bm25(${Fts.ayahs}, 1.0, 1.0, 0.4)';
+  static const questions = 'bm25(${Fts.questions}, 0, 10.0, 1.0, 4.0, 0.4)';
+}
 
 @DriftDatabase(
   tables: [Surahs, Ayahs, Categories, Questions, QuestionAyahs, Meta],

@@ -88,7 +88,7 @@ class _SurahsScreenState extends ConsumerState<SurahsScreen> {
                       index.citedSurahs(),
                     ))
                       if (surahs[n] case final surah?)
-                        _SurahRow(
+                        SurahRow(
                           surah: surah,
                           questionCount: count,
                           onTap: () => context.openSurah(n),
@@ -109,16 +109,22 @@ class _SurahsScreenState extends ConsumerState<SurahsScreen> {
       : cited.entries;
 }
 
-class _SurahRow extends StatelessWidget {
-  const _SurahRow({
+/// A surah: number badge, name, place and length, and its Arabic name.
+class SurahRow extends StatelessWidget {
+  const SurahRow({
+    super.key,
     required this.surah,
-    required this.questionCount,
     required this.onTap,
+    this.questionCount,
+    this.padding = const EdgeInsets.fromLTRB(20, 10, Space.gutter, 10),
   });
 
   final Surah surah;
-  final int questionCount;
+
+  /// Questions citing it, shown under the Arabic name; hidden when null.
+  final int? questionCount;
   final VoidCallback onTap;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +133,7 @@ class _SurahRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, Space.gutter, 10),
+        padding: padding,
         child: Row(
           children: [
             HexBadge(label: bnDigits(surah.number)),
@@ -152,14 +158,15 @@ class _SurahRow extends StatelessWidget {
                   surah.nameAr,
                   style: t.arabic.copyWith(fontSize: 19, height: 1.9),
                 ),
-                Text(
-                  Strings.questionCount(bnDigits(questionCount)),
-                  style: t.meta.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: c.highlight,
+                if (questionCount case final n?)
+                  Text(
+                    Strings.questionCount(bnDigits(n)),
+                    style: t.meta.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: c.highlight,
+                    ),
                   ),
-                ),
               ],
             ),
           ],

@@ -117,7 +117,8 @@ void main() {
           'SELECT slug FROM ${Fts.questions} WHERE ${Fts.questions} MATCH ?',
           [
             Variable(
-              'search_bn : "${normalizeForSearch('\u0995\u09CB\u09A8')}"',
+              '{question_bn answer_bn} : '
+              '"${normalizeForSearch('\u0995\u09CB\u09A8')}"',
             ),
           ],
         );
@@ -125,7 +126,7 @@ void main() {
 
         final fragment = await query(
           'SELECT slug FROM ${Fts.questions} WHERE ${Fts.questions} MATCH ?',
-          [Variable('search_bn : "\u0995"')],
+          [Variable('{question_bn answer_bn} : "\u0995"')],
         );
         expect(
           fragment,
@@ -138,7 +139,11 @@ void main() {
     test('finds a question by a distinctive Bengali word', () async {
       final rows = await query(
         'SELECT slug FROM ${Fts.questions} WHERE ${Fts.questions} MATCH ?',
-        [Variable('search_bn : "${normalizeForSearch('মুদ্দাক্কির')}"')],
+        [
+          Variable(
+            '{question_bn answer_bn} : "${normalizeForSearch('মুদ্দাক্কির')}"',
+          ),
+        ],
       );
       expect(rows.map((r) => r.read<String>('slug')), ['muddakkir-al-qamar']);
     });

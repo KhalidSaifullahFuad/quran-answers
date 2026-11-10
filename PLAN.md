@@ -261,6 +261,43 @@ Author: bar looked cramped (low height, no padding, small title). Analysis: 52dp
 - [x] **29.3** All inner screens migrated (category, surah, question, ayah, search, settings, about, history); one 12dp gap below the bar (`Space.belowHeader`).
 - [x] **29.4** `ContentFrame` gives its child the full column width (short rows no longer drift to the center). Home keeps its own wordmark header.
 
+### Step 30: Search quality (2026-11-07)
+Audit of search against the shipped `content.db`. Main cause of misses: spellings users type don't match the indexed forms. All landed 2026-11-07; 136 + new tests pass; **awaits a device check** (no device in the session; the Chrome preview has no search).
+- [x] **30.1** Arabic standard spelling: `search_ar` indexed Uthmani rasm only (`الكتاب` → 0). Now Uthmani + every word the plain (`text_plain`) spelling writes differently (`build_db.dart` `arabicSearchText`). Test: `الكتاب` finds 2:2.
+- [x] **30.2** Bengali loose spelling: `looseFold` in `normalize.dart` (ী→ি, ূ→ু, ঈ→ই, ঊ→উ, ো→ু, য→জ, ণ→ন, শ/ষ→স, ৎ→ত, ড়/ঢ়→র, ং→ঙ, hasanta and candrabindu dropped; য় kept). New FTS columns `loose_bn` (ayat) and `loose_question_bn` / `loose_answer_bn`; every query word searched exact OR loose; bm25 weights loose 0.4 vs exact 1. নুহ, ইসা, কোরআন, ইবরাহিম now match. DB 11.4 → 12.3 MB.
+- [x] **30.3** Synonyms: `lib/core/text/synonyms.dart`, 16 groups (সালাত/নামাজ, সিয়াম/রোজা, হজ্জ/হাজ্জ, কুরআন/কোরান, দোয়া/দুআ, জান্নাত/বেহেশত, জাহান্নাম/দোযখ/নরক, ফেরেশতা/মালাইকা, কিয়ামাত/কিয়ামত, মুহাম্মাদ/মুহাম্মদ, শয়তান, তাওবা/তওবা, রাসূল/রসূল, আখিরাত/পরকাল, রমাদান/রমজান, মারইয়াম/মারিয়াম). Matched on loose prefix, min 3 letters; bare হজ left out (would reach হজরত). Only forms checked against the corpus. **(author) Review / prune the list.**
+- [x] **30.4** Surah search: names matched by Bengali meaning (`name_bn`, e.g. চাঁদ), English transliteration with/without article (`qamar`, `Al-Qamar`), Arabic with/without `ال`; shown as a "সূরা" section. Lone number (`৩৬`) opens the surah; name + number (`baqarah ২৫৫`) jumps to the verse; a leading সূরা/surah is ignored. **Gap:** Bengali transliterations (বাকারা, ইয়াসীন-style for every surah) don't exist in the data, so বাকারা still finds no surah; waits on the "Bengali transliterated surah names" content item under Later.
+- [x] **30.5** Question ranking: `questions_fts` split into `question_bn` / `answer_bn` (+ loose twins), ordered by `bm25(questions_fts, 0, 10, 1, 4, 0.4)` (`FtsRank`).
+- [x] **30.6** Zero-result fallback: a multi-word query with no AND hits retries as OR; a note says so (`Strings.searchRelaxed`).
+- [x] **30.7** Ayat paging: "আরও nটি আয়াত দেখুন" fetches 50 more (provider keyed by `(query, ayahLimit)`); old "first 50 of N" line removed.
+- [x] **30.8** (author: cap) First 5 questions, then "সব nটি প্রশ্ন দেখুন" expands in place; reference queries still list every citing question.
+- [x] **30.9** Match context: matched words in ayah translations in `highlight` (w600, text only); in question titles bold `fg1` (not Qur'an, so no green); an answer excerpt under the title when only the answer matched (`shared/search_highlight.dart`).
+- [x] **30.10** Questions-tab filter uses the same rules as search (`SearchTerms.matchesAll` over loose tokens: per-word prefix, loose spelling, synonyms); one-letter input falls back to plain contains.
+- [x] **30.11** 2dp `fg3` progress bar under the header while a newer query loads over old results.
+- [x] **30.12** Recent searches: `RecentSearches` table, user DB schema 3 (migration + test), last 10, saved on submit, on opening a result and on leaving search; chips with clock icon in the empty state, trash icon clears.
+- [x] **30.13** Words under 2 letters dropped; a query of only those shows "অন্তত দুই অক্ষরের শব্দ লিখুন।" instead of searching.
+- [ ] **30.14** (author) Device pass: search নামাজ, নুহ, `الكتاب`, `৩৬`, `qamar`, `baqarah ২৫৫`, কুরআন (cap + show all), a long ayah list (show more), recent chips, questions-tab filter.
+
+### Step 31: Search screen redesign (2026-11-07, author mock-up)
+Layout from the author's reference image. No word dictionary is built: the শব্দ card and tab are out of scope.
+- [x] **31.1** Header: back arrow + rounded pill field with search icon in the top bar; hint "প্রশ্ন, শব্দ বা আয়াত খুঁজুন". Already back + pill; hint changed.
+- [x] **31.2** Empty state "সাম্প্রতিক": recent searches as a list (clock icon, text, ↖ icon fills the field without searching; tapping the row searches). Clear-all kept.
+- [x] **31.3** Empty state "যেভাবে খুঁজতে পারেন": 4 guide cards (Iconsax icon, title, one-line hint, tappable example on the right): বাংলায় প্রশ্ন / বার মাস, আরবি শব্দ / مدكر (via \u escapes), সূরার নাম / القمر, আয়াত নম্বর / ৫৪:১৭.
+- [x] **31.4** Results tabs সব / প্রশ্ন / আয়াত as a segmented control, grey selected pill (no green). সব = current mixed sections; others filter.
+- [x] **31.5** Question rows: title with bold match, surah name + ayah ref below; section header with count (৩টি).
+- [x] **31.6** Ayah rows compact: grey pill (book icon + surah name + ref), 2-line translation excerpt with bold match; header "অনুবাদে মিল". Tap opens the ayah.
+- [x] **31.7** Match style bold fg1 everywhere (drop green highlight in translations).
+- [x] **31.8** Update widget tests; analyze + test pass. Empty-state check now looks for the guide title; 142 pass. Text results now carry every surah so question rows can name the cited one.
+- [ ] **31.9** (author) Device pass.
+
+### Step 32: Search precision (2026-11-09, from device pass)
+On device, বার মাস listed 17:1 (মাসজিদুল, বারাকাতময়) and 22:40 (বাড়ী via loose ড়→র) above 9:36.
+- [x] **32.1** Exact-token hits rank above prefix-only hits (e.g. order by exact-match tier, then bm25).
+- [x] **32.2** Short words (≤3 letters) match themselves plus common suffixes (-এর, -ের, -ে, -টি, -গুলো...), not any longer word.
+- [x] **32.3** Loose fold used for whole-token match only, not as a prefix. Done as: short words (both columns) whole+suffix only; long words keep loose prefix so নুহ→নূহের still works.
+- [x] **32.4** Tests: বার মাস puts 9:36 first and excludes 17:1; নামাজ, নুহ, মুসা counts still pass.
+- [ ] **32.5** (author) Device pass.
+
 ### Later (not scheduled)
 - [ ] Quiz / practice mode: answer hidden until tapped, then next (author: later version).
 - [ ] Decide on the uncommitted Chrome preview (`lib/web_preview*.dart`, `native_opener*.dart`); kept uncommitted for now.
